@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Play, X } from 'lucide-react';
+import { ExternalLink, Play, X, Music as MusicIcon } from 'lucide-react';
 
 interface SpotifyAlbum {
   id: string;
@@ -20,22 +20,30 @@ const LYRICS_CACHE: Record<string, string> = {
 const Discography = () => {
   const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedAlbum, setSelectedAlbum] = useState<SpotifyAlbum | null>(null);
 
   useEffect(() => {
     const fetchMusic = async () => {
       try {
         const response = await fetch('/api/spotify');
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
         const data = await response.json();
+        if (data.error) throw new Error(data.error);
+        
         if (Array.isArray(data)) {
-          // Sort chronologically newest first
           const sorted = data.sort((a, b) => 
             new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
           );
           setAlbums(sorted);
+        } else {
+          setAlbums([]);
         }
-      } catch (error) {
-        console.error('Error fetching music:', error);
+      } catch (err) {
+        console.error('Error fetching music:', err);
+        setError('Unable to load music catalog.');
       } finally {
         setLoading(false);
       }
@@ -56,6 +64,15 @@ const Discography = () => {
           <div className="flex justify-center py-40">
             <div className="w-8 h-8 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
           </div>
+        ) : error ? (
+            <div className="text-center py-40 text-white/40 space-y-4">
+                <MusicIcon size={48} className="mx-auto" />
+                <p className="uppercase tracking-widest text-xs font-black">{error}</p>
+            </div>
+        ) : albums.length === 0 ? (
+            <div className="text-center py-40 text-white/40">
+                <p>No music found.</p>
+            </div>
         ) : (
           <>
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12 flex items-center gap-4">
@@ -171,11 +188,6 @@ const Discography = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Pure Aesthetic Section */}
-        <div className="relative py-40 flex items-center justify-center opacity-10">
-           <h2 className="text-5xl md:text-8xl font-display uppercase tracking-[1em] text-white">COLIN</h2>
-        </div>
       </div>
     </PageTransition>
   );
