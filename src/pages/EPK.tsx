@@ -67,7 +67,7 @@ const EPK = () => {
             <header>
               <h1 className="text-7xl md:text-9xl font-black tracking-tighter uppercase mb-6 leading-none">EPK</h1>
               <p className="text-2xl text-white/40 font-serif italic border-l-4 border-white/10 pl-8 leading-relaxed">
-                "The Midwest sound isn't just a place, it's a mood."
+                "The  sound isn't just a place, it's a mood."
               </p>
             </header>
 
@@ -80,7 +80,7 @@ const EPK = () => {
                   Colin Cherry is an architect of atmosphere. Blending industrial textures with raw alternative emotion, he creates a sonic landscape that is both visceral and calculated.
                 </p>
                 <p>
-                  Based in Indianapolis, his work explores the quiet tension of the Midwest through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
+                  Based in Indianapolis, his work explores the quiet tension of the  through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
                 </p>
               </div>
             </section>

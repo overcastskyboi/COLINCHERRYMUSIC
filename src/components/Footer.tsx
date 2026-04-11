@@ -31,7 +31,7 @@ const Footer = () => {
         </div>
         
         <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
-          Midwest Noir
+          
         </div>
       </div>
     </footer>

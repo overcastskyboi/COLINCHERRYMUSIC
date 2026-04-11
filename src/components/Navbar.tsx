@@ -9,7 +9,6 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Music', path: '/music' },
-    { name: 'Lyrics', path: '/lyrics' },
   ];
 
   return (

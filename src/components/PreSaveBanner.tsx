@@ -57,6 +57,8 @@ const PreSaveBanner = () => {
     day: 'numeric'
   }).toUpperCase();
 
+  const marqueeText = `PRE-SAVE "${nextRelease.title}" - OUT ${formattedDate} • `.repeat(10);
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -64,23 +66,27 @@ const PreSaveBanner = () => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="fixed top-0 left-0 right-0 z-[60] overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px]"
+          className="fixed top-0 left-0 right-0 z-[60] overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] py-3"
         >
-          <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-               <span className="hidden sm:inline">PRE-SAVE "{nextRelease.title}" - OUT {formattedDate}</span>
+          <div className="relative flex items-center">
+            <div className="whitespace-nowrap animate-marquee flex items-center">
+              <span className="mx-4">{marqueeText}</span>
+              <span className="mx-4">{marqueeText}</span>
+            </div>
+            
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-white pl-4 pr-6 h-full flex items-center z-10 shadow-[-20px_0_20px_rgba(255,255,255,1)]">
                <a 
                  href={nextRelease.link} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b border-black"
+                 className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b border-black mr-6"
                >
-                 PRE-SAVE NOW <ArrowRight size={12} />
+                 LINK <ArrowRight size={12} />
                </a>
+               <button onClick={dismiss} className="p-1 hover:scale-110 transition-transform">
+                 <X size={14} />
+               </button>
             </div>
-            <button onClick={dismiss} className="p-1 hover:scale-110 transition-transform">
-              <X size={14} />
-            </button>
           </div>
         </motion.div>
       )}
