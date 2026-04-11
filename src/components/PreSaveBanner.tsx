@@ -57,7 +57,9 @@ const PreSaveBanner = () => {
     day: 'numeric'
   }).toUpperCase();
 
-  const marqueeText = `PRE-SAVE "${nextRelease.title}" - OUT ${formattedDate} • `.repeat(10);
+  // Create elegant marquee text with large gaps and bullets
+  const singleMarqueeItem = `PRE-SAVE "${nextRelease.title}" — OUT ${formattedDate} \u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0 `;
+  const marqueeText = singleMarqueeItem.repeat(15);
 
   return (
     <AnimatePresence>
@@ -68,23 +70,23 @@ const PreSaveBanner = () => {
           exit={{ height: 0, opacity: 0 }}
           className="fixed top-0 left-0 right-0 z-[60] overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] py-3"
         >
-          <div className="relative flex items-center">
-            <div className="whitespace-nowrap animate-marquee flex items-center">
-              <span className="mx-4">{marqueeText}</span>
-              <span className="mx-4">{marqueeText}</span>
+          <div className="relative flex items-center w-full">
+            <div className="whitespace-nowrap animate-marquee-slow flex items-center">
+              <span>{marqueeText}</span>
+              <span>{marqueeText}</span>
             </div>
             
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-white pl-4 pr-6 h-full flex items-center z-10 shadow-[-20px_0_20px_rgba(255,255,255,1)]">
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-white pl-8 pr-6 h-full flex items-center z-10 shadow-[-30px_0_30px_rgba(255,255,255,1)]">
                <a 
                  href={nextRelease.link} 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b border-black mr-6"
+                 className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b-2 border-black mr-8"
                >
-                 LINK <ArrowRight size={12} />
+                 PRE-SAVE <ArrowRight size={12} strokeWidth={3} />
                </a>
-               <button onClick={dismiss} className="p-1 hover:scale-110 transition-transform">
-                 <X size={14} />
+               <button onClick={dismiss} className="p-1 hover:scale-125 transition-transform">
+                 <X size={16} strokeWidth={3} />
                </button>
             </div>
           </div>

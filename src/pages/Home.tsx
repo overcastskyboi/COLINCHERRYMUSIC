@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
   const upcomingReleases = [
-    { title: 'ROSE', date: 'APRIL 24', link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release' },
-    { title: 'HOLDING ON', date: 'MAY 8', link: 'https://distrokid.com/hyperfollow/colincherry/holding-on?ref=release' },
-    { title: 'DIFFERENT', date: 'MAY 22', link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release' },
+    { title: 'ROSE', date: 'APRIL 24', link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release', art: '/rose.jpg' },
+    { title: 'HOLDING ON', date: 'MAY 8', link: 'https://distrokid.com/hyperfollow/colincherry/holding-on?ref=release', art: '/holding-on.png' },
+    { title: 'DIFFERENT', date: 'MAY 22', link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release', art: '/different.png' },
   ];
 
   const socials = [
@@ -53,9 +53,9 @@ const Home = () => {
               ))}
             </div>
 
-            {/* Featured Embeds */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 w-full max-w-4xl mx-auto">
-              <div className="glass p-1 shadow-2xl overflow-hidden rounded-xl h-[352px]">
+            {/* Featured Embeds - Desktop Dominant */}
+            <div className="flex flex-col items-center gap-8 mb-24 w-full max-w-[800px] mx-auto">
+              <div className="glass p-1 shadow-2xl overflow-hidden rounded-xl w-full h-[352px]">
                 <iframe 
                   src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
                   width="100%" 
@@ -66,7 +66,7 @@ const Home = () => {
                   className="rounded-xl"
                 ></iframe>
               </div>
-              <div className="glass p-1 shadow-2xl overflow-hidden rounded-xl h-[352px]">
+              <div className="glass p-1 shadow-2xl overflow-hidden rounded-xl w-full h-[352px]">
                 <iframe 
                   allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" 
                   frameBorder="0" 
@@ -90,19 +90,19 @@ const Home = () => {
                     href={release.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-6 glass hover:bg-white/5 transition-all group"
+                    className="flex items-center justify-between p-4 md:p-6 glass hover:bg-white/5 transition-all group"
                   >
-                    <div className="flex items-center gap-6">
-                      <div className="text-white/20 group-hover:text-white transition-colors">
-                        <Calendar size={20} />
+                    <div className="flex items-center gap-4 md:gap-6">
+                      <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 glass overflow-hidden rounded-md">
+                        <img src={release.art} alt={release.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                       </div>
                       <div>
-                        <h4 className="text-xl font-black uppercase tracking-tight leading-none mb-1">{release.title}</h4>
+                        <h4 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-none mb-1">{release.title}</h4>
                         <p className="text-[9px] font-bold uppercase tracking-widest text-white/20">{release.date}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-white/20 group-hover:text-white transition-all">
-                      Pre-Save <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      <span className="hidden sm:inline">Pre-Save</span> <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                     </div>
                   </a>
                 ))}
