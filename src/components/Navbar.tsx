@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Music, PlayCircle, FileText, Mail, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -7,28 +7,27 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { name: 'Home', path: '/', icon: <Home size={18} /> },
-    { name: 'Music', path: '/music', icon: <Music size={18} /> },
-    { name: 'Videos', path: '/videos', icon: <PlayCircle size={18} /> },
-    { name: 'EPK', path: '/epk', icon: <FileText size={18} /> },
-    { name: 'Contact', path: '/contact', icon: <Mail size={18} /> },
+    { name: 'Home', path: '/' },
+    { name: 'Music', path: '/discography' },
+    { name: 'Visuals', path: '/visuals' },
+    { name: 'Booking', path: '/booking' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-6 pointer-events-none">
-      <div className="max-w-7xl mx-auto flex justify-between items-center bg-black/60 backdrop-blur-xl border border-white/10 rounded-full px-8 py-3 pointer-events-auto shadow-2xl">
-        <NavLink to="/" className="text-2xl font-black tracking-tighter hover:opacity-80 transition-opacity">
+    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-5">
+        <NavLink to="/" className="text-xl font-display uppercase tracking-tighter">
           COLIN CHERRY
         </NavLink>
 
         {/* Desktop Nav */}
-        <div className="hidden lg:flex gap-10">
+        <div className="hidden md:flex gap-12">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/30'}`
+                `text-[11px] uppercase tracking-[0.4em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/30'}`
               }
             >
               {item.name}
@@ -38,10 +37,10 @@ const Navbar = () => {
 
         {/* Mobile Toggle */}
         <button 
-          className="lg:hidden p-2 text-white"
+          className="md:hidden p-2 text-white/50 hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
@@ -49,24 +48,25 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="lg:hidden mt-4 glass p-8 space-y-8 pointer-events-auto flex flex-col items-center"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden glass backdrop-blur-3xl overflow-hidden mx-4 mb-4"
           >
-            {navItems.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-                className={({ isActive }) => 
-                  `flex items-center gap-6 text-sm font-black uppercase tracking-[0.4em] transition-colors ${isActive ? 'text-white' : 'text-white/30'}`
-                }
-              >
-                {item.icon}
-                {item.name}
-              </NavLink>
-            ))}
+            <div className="flex flex-col items-center py-10 gap-8">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.name}
+                  to={item.path}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) => 
+                    `text-xs font-black uppercase tracking-[0.5em] transition-colors ${isActive ? 'text-white' : 'text-white/30'}`
+                  }
+                >
+                  {item.name}
+                </NavLink>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

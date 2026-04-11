@@ -15,10 +15,10 @@ const Layout = ({ children }: LayoutProps) => {
       </main>
       <AudioPlayer />
       
-      {/* Dynamic Background Atmosphere */}
+      {/* Subtle Atmosphere */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-900/10 blur-[160px] rounded-full animate-pulse-slow"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-900/10 blur-[160px] rounded-full animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-white/[0.02] blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-white/[0.01] blur-[100px] rounded-full"></div>
       </div>
     </div>
   );

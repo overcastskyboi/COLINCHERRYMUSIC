@@ -1,93 +1,89 @@
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Play, ArrowRight } from 'lucide-react';
+import { Play, ArrowRight, Music, Disc } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
     <PageTransition>
-      <div className="relative h-[85vh] flex items-center justify-center overflow-hidden -mt-24">
-        {/* Cinematic Backdrop */}
-        <div className="absolute inset-0 z-0 scale-110">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/40 z-10"></div>
+      <div className="relative min-h-[90vh] flex items-center justify-center px-6 overflow-hidden">
+        {/* Visual Focus */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-[#0a0a0a]/50 z-10"></div>
           <img 
             src="https://images.unsplash.com/photo-1514525253361-bee0483307a0?auto=format&fit=crop&q=80&w=1920" 
             alt="Hero Background" 
-            className="w-full h-full object-cover opacity-50 contrast-125 saturate-50"
+            className="w-full h-full object-cover opacity-20 contrast-125 grayscale"
           />
         </div>
 
-        <div className="relative z-20 text-center px-6">
+        <div className="relative z-20 text-center max-w-4xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h1 className="text-7xl md:text-[12rem] font-black tracking-tighter mb-4 leading-none">
+            <h1 className="text-7xl md:text-[14rem] font-display uppercase tracking-tighter mb-4 leading-none">
               COLIN CHERRY
             </h1>
-            <p className="text-sm md:text-xl text-white/40 mb-12 uppercase tracking-[0.5em] font-bold">
-              Indianapolis Alternative &bull; Midwest Noir
+            <p className="text-sm md:text-lg text-white/30 mb-12 uppercase tracking-[0.8em] font-black">
+              Emo-Rap / Alt-Pop &bull; Indianapolis
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button className="group relative px-10 py-5 bg-white text-black font-black uppercase tracking-widest text-sm rounded-full overflow-hidden hover:scale-105 transition-all">
-                <span className="relative z-10 flex items-center gap-3">
-                  <Play size={18} fill="currentColor" /> Stream Latest
-                </span>
-                <div className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-              </button>
-              <Link to="/music" className="px-10 py-5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-black uppercase tracking-widest text-sm rounded-full hover:bg-white/10 hover:border-white/20 transition-all">
-                <span className="flex items-center gap-3">
-                  Explore Music <ArrowRight size={18} />
-                </span>
+            <div className="flex flex-col sm:flex-row gap-8 justify-center items-center">
+              <a 
+                href="https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4 px-10 py-5 glass hover:bg-white/10 transition-all"
+              >
+                <Play size={16} fill="currentColor" />
+                <span className="text-[10px] uppercase font-black tracking-[0.3em]">Stream Latest</span>
+              </a>
+              <Link to="/discography" className="group flex items-center gap-4 px-10 py-5 bg-white text-black hover:scale-105 transition-all">
+                <Disc size={16} fill="currentColor" />
+                <span className="text-[10px] uppercase font-black tracking-[0.3em]">Discography <ArrowRight size={14} className="inline ml-2 group-hover:translate-x-1 transition-transform" /></span>
               </Link>
             </div>
           </motion.div>
         </div>
       </div>
 
-      {/* Featured Artwork Section */}
-      <section className="max-w-7xl mx-auto px-6 py-32 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-20 items-center">
+      <section className="max-w-6xl mx-auto px-6 py-40">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <motion.div 
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="w-full lg:w-1/2"
+            className="space-y-10"
           >
-            <div className="relative group">
-              <div className="absolute -inset-4 bg-white/5 blur-2xl rounded-3xl group-hover:bg-white/10 transition-colors"></div>
-              <div className="relative glass aspect-square overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=1200" 
-                  alt="Featured Release" 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                />
+            <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter">The Vision</h2>
+            <div className="h-1 w-20 bg-white/10"></div>
+            <p className="text-xl text-white/40 leading-relaxed font-medium">
+              Architecting atmosphere through the lens of Midwest noir. Colin Cherry blends industrial textures with raw alternative emotion, creating a sonic landscape that is both visceral and calculated.
+            </p>
+            <div className="flex gap-10">
+              <div className="space-y-2">
+                 <h4 className="text-[10px] uppercase tracking-[0.3em] font-black text-white/20">Based In</h4>
+                 <p className="text-lg font-black uppercase">Indianapolis, IN</p>
+              </div>
+              <div className="space-y-2">
+                 <h4 className="text-[10px] uppercase tracking-[0.3em] font-black text-white/20">Focus</h4>
+                 <p className="text-lg font-black uppercase">Atmospheric Alt</p>
               </div>
             </div>
           </motion.div>
-          
           <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="w-full lg:w-1/2 space-y-8"
+            className="glass aspect-[3/4] overflow-hidden grayscale group"
           >
-            <div className="space-y-2">
-              <span className="text-white/30 uppercase tracking-[0.3em] text-xs font-black">Featured Single</span>
-              <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase">DARK ETHER</h2>
-            </div>
-            <p className="text-xl text-white/50 leading-relaxed font-medium">
-              A collision of industrial texture and Midwest atmosphere. "Dark Ether" explores the quiet tension of Indianapolis nights through a lens of heavy bass and haunting melodies.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              {['Spotify', 'Apple Music', 'YouTube', 'SoundCloud'].map(p => (
-                <span key={p} className="px-5 py-2 glass text-[10px] uppercase font-black tracking-widest text-white/40 hover:text-white transition-colors cursor-pointer">
-                  {p}
-                </span>
-              ))}
-            </div>
+            <img 
+              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=1200" 
+              alt="Colin Cherry Press Shot" 
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 group-hover:grayscale-0"
+            />
           </motion.div>
         </div>
       </section>

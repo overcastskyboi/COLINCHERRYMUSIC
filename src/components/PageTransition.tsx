@@ -8,11 +8,11 @@ interface PageTransitionProps {
 const PageTransition = ({ children }: PageTransitionProps) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="min-h-screen pt-24 pb-32"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+      className="min-h-screen pt-20 pb-32"
     >
       {children}
     </motion.div>
