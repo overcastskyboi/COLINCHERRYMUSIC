@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Navbar from './Navbar';
+import PreSaveBanner from './PreSaveBanner';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,6 +9,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden">
+      <PreSaveBanner />
       <Navbar />
       <main className="relative z-10">
         {children}
