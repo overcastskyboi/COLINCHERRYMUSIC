@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Navbar from './Navbar';
-import AudioPlayer from './AudioPlayer';
 
 interface LayoutProps {
   children: ReactNode;
@@ -13,7 +12,6 @@ const Layout = ({ children }: LayoutProps) => {
       <main className="relative z-10">
         {children}
       </main>
-      <AudioPlayer />
       
       {/* Subtle Atmosphere */}
       <div className="fixed inset-0 pointer-events-none z-0">
