@@ -1,7 +1,6 @@
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
 import { Instagram, Music2, Facebook, Music, ArrowRight, Calendar, Send } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const Home = () => {
   const upcomingReleases = [
