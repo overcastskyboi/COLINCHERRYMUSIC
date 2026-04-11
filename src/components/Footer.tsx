@@ -2,10 +2,10 @@ import { Instagram, Facebook, Music2, Music } from 'lucide-react';
 
 const Footer = () => {
   const socials = [
-    { name: 'Instagram', icon: <Instagram size={20} />, href: 'https://instagram.com/thecolincherry' },
-    { name: 'TikTok', icon: <Music size={20} />, href: 'https://tiktok.com/@thecolincherry' },
-    { name: 'Facebook', icon: <Facebook size={20} />, href: 'https://facebook.com/thecolincherry' },
-    { name: 'SoundCloud', icon: <Music2 size={20} />, href: 'https://soundcloud.com/thecolincherry' },
+    { name: 'Instagram', icon: <Instagram size={20} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F]' },
+    { name: 'TikTok', icon: <Music size={20} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea]' },
+    { name: 'Facebook', icon: <Facebook size={20} />, href: 'https://facebook.com/thecolincherry', color: 'hover:text-[#1877F2]' },
+    { name: 'SoundCloud', icon: <Music2 size={20} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300]' },
   ];
 
   return (
@@ -22,7 +22,7 @@ const Footer = () => {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white/20 hover:text-white transition-all transform hover:scale-110"
+              className={`text-white/20 ${social.color} transition-all transform hover:scale-110`}
               title={social.name}
             >
               {social.icon}

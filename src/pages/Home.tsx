@@ -11,10 +11,10 @@ const Home = () => {
   ];
 
   const socials = [
-    { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry' },
-    { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry' },
-    { icon: <Facebook size={18} />, href: 'https://facebook.com/thecolincherry' },
-    { icon: <Music2 size={18} />, href: 'https://soundcloud.com/thecolincherry' },
+    { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
+    { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea] hover:border-[#00f2ea]/50' },
+    { icon: <Facebook size={18} />, href: 'https://facebook.com/thecolincherry', color: 'hover:text-[#1877F2] hover:border-[#1877F2]/50' },
+    { icon: <Music2 size={18} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300] hover:border-[#FF3300]/50' },
   ];
 
   return (
@@ -46,7 +46,7 @@ const Home = () => {
                   href={social.href} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="p-4 glass hover:bg-white/10 transition-all text-white/40 hover:text-white"
+                  className={`p-4 glass transition-all text-white/40 ${social.color} hover:bg-white/5`}
                 >
                   {social.icon}
                 </a>
