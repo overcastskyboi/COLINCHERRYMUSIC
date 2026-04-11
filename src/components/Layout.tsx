@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Navbar from './Navbar';
 import PreSaveBanner from './PreSaveBanner';
+import Footer from './Footer';
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,12 +9,13 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden flex flex-col">
       <PreSaveBanner />
       <Navbar />
-      <main className="relative z-10">
+      <main className="relative z-10 flex-grow">
         {children}
       </main>
+      <Footer />
       
       {/* Subtle Atmosphere */}
       <div className="fixed inset-0 pointer-events-none z-0">

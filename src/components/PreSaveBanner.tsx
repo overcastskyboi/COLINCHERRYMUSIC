@@ -28,9 +28,9 @@ const PreSaveBanner = () => {
         >
           <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
             <div className="flex items-center gap-4">
-               <span className="hidden sm:inline">New Single "Dark Ether" out soon</span>
+               <span className="hidden sm:inline">PRE-SAVE "ROSE" - OUT APRIL 24</span>
                <a 
-                 href="https://distrokid.com/hyperfollow/colincherry/dark-ether" 
+                 href="https://distrokid.com/hyperfollow/colincherry/rose?ref=release" 
                  target="_blank" 
                  rel="noopener noreferrer"
                  className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b border-black"
