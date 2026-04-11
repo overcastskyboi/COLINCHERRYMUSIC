@@ -1,5 +1,4 @@
 import PageTransition from '../components/PageTransition';
-import { motion } from 'framer-motion';
 import { Music, ExternalLink } from 'lucide-react';
 
 const releases = [

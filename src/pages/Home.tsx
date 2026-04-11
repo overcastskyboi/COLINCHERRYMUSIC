@@ -1,6 +1,6 @@
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Play, ArrowRight, Music, Disc } from 'lucide-react';
+import { Play, ArrowRight, Disc } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {

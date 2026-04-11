@@ -5,6 +5,7 @@ import Discography from './pages/Discography';
 import Visuals from './pages/Visuals';
 import Booking from './pages/Booking';
 import { AnimatePresence } from 'framer-motion';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           </Routes>
         </AnimatePresence>
       </Layout>
+      <SpeedInsights />
     </Router>
   );
 }
