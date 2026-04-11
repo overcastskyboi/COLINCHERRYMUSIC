@@ -5,6 +5,7 @@ import Discography from './pages/Discography';
 import Lyrics from './pages/Lyrics';
 import EPK from './pages/EPK';
 import { AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path="/epk" element={<EPK />} />
           </Routes>
         </AnimatePresence>
+        <Analytics />
       </Layout>
     </Router>
   );
