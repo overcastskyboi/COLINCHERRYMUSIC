@@ -22,7 +22,7 @@ const Home = () => {
         {/* Brand Watermark */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
            <img 
-             src="/LOGO_TEXTURED.png" 
+             src="/logo_textured.png" 
              alt="" 
              className="w-[120%] max-w-none opacity-[0.03] grayscale contrast-150 scale-110"
            />
@@ -115,7 +115,7 @@ const Home = () => {
         <div className="glass p-12 md:p-20 relative overflow-hidden group">
            {/* Inner watermark */}
            <img 
-             src="/LOGO_TEXTURED.png" 
+             src="/logo_textured.png" 
              alt="" 
              className="absolute inset-0 w-full h-full object-contain opacity-[0.02] scale-150 grayscale pointer-events-none group-hover:scale-125 transition-transform duration-1000"
            />
