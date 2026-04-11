@@ -4,9 +4,9 @@ import { Instagram, Music2, Facebook, Music, ArrowRight, Calendar, Send } from '
 
 const Home = () => {
   const upcomingReleases = [
-    { title: 'ROSE', date: 'APRIL 24', link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release', art: '/rose.jpg' },
+    { title: 'ROSE', date: 'APRIL 24', link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release', art: '/ROSE.jpg' },
     { title: 'HOLDING ON', date: 'MAY 8', link: 'https://distrokid.com/hyperfollow/colincherry/holding-on?ref=release', art: '/holding-on.png' },
-    { title: 'DIFFERENT', date: 'MAY 22', link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release', art: '/different.png' },
+    { title: 'DIFFERENT', date: 'MAY 22', link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release', art: '/DIFFERENT.png' },
   ];
 
   const socials = [
