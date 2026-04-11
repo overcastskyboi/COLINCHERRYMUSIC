@@ -1,6 +1,5 @@
 import PageTransition from '../components/PageTransition';
-import { motion } from 'framer-motion';
-import { Mail, ArrowRight, Instagram, Twitter } from 'lucide-react';
+import { ArrowRight, Instagram, Twitter } from 'lucide-react';
 
 const Booking = () => {
   return (
