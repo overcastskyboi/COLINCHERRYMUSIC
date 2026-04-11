@@ -1,6 +1,7 @@
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Instagram, Music2, Facebook, Music, ArrowRight, Calendar } from 'lucide-react';
+import { Instagram, Music2, Facebook, Music, ArrowRight, Calendar, Send } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const upcomingReleases = [
@@ -19,6 +20,15 @@ const Home = () => {
   return (
     <PageTransition>
       <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-32 pb-40">
+        {/* Brand Watermark */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
+           <img 
+             src="/LOGO_TEXTURED.png" 
+             alt="" 
+             className="w-[120%] max-w-none opacity-[0.03] grayscale contrast-150 scale-110"
+           />
+        </div>
+
         <div className="relative z-20 text-center max-w-5xl w-full">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -100,14 +110,46 @@ const Home = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* Abstract Background */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[#0a0a0a]"></div>
-          <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-white/[0.01] blur-[150px] rounded-full"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-[800px] h-[800px] bg-white/[0.015] blur-[200px] rounded-full"></div>
-        </div>
       </div>
+
+      <section className="max-w-4xl mx-auto px-6 py-40 text-center">
+        <div className="glass p-12 md:p-20 relative overflow-hidden group">
+           {/* Inner watermark */}
+           <img 
+             src="/LOGO_TEXTURED.png" 
+             alt="" 
+             className="absolute inset-0 w-full h-full object-contain opacity-[0.02] scale-150 grayscale pointer-events-none group-hover:scale-125 transition-transform duration-1000"
+           />
+           
+           <div className="relative z-10 max-w-md mx-auto space-y-8">
+              <h3 className="text-3xl font-black uppercase tracking-tighter">Join the list.</h3>
+              <p className="text-white/30 text-sm">No spam, just drops. Get notified about new releases and visual experiences.</p>
+              <form className="flex flex-col sm:flex-row gap-2" onSubmit={(e) => e.preventDefault()}>
+                <input 
+                  type="email" 
+                  placeholder="EMAIL ADDRESS" 
+                  className="bg-white/5 border border-white/10 px-6 py-4 rounded-lg flex-grow focus:outline-none focus:border-white/30 transition-colors text-[10px] font-bold tracking-widest text-white"
+                />
+                <button className="bg-white text-black px-8 py-4 rounded-lg font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+                  Join <Send size={14} />
+                </button>
+              </form>
+           </div>
+        </div>
+      </section>
+
+      <section className="max-w-4xl mx-auto px-6 py-20 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+        >
+          <p className="text-2xl md:text-3xl text-white/30 leading-relaxed font-light tracking-wide italic">
+            Architecting atmosphere.
+          </p>
+        </motion.div>
+      </section>
     </PageTransition>
   );
 };

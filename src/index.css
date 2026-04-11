@@ -61,3 +61,20 @@ body {
 .animate-pulse-slow {
   animation: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Grain/Noise Overlay */
+.bg-grain {
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  filter: contrast(150%) brightness(100%);
+}
+
+/* Atmospheric Fog Animation */
+@keyframes fogDrift {
+  0% { transform: translate(-10%, -10%) scale(1); }
+  50% { transform: translate(10%, 5%) scale(1.1); }
+  100% { transform: translate(-10%, -10%) scale(1); }
+}
+
+.animate-fog {
+  animation: fogDrift 20s ease-in-out infinite;
+}

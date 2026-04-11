@@ -14,8 +14,15 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-5">
-        <NavLink to="/" className="text-xl font-display uppercase tracking-tighter">
-          COLIN CHERRY
+        <NavLink to="/" className="flex items-center gap-4 group">
+          <img 
+            src="/LOGO WHITE.png" 
+            alt="Colin Cherry Logo" 
+            className="h-8 md:h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110" 
+          />
+          <span className="text-xl font-display uppercase tracking-tighter transition-opacity group-hover:opacity-80">
+            COLIN CHERRY
+          </span>
         </NavLink>
 
         {/* Desktop Nav */}
