@@ -16,7 +16,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-6">
         <NavLink to="/" className="flex items-center gap-6 group">
           <img 
-            src="/logo white.png" 
+            src="/logo%20white.png" 
             alt="Colin Cherry Logo" 
             className="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-110" 
           />
