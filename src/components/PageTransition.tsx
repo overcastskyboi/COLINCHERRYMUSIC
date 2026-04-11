@@ -12,7 +12,7 @@ const PageTransition = ({ children }: PageTransitionProps) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
-      className="min-h-screen pt-20 pb-32"
+      className="min-h-screen pb-32"
     >
       {children}
     </motion.div>

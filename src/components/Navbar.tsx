@@ -12,27 +12,27 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-5">
-        <NavLink to="/" className="flex items-center gap-4 group">
+    <nav className="w-full glass-nav">
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-6">
+        <NavLink to="/" className="flex items-center gap-6 group">
           <img 
             src="/LOGO WHITE.png" 
             alt="Colin Cherry Logo" 
-            className="h-8 md:h-10 w-auto object-contain transition-transform duration-500 group-hover:scale-110" 
+            className="h-10 md:h-14 w-auto object-contain transition-transform duration-500 group-hover:scale-110" 
           />
-          <span className="text-xl font-display uppercase tracking-tighter transition-opacity group-hover:opacity-80">
+          <span className="text-2xl font-display uppercase tracking-tighter transition-opacity group-hover:opacity-80">
             COLIN CHERRY
           </span>
         </NavLink>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex gap-12">
+        <div className="hidden md:flex gap-16">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `text-[11px] uppercase tracking-[0.4em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/30'}`
+                `text-lg uppercase tracking-[0.5em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/30'}`
               }
             >
               {item.name}
@@ -45,7 +45,7 @@ const Navbar = () => {
           className="md:hidden p-2 text-white/50 hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
@@ -58,14 +58,14 @@ const Navbar = () => {
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden glass backdrop-blur-3xl overflow-hidden mx-4 mb-4"
           >
-            <div className="flex flex-col items-center py-10 gap-8">
+            <div className="flex flex-col items-center py-12 gap-10">
               {navItems.map((item) => (
                 <NavLink
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => 
-                    `text-xs font-black uppercase tracking-[0.5em] transition-colors ${isActive ? 'text-white' : 'text-white/30'}`
+                    `text-xl font-black uppercase tracking-[0.6em] transition-colors ${isActive ? 'text-white' : 'text-white/30'}`
                   }
                 >
                   {item.name}

@@ -27,9 +27,13 @@ const Layout = ({ children }: LayoutProps) => {
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <PreSaveBanner />
-        <Navbar />
-        <main className="flex-grow">
+        {/* Header Stack */}
+        <header className="fixed top-0 left-0 right-0 z-50 flex flex-col">
+          <PreSaveBanner />
+          <Navbar />
+        </header>
+
+        <main className="flex-grow pt-32">
           {children}
         </main>
         <Footer />

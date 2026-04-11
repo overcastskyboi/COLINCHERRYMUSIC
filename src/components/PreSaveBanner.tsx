@@ -68,7 +68,7 @@ const PreSaveBanner = () => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="fixed top-0 left-0 right-0 z-[60] overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] py-3"
+          className="relative overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] py-3"
         >
           <div className="relative flex items-center w-full">
             <div className="whitespace-nowrap animate-marquee-slow flex items-center">
