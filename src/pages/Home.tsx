@@ -1,14 +1,11 @@
 import PageTransition from '../components/PageTransition';
+import Hero from '../components/Hero';
+import AlbumTeaser from '../components/AlbumTeaser';
 import { motion } from 'framer-motion';
-import { Instagram, Music2, Facebook, Music, ArrowRight, Calendar, Send } from 'lucide-react';
+import { Instagram, Music2, Facebook, Music, ArrowRight, Send } from 'lucide-react';
+import { RELEASE_DATA } from '../config/releaseData';
 
 const Home = () => {
-  const upcomingReleases = [
-    { title: 'ROSE', date: 'APRIL 24', link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release', art: '/ROSE.jpg' },
-    { title: 'HOLDING ON', date: 'MAY 8', link: 'https://distrokid.com/hyperfollow/colincherry/holding-on?ref=release', art: '/holding-on.png' },
-    { title: 'DIFFERENT', date: 'MAY 22', link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release', art: '/DIFFERENT.png' },
-  ];
-
   const socials = [
     { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
     { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea] hover:border-[#00f2ea]/50' },
@@ -18,6 +15,19 @@ const Home = () => {
 
   return (
     <PageTransition>
+      <Hero 
+        latestDropTitle={RELEASE_DATA.currentSingle.title}
+        artworkUrl={RELEASE_DATA.currentSingle.artworkUrl}
+        routingLink={RELEASE_DATA.currentSingle.streamLink}
+      />
+
+      <AlbumTeaser 
+        title={RELEASE_DATA.rollout.albumTitle}
+        artworkUrl="/rose.jpg"
+        isVisible={RELEASE_DATA.rollout.showTeaser}
+        releaseDate={RELEASE_DATA.rollout.targetMonth}
+      />
+
       <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-32 pb-40">
         {/* Brand Watermark */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
