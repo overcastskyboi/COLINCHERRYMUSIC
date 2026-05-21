@@ -6,7 +6,7 @@ export const RELEASE_DATA = {
   },
   nextUp: {
     title: "Guilty Conscience",
-    releaseDate: "May 22",
+    releasedDate: "May 22",
     preSaveLink: "https://distrokid.com/hyperfollow/colincherry/guilty-conscience"
   },
   rollout: {
@@ -21,12 +21,18 @@ export const upcomingReleases = [
     title: "Guilty Conscience",
     date: "MAY 22",
     link: "https://distrokid.com/hyperfollow/colincherry/guilty-conscience",
-    art: "/rose.jpg" // Placeholder or specific art if available
+    art: "/rose.jpg"
   },
   {
     title: "Different",
     date: "JUNE 5",
     link: "https://distrokid.com/hyperfollow/colincherry/different",
     art: "/different.png"
+  },
+  {
+    title: "More Lonely",
+    date: "JUNE 19",
+    link: "https://distrokid.com/hyperfollow/colincherry/more-lonely",
+    art: "/more-lonely.png"
   }
 ];
