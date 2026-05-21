@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import Navbar from './Navbar';
-import PreSaveBanner from './PreSaveBanner';
 import Footer from './Footer';
 
 interface LayoutProps {
@@ -29,11 +28,10 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header Stack */}
         <header className="fixed top-0 left-0 right-0 z-50 flex flex-col">
-          <PreSaveBanner />
           <Navbar />
         </header>
 
-        <main className="flex-grow pt-32">
+        <main className="flex-grow pt-20">
           {children}
         </main>
         <Footer />
