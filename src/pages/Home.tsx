@@ -3,7 +3,7 @@ import Hero from '../components/Hero';
 import AlbumTeaser from '../components/AlbumTeaser';
 import { motion } from 'framer-motion';
 import { Instagram, Music2, Facebook, Music, ArrowRight, Send } from 'lucide-react';
-import { RELEASE_DATA } from '../config/releaseData';
+import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 
 const Home = () => {
   const socials = [

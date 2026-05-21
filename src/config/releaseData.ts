@@ -15,3 +15,18 @@ export const RELEASE_DATA = {
     showTeaser: false
   }
 };
+
+export const upcomingReleases = [
+  {
+    title: "Guilty Conscience",
+    date: "MAY 22",
+    link: "https://distrokid.com/hyperfollow/colincherry/guilty-conscience",
+    art: "/rose.jpg" // Placeholder or specific art if available
+  },
+  {
+    title: "Different",
+    date: "JUNE 5",
+    link: "https://distrokid.com/hyperfollow/colincherry/different",
+    art: "/different.png"
+  }
+];
