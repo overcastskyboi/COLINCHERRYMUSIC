@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Play, X, Music as MusicIcon } from 'lucide-react';
+import { upcomingReleases } from '../config/releaseData';
+import LyricModal from '../components/LyricModal';
 
 interface SpotifyAlbum {
   id: string;
@@ -22,6 +24,7 @@ const Discography = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedAlbum, setSelectedAlbum] = useState<SpotifyAlbum | null>(null);
+  const [selectedLyrics, setSelectedLyrics] = useState<{title: string, lyrics: string, themeColor: string} | null>(null);
 
   useEffect(() => {
     const fetchMusic = async () => {
@@ -60,6 +63,37 @@ const Discography = () => {
           <p className="text-[10px] uppercase tracking-[0.5em] font-black text-white/20">Official Streaming Catalog</p>
         </header>
 
+        {/* Interactive Gallery for Upcoming */}
+        <section className="mb-32">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12 flex items-center gap-4">
+            Upcoming Releases <span className="h-px flex-grow bg-white/5"></span>
+          </h3>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {upcomingReleases.map((release) => (
+              <button 
+                key={release.title}
+                onClick={() => setSelectedLyrics({title: release.title, lyrics: release.lyrics, themeColor: release.themeColor})}
+                className="group relative aspect-square overflow-hidden rounded-xl border border-white/10"
+              >
+                <img src={release.art} alt={release.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-xs font-black uppercase tracking-widest text-white">View Lyrics</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+        
+        {selectedLyrics && (
+          <LyricModal
+            isOpen={!!selectedLyrics}
+            onClose={() => setSelectedLyrics(null)}
+            title={selectedLyrics.title}
+            lyrics={selectedLyrics.lyrics}
+            themeColor={selectedLyrics.themeColor}
+          />
+        )}
+
         {loading ? (
           <div className="flex justify-center py-40">
             <div className="w-8 h-8 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
@@ -76,7 +110,7 @@ const Discography = () => {
         ) : (
           <>
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12 flex items-center gap-4">
-              Music Catalog <span className="h-px flex-grow bg-white/5"></span>
+              Catalog <span className="h-px flex-grow bg-white/5"></span>
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mb-32">
               {albums.map((album, i) => (
