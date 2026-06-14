@@ -3,7 +3,7 @@ import PageTransition from '../components/PageTransition';
 import Hero from '../components/Hero';
 import AlbumTeaser from '../components/AlbumTeaser';
 import { motion } from 'framer-motion';
-import { Instagram, Music2, Facebook, Music, ArrowRight, Send, Disc, FileText, Share2 } from 'lucide-react';
+import { Instagram, Music2, Facebook, Music, ArrowRight, Send, Disc, FileText, Share2, ShoppingBag } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -161,14 +161,29 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 4: Release Schedule (Spans 2 columns on desktop) - Blue Glow */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+              {/* Card 4: Merchandise Store (Spans 1 column) - Emerald/Green Glow */}
+              <Link to="/store" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="flex justify-between items-start text-white/40 group-hover:text-emerald-400 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-emerald-400">Merchandise</span>
+                  <ShoppingBag size={20} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Store</h3>
+                  <p className="text-white/40 text-xs">Pre-order official vinyl, cassettes, heavyweight apparel, and accessories.</p>
+                </div>
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                  Explore Shop <ArrowRight size={12} />
+                </span>
+              </Link>
+
+              {/* Card 5: Release Schedule (Spans 1 column) - Blue Glow */}
+              <div className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div>
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Schedule</span>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-6">Upcoming Releases</h3>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-6">Releases</h3>
                   <div className="space-y-3">
                     {activeSchedule.length > 0 ? (
-                      activeSchedule.slice(0, 2).map((release, i) => {
+                      activeSchedule.slice(0, 1).map((release, i) => {
                         const isFuture = parseReleaseDate(release.date) > now;
                         return (
                           <a 
@@ -178,8 +193,8 @@ const Home = () => {
                             rel="noopener noreferrer"
                             className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all group/item w-full"
                           >
-                            <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 flex-shrink-0 rounded-md overflow-hidden border border-white/10">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 flex-shrink-0 rounded-md overflow-hidden border border-white/10">
                                 <img 
                                   src={release.art} 
                                   alt="" 
@@ -188,13 +203,13 @@ const Home = () => {
                                 />
                               </div>
                               <div>
-                                <h4 className="text-sm font-black uppercase tracking-tight leading-none mb-1">{release.title}</h4>
-                                <p className="text-[8px] font-bold uppercase tracking-wider text-white/20">
-                                  {release.date} {isFuture ? '— PRE-SAVE' : '— OUT NOW'}
+                                <h4 className="text-xs font-black uppercase tracking-tight leading-none mb-1 truncate max-w-[100px]">{release.title}</h4>
+                                <p className="text-[7px] font-bold uppercase tracking-wider text-white/20">
+                                  {release.date} {isFuture ? '— PRE' : '— OUT'}
                                 </p>
                               </div>
                             </div>
-                            <ArrowRight size={12} className="text-white/20 group-hover/item:translate-x-1 group-hover/item:text-white transition-all" />
+                            <ArrowRight size={10} className="text-white/20 group-hover/item:translate-x-1 group-hover/item:text-white transition-all" />
                           </a>
                         );
                       })
