@@ -1,3 +1,21 @@
+export const RELEASE_DATA = {
+  currentSingle: {
+    title: "Different",
+    artworkUrl: "/different.png",
+    streamLink: "https://distrokid.com/hyperfollow/colincherry/different"
+  },
+  nextUp: {
+    title: "More Lonely",
+    releaseDate: "June 19",
+    preSaveLink: "https://distrokid.com/hyperfollow/colincherry/more-lonely"
+  },
+  rollout: {
+    albumTitle: "Garfield Park",
+    targetMonth: "August 2026",
+    showTeaser: true
+  }
+};
+
 export const upcomingReleases = [
   {
     title: "More Lonely",

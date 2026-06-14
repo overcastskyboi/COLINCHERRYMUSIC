@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Download, Mail, Instagram, Music, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Download, Mail, Instagram, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Helmet } from 'react-helmet-async';
 
 const EPK = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -32,6 +33,11 @@ const EPK = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>Colin Cherry | EPK Press Hub & Contact</title>
+        <meta name="description" content="Official Electronic Press Kit (EPK) for artist Colin Cherry. Access bio details, download high-res press assets and tech riders, or send direct inquiries." />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-24 items-start pt-12">
           {/* Visual Side */}
@@ -40,25 +46,35 @@ const EPK = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="w-full lg:w-2/5 lg:sticky lg:top-32"
           >
-            <div className="glass aspect-[3/4] overflow-hidden shadow-2xl relative group">
-              <div className="absolute inset-0 bg-white/5 animate-pulse"></div>
-              <div className="absolute inset-0 flex items-center justify-center text-white/10 uppercase font-black tracking-widest text-xs">
-                Press Photo 01
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-8 left-8">
+            <div className="glass aspect-[3/4] overflow-hidden shadow-2xl relative group bg-neutral-900">
+              <img 
+                src="/press-photo.jpg" 
+                alt="Colin Cherry Press Shot" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                onError={(e) => { e.currentTarget.style.opacity = '0'; }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/90 via-transparent to-transparent"></div>
+              <div className="absolute bottom-8 left-8 z-10">
                  <h2 className="text-4xl font-black tracking-tighter uppercase leading-none">Colin Cherry</h2>
                  <p className="text-white/50 uppercase tracking-widest text-[10px] font-bold mt-2">Indianapolis, IN</p>
               </div>
             </div>
             
             <div className="grid grid-cols-2 gap-4 mt-8">
-               <button className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+               <a 
+                 href="/assets/press-assets.zip" 
+                 download
+                 className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
+               >
                  <Download size={14} /> Hi-Res Assets
-               </button>
-               <button className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all">
+               </a>
+               <a 
+                 href="/assets/tech-rider.pdf" 
+                 download
+                 className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
+               >
                  <Download size={14} /> Tech Rider
-               </button>
+               </a>
             </div>
           </motion.div>
           
@@ -67,7 +83,7 @@ const EPK = () => {
             <header>
               <h1 className="text-7xl md:text-9xl font-black tracking-tighter uppercase mb-6 leading-none">EPK</h1>
               <p className="text-2xl text-white/40 font-serif italic border-l-4 border-white/10 pl-8 leading-relaxed">
-                "The  sound isn't just a place, it's a mood."
+                "The Midwest sound isn't just a place, it's a mood."
               </p>
             </header>
 
@@ -80,7 +96,7 @@ const EPK = () => {
                   Colin Cherry is an architect of atmosphere. Blending industrial textures with raw alternative emotion, he creates a sonic landscape that is both visceral and calculated.
                 </p>
                 <p>
-                  Based in Indianapolis, his work explores the quiet tension of the  through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
+                  Based in Indianapolis, his work explores the quiet tension of the Midwest through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
                 </p>
               </div>
             </section>

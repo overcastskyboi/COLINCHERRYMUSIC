@@ -1,12 +1,15 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import PreSaveBanner from './PreSaveBanner';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const [hasBanner, setHasBanner] = useState(false);
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden flex flex-col relative">
       {/* Global Grain Overlay */}
@@ -28,10 +31,11 @@ const Layout = ({ children }: LayoutProps) => {
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Header Stack */}
         <header className="fixed top-0 left-0 right-0 z-50 flex flex-col">
+          <PreSaveBanner onVisibilityChange={setHasBanner} />
           <Navbar />
         </header>
 
-        <main className="flex-grow pt-20">
+        <main className={`flex-grow transition-all duration-300 ${hasBanner ? 'pt-32 md:pt-36' : 'pt-20'}`}>
           {children}
         </main>
         <Footer />

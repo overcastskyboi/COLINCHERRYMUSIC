@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Play, X, Music as MusicIcon } from 'lucide-react';
 import { upcomingReleases } from '../config/releaseData';
 import LyricModal from '../components/LyricModal';
+import { Helmet } from 'react-helmet-async';
 
 interface SpotifyAlbum {
   id: string;
@@ -26,6 +27,29 @@ const Discography = () => {
   const [selectedAlbum, setSelectedAlbum] = useState<SpotifyAlbum | null>(null);
   const [selectedLyrics, setSelectedLyrics] = useState<{title: string, lyrics: string, themeColor: string} | null>(null);
 
+  const now = Date.now();
+  const parseReleaseDate = (dateStr: string) => {
+    if (dateStr === "PAST RELEASE") return 0;
+    const parsed = Date.parse(`${dateStr}, ${new Date().getFullYear()}`);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const futureReleasesOnly = upcomingReleases.filter(release => parseReleaseDate(release.date) > now);
+
+  // Fallback albums from our local release data
+  const localFallbackAlbums: SpotifyAlbum[] = upcomingReleases
+    .filter(release => release.date === "PAST RELEASE" || parseReleaseDate(release.date) <= now)
+    .map((release, i) => ({
+      id: `local-fallback-${i}`,
+      name: release.title,
+      release_date: parseReleaseDate(release.date) > 0 
+        ? new Date(parseReleaseDate(release.date)).toISOString().split('T')[0] 
+        : '2025-01-01',
+      images: [{ url: release.art }],
+      external_urls: { spotify: release.link },
+      album_type: 'single'
+    }));
+
   useEffect(() => {
     const fetchMusic = async () => {
       try {
@@ -36,17 +60,19 @@ const Discography = () => {
         const data = await response.json();
         if (data.error) throw new Error(data.error);
         
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           const sorted = data.sort((a, b) => 
             new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
           );
           setAlbums(sorted);
         } else {
-          setAlbums([]);
+          // Fallback if data is empty array
+          setAlbums(localFallbackAlbums);
         }
       } catch (err) {
-        console.error('Error fetching music:', err);
-        setError('Unable to load music catalog.');
+        console.warn('Spotify API fetch failed. Using local fallback catalog:', err);
+        // Do not block the page with an error, show the local fallback discography instead!
+        setAlbums(localFallbackAlbums);
       } finally {
         setLoading(false);
       }
@@ -55,8 +81,23 @@ const Discography = () => {
     fetchMusic();
   }, []);
 
+  const getLyricsForAlbum = (albumName: string) => {
+    const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
+    return matched ? matched.lyrics : (LYRICS_CACHE[albumName] || "Lyrics coming soon.");
+  };
+
+  const getThemeColorForAlbum = (albumName: string) => {
+    const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
+    return matched ? matched.themeColor : "#FFFFFF";
+  };
+
   return (
     <PageTransition>
+      <Helmet>
+        <title>Colin Cherry | Music Catalog & Lyrics</title>
+        <meta name="description" content="Explore Colin Cherry's full discography. View official album artwork, listen to streaming music, and read high-fidelity song lyrics." />
+      </Helmet>
+
       <div className="max-w-7xl mx-auto px-6 py-12">
         <header className="mb-24 text-center max-w-2xl mx-auto">
           <h1 className="text-6xl md:text-9xl font-display uppercase tracking-tighter mb-6 leading-none">Music</h1>
@@ -64,25 +105,32 @@ const Discography = () => {
         </header>
 
         {/* Interactive Gallery for Upcoming */}
-        <section className="mb-32">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12 flex items-center gap-4">
-            Upcoming Releases <span className="h-px flex-grow bg-white/5"></span>
-          </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {upcomingReleases.map((release) => (
-              <button 
-                key={release.title}
-                onClick={() => setSelectedLyrics({title: release.title, lyrics: release.lyrics, themeColor: release.themeColor})}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-white/10"
-              >
-                <img src={release.art} alt={release.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="text-xs font-black uppercase tracking-widest text-white">View Lyrics</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
+        {futureReleasesOnly.length > 0 && (
+          <section className="mb-32">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-12 flex items-center gap-4">
+              Upcoming Releases <span className="h-px flex-grow bg-white/5"></span>
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {futureReleasesOnly.map((release) => (
+                <button 
+                  key={release.title}
+                  onClick={() => setSelectedLyrics({title: release.title, lyrics: release.lyrics, themeColor: release.themeColor})}
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-white/10"
+                >
+                  <img 
+                    src={release.art} 
+                    alt={release.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+                    onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-xs font-black uppercase tracking-widest text-white">View Lyrics</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
         
         {selectedLyrics && (
           <LyricModal
@@ -98,11 +146,6 @@ const Discography = () => {
           <div className="flex justify-center py-40">
             <div className="w-8 h-8 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
           </div>
-        ) : error ? (
-            <div className="text-center py-40 text-white/40 space-y-4">
-                <MusicIcon size={48} className="mx-auto" />
-                <p className="uppercase tracking-widest text-xs font-black">{error}</p>
-            </div>
         ) : albums.length === 0 ? (
             <div className="text-center py-40 text-white/40">
                 <p>No music found.</p>
@@ -127,6 +170,7 @@ const Discography = () => {
                       src={album.images[0]?.url}
                       alt={album.name}
                       className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
+                      onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
                       <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-2xl">
@@ -181,18 +225,31 @@ const Discography = () => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
                   <div className="space-y-8">
                     <div className="aspect-square glass overflow-hidden rounded-xl">
-                       <img src={selectedAlbum.images[0]?.url} alt={selectedAlbum.name} className="w-full h-full object-cover" />
+                       <img 
+                         src={selectedAlbum.images[0]?.url} 
+                         alt={selectedAlbum.name} 
+                         className="w-full h-full object-cover" 
+                         onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
+                       />
                     </div>
                     <div className="space-y-4">
-                       <iframe 
-                          src={`https://open.spotify.com/embed/album/${selectedAlbum.id}?utm_source=generator&theme=0`} 
-                          width="100%" 
-                          height="152" 
-                          frameBorder="0" 
-                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                          loading="lazy"
-                          className="rounded-xl"
-                        ></iframe>
+                       {/* If it's a fallback album, render the general artist player or cover */}
+                       {!selectedAlbum.id.includes('local-fallback') ? (
+                         <iframe 
+                            src={`https://open.spotify.com/embed/album/${selectedAlbum.id}?utm_source=generator&theme=0`} 
+                            width="100%" 
+                            height="152" 
+                            frameBorder="0" 
+                            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                            loading="lazy"
+                            className="rounded-xl"
+                          ></iframe>
+                       ) : (
+                         <div className="p-6 glass rounded-xl text-center space-y-2 border border-white/5">
+                           <Play size={24} className="mx-auto text-white/30" />
+                           <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Streaming Embed available on production build</p>
+                         </div>
+                       )}
                         <a 
                           href={selectedAlbum.external_urls.spotify}
                           target="_blank"
@@ -206,14 +263,19 @@ const Discography = () => {
 
                   <div className="space-y-12">
                     <div>
-                      <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 leading-none">{selectedAlbum.name}</h2>
+                      <h2 
+                        className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 leading-none transition-colors"
+                        style={{ color: getThemeColorForAlbum(selectedAlbum.name) }}
+                      >
+                        {selectedAlbum.name}
+                      </h2>
                       <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/20">{selectedAlbum.album_type} &bull; {selectedAlbum.release_date}</p>
                     </div>
 
                     <div className="space-y-6">
                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 border-b border-white/5 pb-4">Lyrics</h4>
-                       <pre className="font-mono text-sm md:text-base leading-relaxed text-white/40 whitespace-pre-wrap">
-                         {LYRICS_CACHE[selectedAlbum.name] || "Lyrics coming soon."}
+                       <pre className="font-mono text-sm md:text-base leading-relaxed text-white/60 whitespace-pre-wrap max-h-[40vh] overflow-y-auto pr-4">
+                         {getLyricsForAlbum(selectedAlbum.name)}
                        </pre>
                     </div>
                   </div>

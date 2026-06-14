@@ -1,34 +1,29 @@
 import { useState, useEffect } from 'react';
 import { X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { upcomingReleases } from '../config/releaseData';
 
-const RELEASES = [
-  { 
-    title: 'ROSE', 
-    date: '2026-04-24T00:00:00', 
-    link: 'https://distrokid.com/hyperfollow/colincherry/rose?ref=release' 
-  },
-  { 
-    title: 'HOLDING ON', 
-    date: '2026-05-08T00:00:00', 
-    link: 'https://distrokid.com/hyperfollow/colincherry/holding-on?ref=release' 
-  },
-  { 
-    title: 'DIFFERENT', 
-    date: '2026-05-22T00:00:00', 
-    link: 'https://distrokid.com/hyperfollow/colincherry/different?ref=release' 
-  }
-];
+interface PreSaveBannerProps {
+  onVisibilityChange?: (visible: boolean) => void;
+}
 
-const PreSaveBanner = () => {
+const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [nextRelease, setNextRelease] = useState<typeof RELEASES[0] | null>(null);
+  const [nextRelease, setNextRelease] = useState<typeof upcomingReleases[0] | null>(null);
 
   useEffect(() => {
     const now = Date.now();
-    const futureReleases = RELEASES
-      .filter(release => new Date(release.date).getTime() > now)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    const parseReleaseDate = (dateStr: string) => {
+      if (dateStr === "PAST RELEASE") return 0;
+      // Append the current year (2026) to the month-day format
+      const parsed = Date.parse(`${dateStr}, ${new Date().getFullYear()}`);
+      return isNaN(parsed) ? 0 : parsed;
+    };
+
+    const futureReleases = upcomingReleases
+      .filter(release => parseReleaseDate(release.date) > now)
+      .sort((a, b) => parseReleaseDate(a.date) - parseReleaseDate(b.date));
 
     if (futureReleases.length > 0) {
       const upcoming = futureReleases[0];
@@ -37,25 +32,28 @@ const PreSaveBanner = () => {
       const isDismissed = localStorage.getItem(`preSaveDismissed_${upcoming.title}`);
       if (!isDismissed) {
         setIsVisible(true);
+        onVisibilityChange?.(true);
+      } else {
+        setIsVisible(false);
+        onVisibilityChange?.(false);
       }
     } else {
       setIsVisible(false);
+      onVisibilityChange?.(false);
     }
-  }, []);
+  }, [onVisibilityChange]);
 
   const dismiss = () => {
     if (nextRelease) {
       setIsVisible(false);
+      onVisibilityChange?.(false);
       localStorage.setItem(`preSaveDismissed_${nextRelease.title}`, 'true');
     }
   };
 
   if (!nextRelease) return null;
 
-  const formattedDate = new Date(nextRelease.date).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric'
-  }).toUpperCase();
+  const formattedDate = nextRelease.date.toUpperCase();
 
   // Create elegant marquee text with large gaps and bullets
   const singleMarqueeItem = `PRE-SAVE "${nextRelease.title}" — OUT ${formattedDate} \u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0 `;

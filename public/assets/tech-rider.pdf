@@ -1,0 +1,57 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 600 >>
+stream
+BT
+/F1 18 Tf
+50 780 Td
+(COLIN CHERRY - TECHNICAL RIDER 2026) Tj
+/F1 12 Tf
+0 -40 Td
+(1. STAGE SETUP & INPUT LIST:) Tj
+0 -20 Td
+(  - Input 01: Stereo Synth Left [DI Box] - Balanced XLR) Tj
+0 -15 Td
+(  - Input 02: Stereo Synth Right [DI Box] - Balanced XLR) Tj
+0 -15 Td
+(  - Input 03: Lead Vocal [Shure SM58 / Wireless] - Balanced XLR) Tj
+0 -15 Td
+(  - Input 04: Laptop/Backing Tracks Left [DI Box] - Balanced XLR) Tj
+0 -15 Td
+(  - Input 05: Laptop/Backing Tracks Right [DI Box] - Balanced XLR) Tj
+0 -30 Td
+(2. MONITORING & POWER REQUIREMENTS:) Tj
+0 -20 Td
+(  - 2x Independent IEM mixes (XLR sending to stage box)) Tj
+0 -15 Td
+(  - 3x Duplex Power Outlets (120V) at center stage and keyboard riser) Tj
+0 -30 Td
+(3. LIGHTING & ATMOSPHERE:) Tj
+0 -20 Td
+(  - Heavy use of atmospheric fog / haze is REQUIRED throughout set) Tj
+0 -15 Td
+(  - High contrast, dark silhouettes, cold white and deep blue tones only) Tj
+ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000282 00000 n 
+trailer
+<< /Size 5 /Root 1 0 R >>
+startxref
+930
+%%EOF
