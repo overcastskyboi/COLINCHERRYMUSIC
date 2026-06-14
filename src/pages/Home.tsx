@@ -83,25 +83,27 @@ const Home = () => {
               COLIN CHERRY
             </h1>
 
-            {/* Featured Embeds - Responsive Containment */}
+            {/* Featured Embeds - Fixed Height Alignment */}
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-24 w-full max-w-4xl mx-auto">
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40">
+              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40 h-[380px]">
                 <iframe 
                   src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
                   width="100%" 
+                  height="380"
                   frameBorder="0" 
                   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
                   loading="lazy"
-                  className="w-full aspect-[4/1] md:aspect-[3/1] rounded-xl"
+                  className="w-full h-full rounded-xl bg-transparent"
                 ></iframe>
               </div>
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40">
+              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40 h-[380px]">
                 <iframe 
                   allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" 
                   frameBorder="0" 
+                  height="380"
                   sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" 
                   src="https://embed.music.apple.com/us/artist/colin-cherry/1639040887"
-                  className="w-full aspect-[4/1] md:aspect-[3/1] rounded-xl"
+                  className="w-full h-full rounded-xl bg-transparent"
                 ></iframe>
               </div>
             </div>
