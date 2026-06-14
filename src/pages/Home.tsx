@@ -34,11 +34,11 @@ const Home = () => {
     return isNaN(parsed) ? 0 : parsed;
   };
 
-  // Only show future or very recent releases in the schedule, ordered chronologically
+  // Release Schedule items
   const activeSchedule = upcomingReleases
     .filter(release => {
       const releaseTime = parseReleaseDate(release.date);
-      // Show if it is in the future, or was released within the last 14 days
+      // Show if in future, or released in last 14 days
       return releaseTime > now || (releaseTime > 0 && now - releaseTime < 14 * 24 * 60 * 60 * 1000);
     })
     .sort((a, b) => parseReleaseDate(a.date) - parseReleaseDate(b.date));
@@ -58,12 +58,12 @@ const Home = () => {
 
       <AlbumTeaser 
         title={RELEASE_DATA.rollout.albumTitle}
-        artworkUrl="/rose.jpg"
+        artworkUrl="/Garfield Park.jpg"
         isVisible={RELEASE_DATA.rollout.showTeaser}
         releaseDate={RELEASE_DATA.rollout.targetMonth}
       />
 
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
+      <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
         {/* Brand Watermark */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
            <img 
@@ -85,7 +85,7 @@ const Home = () => {
 
             {/* Featured Embeds - Responsive Containment */}
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-24 w-full max-w-4xl mx-auto">
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1">
+              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40">
                 <iframe 
                   src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
                   width="100%" 
@@ -95,7 +95,7 @@ const Home = () => {
                   className="w-full aspect-[4/1] md:aspect-[3/1] rounded-xl"
                 ></iframe>
               </div>
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1">
+              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40">
                 <iframe 
                   allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" 
                   frameBorder="0" 
@@ -108,13 +108,14 @@ const Home = () => {
 
             {/* Bento Grid Navigation */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
-              {/* Card 1: Latest Release (Spans 2 columns on desktop) */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between relative overflow-hidden group hover:border-white/20 transition-all duration-300 min-h-[220px]">
-                <div className="absolute top-0 right-0 w-48 h-full opacity-10 group-hover:opacity-20 transition-opacity pointer-events-none">
+              
+              {/* Card 1: Latest Release (Spans 2 columns on desktop) - Cyan Glow */}
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="absolute top-0 right-0 w-48 h-full opacity-10 group-hover:opacity-25 transition-opacity pointer-events-none">
                   <img src={RELEASE_DATA.currentSingle.artworkUrl} alt="" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
                 <div className="relative z-10 space-y-4">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Latest Release</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">Latest Release</span>
                   <h3 className="text-4xl font-black uppercase tracking-tighter">{RELEASE_DATA.currentSingle.title}</h3>
                   <p className="text-white/40 text-xs max-w-md">Stream the new single now on Spotify, Apple Music, and other major platforms.</p>
                 </div>
@@ -122,16 +123,16 @@ const Home = () => {
                   href={RELEASE_DATA.currentSingle.streamLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-6 group-hover:text-white/70 transition-colors w-fit border-b border-white pb-1"
+                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-6 group-hover:text-cyan-400 transition-colors w-fit border-b border-white hover:border-cyan-400 pb-1"
                 >
                   Stream Now <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
 
-              {/* Card 2: Music Catalog (Spans 1 column) */}
-              <Link to="/music" className="glass p-8 flex flex-col justify-between group hover:border-white/20 transition-all duration-300 min-h-[220px]">
-                <div className="flex justify-between items-start text-white/40">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Discography</span>
+              {/* Card 2: Music Catalog (Spans 1 column) - Indigo Glow */}
+              <Link to="/music" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-indigo-500/30 hover:shadow-[0_0_30px_rgba(99,102,241,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="flex justify-between items-start text-white/40 group-hover:text-indigo-400 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-indigo-400">Discography</span>
                   <Disc size={20} className="group-hover:rotate-45 transition-transform duration-500" />
                 </div>
                 <div className="space-y-2">
@@ -143,10 +144,10 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 3: EPK Hub (Spans 1 column) */}
-              <Link to="/epk" className="glass p-8 flex flex-col justify-between group hover:border-white/20 transition-all duration-300 min-h-[220px]">
-                <div className="flex justify-between items-start text-white/40">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Industry</span>
+              {/* Card 3: EPK Hub (Spans 1 column) - Fuchsia Glow */}
+              <Link to="/epk" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-fuchsia-500/30 hover:shadow-[0_0_30px_rgba(217,70,239,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="flex justify-between items-start text-white/40 group-hover:text-fuchsia-400 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-fuchsia-400">Industry</span>
                   <FileText size={20} />
                 </div>
                 <div className="space-y-2">
@@ -158,8 +159,52 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 4: Mailing List (Spans 2 columns on desktop) */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group hover:border-white/20 transition-all duration-300 min-h-[220px]">
+              {/* Card 4: Release Schedule (Spans 2 columns on desktop) - Blue Glow */}
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Schedule</span>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-6">Upcoming Releases</h3>
+                  <div className="space-y-3">
+                    {activeSchedule.length > 0 ? (
+                      activeSchedule.slice(0, 2).map((release, i) => {
+                        const isFuture = parseReleaseDate(release.date) > now;
+                        return (
+                          <a 
+                            key={i}
+                            href={release.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all group/item w-full"
+                          >
+                            <div className="flex items-center gap-4">
+                              <div className="w-10 h-10 flex-shrink-0 rounded-md overflow-hidden border border-white/10">
+                                <img 
+                                  src={release.art} 
+                                  alt="" 
+                                  className="w-full h-full object-cover grayscale group-hover/item:grayscale-0 transition-all duration-300"
+                                  onError={(e) => { e.currentTarget.src = "/Garfield Park.jpg"; }}
+                                />
+                              </div>
+                              <div>
+                                <h4 className="text-sm font-black uppercase tracking-tight leading-none mb-1">{release.title}</h4>
+                                <p className="text-[8px] font-bold uppercase tracking-wider text-white/20">
+                                  {release.date} {isFuture ? '— PRE-SAVE' : '— OUT NOW'}
+                                </p>
+                              </div>
+                            </div>
+                            <ArrowRight size={12} className="text-white/20 group-hover/item:translate-x-1 group-hover/item:text-white transition-all" />
+                          </a>
+                        );
+                      })
+                    ) : (
+                      <p className="text-xs text-white/30 italic">No releases currently scheduled.</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 5: Mailing List (Spans 2 columns on desktop) - Rose Glow */}
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-rose-500/30 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div>
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Mailing List</span>
                   <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-2">Join the list</h3>
@@ -167,7 +212,7 @@ const Home = () => {
                 </div>
                 
                 {subscribed ? (
-                  <div className="text-[10px] font-black uppercase tracking-widest text-white/60 py-4">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-rose-400 py-4">
                     Thank you. You have been subscribed.
                   </div>
                 ) : (
@@ -178,17 +223,17 @@ const Home = () => {
                       placeholder="EMAIL ADDRESS" 
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="bg-white/5 border border-white/10 px-4 py-3 rounded-lg flex-grow focus:outline-none focus:border-white/30 transition-colors text-[10px] font-bold tracking-widest text-white w-full"
+                      className="bg-white/5 border border-white/10 px-4 py-3 rounded-lg flex-grow focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full"
                     />
-                    <button type="submit" className="bg-white text-black px-6 py-3 rounded-lg font-black uppercase text-[10px] tracking-widest hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+                    <button type="submit" className="bg-white text-black px-6 py-3 rounded-lg font-black uppercase text-[10px] tracking-widest hover:bg-rose-400 hover:text-black transition-all flex items-center gap-2">
                       Join <Send size={12} />
                     </button>
                   </form>
                 )}
               </div>
 
-              {/* Card 5: Social Connections (Spans 1 column) */}
-              <div className="glass p-8 flex flex-col justify-between min-h-[220px]">
+              {/* Card 6: Social Connections (Spans 1 column) - White Glow */}
+              <div className="glass p-8 flex flex-col justify-between border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div className="flex justify-between items-start text-white/40">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em]">Connect</span>
                   <Share2 size={20} />
@@ -200,7 +245,7 @@ const Home = () => {
                       href={social.href} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`p-3 glass transition-all flex items-center justify-center text-white/40 ${social.color} hover:bg-white/5`}
+                      className={`p-3 glass border border-white/5 transition-all flex items-center justify-center text-white/40 ${social.color} hover:bg-white/5`}
                     >
                       {social.icon}
                     </a>
@@ -210,48 +255,6 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Release Schedule */}
-            {activeSchedule.length > 0 && (
-              <div className="max-w-2xl mx-auto text-left space-y-8 w-full">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20 mb-8 flex items-center gap-4">
-                  Release Schedule <span className="h-px flex-grow bg-white/5"></span>
-                </h3>
-                <div className="space-y-4">
-                  {activeSchedule.map((release, i) => {
-                    const isFuture = parseReleaseDate(release.date) > now;
-                    return (
-                      <a 
-                        key={i}
-                        href={release.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between p-4 md:p-6 glass hover:bg-white/5 transition-all group"
-                      >
-                        <div className="flex items-center gap-4 md:gap-6">
-                          <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 glass overflow-hidden rounded-md">
-                            <img 
-                              src={release.art} 
-                              alt={release.title} 
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
-                              onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
-                            />
-                          </div>
-                          <div>
-                            <h4 className="text-xl md:text-2xl font-black uppercase tracking-tight leading-none mb-1">{release.title}</h4>
-                            <p className="text-[9px] font-bold uppercase tracking-widest text-white/20">
-                              {release.date} {isFuture ? '— UPCOMING' : '— OUT NOW'}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-white/20 group-hover:text-white transition-all">
-                          <span className="hidden sm:inline">{isFuture ? 'Pre-Save' : 'Stream Now'}</span> <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </a>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </motion.div>
         </div>
       </div>

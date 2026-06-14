@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, ArrowRight } from 'lucide-react';
+import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { upcomingReleases } from '../config/releaseData';
 
@@ -16,7 +16,6 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
     
     const parseReleaseDate = (dateStr: string) => {
       if (dateStr === "PAST RELEASE") return 0;
-      // Append the current year (2026) to the month-day format
       const parsed = Date.parse(`${dateStr}, ${new Date().getFullYear()}`);
       return isNaN(parsed) ? 0 : parsed;
     };
@@ -43,7 +42,9 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
     }
   }, [onVisibilityChange]);
 
-  const dismiss = () => {
+  const dismiss = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (nextRelease) {
       setIsVisible(false);
       onVisibilityChange?.(false);
@@ -55,8 +56,8 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
 
   const formattedDate = nextRelease.date.toUpperCase();
 
-  // Create elegant marquee text with large gaps and bullets
-  const singleMarqueeItem = `PRE-SAVE "${nextRelease.title}" — OUT ${formattedDate} \u00A0\u00A0\u00A0\u2022\u00A0\u00A0\u00A0 `;
+  // Create elegant marquee text with stars and tracking
+  const singleMarqueeItem = `✦ PRE-SAVE NEW SINGLE "${nextRelease.title}" — OUT ${formattedDate} \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 `;
   const marqueeText = singleMarqueeItem.repeat(15);
 
   return (
@@ -66,25 +67,28 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="relative overflow-hidden bg-white text-black font-black uppercase tracking-[0.2em] text-[10px] py-3"
+          className="relative overflow-hidden bg-[#0c0c0c]/80 backdrop-blur-md border-b border-white/5 text-white/50 font-black uppercase tracking-[0.25em] text-[9px] py-3 group/banner cursor-pointer z-50"
         >
           <div className="relative flex items-center w-full">
-            <div className="whitespace-nowrap animate-marquee-slow flex items-center">
-              <span>{marqueeText}</span>
-              <span>{marqueeText}</span>
-            </div>
+            <a 
+              href={nextRelease.link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="w-full hover:text-white transition-colors flex items-center"
+            >
+              <div className="whitespace-nowrap animate-marquee-slow flex items-center">
+                <span>{marqueeText}</span>
+                <span>{marqueeText}</span>
+              </div>
+            </a>
             
-            <div className="absolute right-0 top-1/2 -translate-y-1/2 bg-white pl-8 pr-6 h-full flex items-center z-10 shadow-[-30px_0_30px_rgba(255,255,255,1)]">
-               <a 
-                 href={nextRelease.link} 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 className="flex items-center gap-2 hover:opacity-70 transition-opacity border-b-2 border-black mr-8"
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pl-4 bg-gradient-to-l from-[#0c0c0c]/90 via-[#0c0c0c]/70 to-transparent h-full flex items-center z-10">
+               <button 
+                 onClick={dismiss} 
+                 className="p-1.5 rounded-full border border-white/10 bg-black/40 hover:bg-black/80 text-white/40 hover:text-white transition-all hover:scale-110 z-20 flex items-center justify-center opacity-0 group-hover/banner:opacity-100"
+                 title="Dismiss Announcement"
                >
-                 PRE-SAVE <ArrowRight size={12} strokeWidth={3} />
-               </a>
-               <button onClick={dismiss} className="p-1 hover:scale-125 transition-transform">
-                 <X size={16} strokeWidth={3} />
+                 <X size={12} strokeWidth={3} />
                </button>
             </div>
           </div>
