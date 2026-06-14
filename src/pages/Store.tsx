@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import PageTransition from '../components/PageTransition';
-import { motion, AnimatePresence } from 'react-query'; // Wait, let's use framer-motion!
 import { Helmet } from 'react-helmet-async';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
-
-// Wait, let's make sure we import motion from 'framer-motion'!
 import { motion as motionComponent, AnimatePresence as AnimatePresenceComponent } from 'framer-motion';
 
 interface Product {
@@ -16,6 +13,7 @@ interface Product {
   image: string;
   hasSizes?: boolean;
   themeColor: string;
+  isComingSoon?: boolean;
 }
 
 const PRODUCTS: Product[] = [
@@ -26,7 +24,8 @@ const PRODUCTS: Product[] = [
     category: 'Vinyl',
     description: 'Limited edition 140g black vinyl. Features the full upcoming album "Garfield Park" in high-fidelity audio. Heavyweight gatefold matte packaging.',
     image: '/merch-vinyl.jpg',
-    themeColor: '#4A90E2'
+    themeColor: '#4A90E2',
+    isComingSoon: true
   },
   {
     id: 'garfield-cassette',
@@ -35,27 +34,8 @@ const PRODUCTS: Product[] = [
     category: 'Cassette',
     description: 'Translucent smoke grey cassette shell with minimalist white label. Includes full double-sided printed J-card. Limited edition of 100.',
     image: '/merch-cassette.jpg',
-    themeColor: '#00f2ea'
-  },
-  {
-    id: 'midwest-hoodie',
-    name: 'Midwest Noir Hoodie',
-    price: 65.00,
-    category: 'Apparel',
-    description: 'Premium 450GSM organic heavy cotton hoodie. Features custom "Midwest Noir" graphic printed in white chest ink. Pre-shrunk, relaxed boxy fit.',
-    image: '/merch-hoodie.jpg',
-    hasSizes: true,
-    themeColor: '#E4405F'
-  },
-  {
-    id: 'garfield-tee',
-    name: 'Garfield Park Graphic Tee',
-    price: 30.00,
-    category: 'Apparel',
-    description: '100% carded heavyweight cotton t-shirt. Features full-color "Garfield Park" album artwork front print. Relaxed fit, double-needle hems.',
-    image: '/Garfield Park.jpg',
-    hasSizes: true,
-    themeColor: '#FA243C'
+    themeColor: '#00f2ea',
+    isComingSoon: true
   }
 ];
 
@@ -74,6 +54,8 @@ const Store = () => {
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   const addToCart = (product: Product, size?: string, qty: number = 1) => {
+    if (product.isComingSoon) return; // Prevent adding coming soon items
+    
     const existingIndex = cart.findIndex(
       item => item.product.id === product.id && (!product.hasSizes || item.size === size)
     );
@@ -87,7 +69,6 @@ const Store = () => {
     }
     
     setIsCartOpen(true);
-    // Reset selections
     setQuantity(1);
     setSelectedProduct(null);
   };
@@ -113,7 +94,7 @@ const Store = () => {
     <PageTransition>
       <Helmet>
         <title>Colin Cherry | Official Merchandise Store</title>
-        <meta name="description" content="Official Colin Cherry store. Pre-order Garfield Park limited edition vinyl, cassette tapes, heavyweight apparel, and music merchandise." />
+        <meta name="description" content="Official Colin Cherry store. Pre-order Garfield Park limited edition vinyl and cassette tapes. Music merchandise and physical releases." />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12 relative">
@@ -130,7 +111,7 @@ const Store = () => {
         </header>
 
         {/* Product Catalog Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 mb-32">
           {PRODUCTS.map((product) => (
             <div 
               key={product.id}
@@ -139,12 +120,17 @@ const Store = () => {
                 setSelectedSize('M');
                 setQuantity(1);
               }}
-              className="group glass border border-white/5 hover:border-white/20 transition-all duration-500 cursor-pointer flex flex-col justify-between overflow-hidden rounded-2xl bg-black/20"
+              className="group glass border border-white/5 hover:border-white/20 transition-all duration-500 cursor-pointer flex flex-col justify-between overflow-hidden rounded-2xl bg-black/20 relative"
               style={{
-                // Add soft hovering brand glow
                 boxShadow: `hover:0 0 30px ${product.themeColor}15`
               }}
             >
+              {product.isComingSoon && (
+                <span className="absolute top-4 left-4 bg-white/10 text-white border border-white/10 backdrop-blur-md px-3.5 py-1 rounded-full text-[8px] font-black uppercase tracking-widest z-10">
+                  Coming Soon
+                </span>
+              )}
+              
               <div className="aspect-square w-full overflow-hidden bg-neutral-900 relative">
                 <img 
                   src={product.image} 
@@ -207,7 +193,12 @@ const Store = () => {
                   
                   <div className="space-y-8">
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-white/30">{selectedProduct.category}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white/30">{selectedProduct.category}</span>
+                        {selectedProduct.isComingSoon && (
+                          <span className="bg-white/10 text-white border border-white/10 px-2.5 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest">Coming Soon</span>
+                        )}
+                      </div>
                       <h2 
                         className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none mt-2"
                         style={{ color: selectedProduct.themeColor }}
@@ -219,53 +210,69 @@ const Store = () => {
 
                     <p className="text-white/50 text-sm leading-relaxed">{selectedProduct.description}</p>
 
-                    {selectedProduct.hasSizes && (
-                      <div className="space-y-3">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Select Size</span>
-                        <div className="flex gap-3">
-                          {['S', 'M', 'L', 'XL'].map((size) => (
-                            <button
-                              key={size}
-                              onClick={() => setSelectedSize(size)}
-                              className={`w-12 h-12 flex items-center justify-center font-black rounded-lg text-xs transition-all ${
-                                selectedSize === size 
-                                  ? 'bg-white text-black scale-105' 
-                                  : 'glass hover:bg-white/5 text-white/40 hover:text-white'
-                              }`}
-                            >
-                              {size}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="space-y-4 pt-4 border-t border-white/5">
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center border border-white/10 rounded-lg p-1.5 glass">
-                          <button 
-                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="p-1 hover:text-white text-white/40 transition-colors"
-                          >
-                            <Minus size={14} />
-                          </button>
-                          <span className="w-12 text-center font-black text-sm">{quantity}</span>
-                          <button 
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="p-1 hover:text-white text-white/40 transition-colors"
-                          >
-                            <Plus size={14} />
-                          </button>
-                        </div>
-
+                    {selectedProduct.isComingSoon ? (
+                      <div className="space-y-4 pt-4 border-t border-white/5">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400">
+                          Pre-orders will launch officially with the rollout of the Garfield Park album.
+                        </p>
                         <button
-                          onClick={() => addToCart(selectedProduct, selectedProduct.hasSizes ? selectedSize : undefined, quantity)}
-                          className="flex-grow bg-white text-black py-4 rounded-lg font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                          disabled
+                          className="w-full bg-white/5 border border-white/10 text-white/30 py-4 rounded-lg font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-3 cursor-not-allowed"
                         >
-                          Add to Cart <ArrowRight size={14} />
+                          Pre-Order Coming Soon
                         </button>
                       </div>
-                    </div>
+                    ) : (
+                      <>
+                        {selectedProduct.hasSizes && (
+                          <div className="space-y-3">
+                            <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Select Size</span>
+                            <div className="flex gap-3">
+                              {['S', 'M', 'L', 'XL'].map((size) => (
+                                <button
+                                  key={size}
+                                  onClick={() => setSelectedSize(size)}
+                                  className={`w-12 h-12 flex items-center justify-center font-black rounded-lg text-xs transition-all ${
+                                    selectedSize === size 
+                                      ? 'bg-white text-black scale-105' 
+                                      : 'glass hover:bg-white/5 text-white/40 hover:text-white'
+                                  }`}
+                                >
+                                  {size}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="space-y-4 pt-4 border-t border-white/5">
+                          <div className="flex items-center gap-6">
+                            <div className="flex items-center border border-white/10 rounded-lg p-1.5 glass">
+                              <button 
+                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                className="p-1 hover:text-white text-white/40 transition-colors"
+                              >
+                                <Minus size={14} />
+                              </button>
+                              <span className="w-12 text-center font-black text-sm">{quantity}</span>
+                              <button 
+                                onClick={() => setQuantity(quantity + 1)}
+                                className="p-1 hover:text-white text-white/40 transition-colors"
+                              >
+                                <Plus size={14} />
+                              </button>
+                            </div>
+
+                            <button
+                              onClick={() => addToCart(selectedProduct, selectedProduct.hasSizes ? selectedSize : undefined, quantity)}
+                              className="flex-grow bg-white text-black py-4 rounded-lg font-black uppercase tracking-widest text-[10px] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
+                            >
+                              Add to Cart <ArrowRight size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </motionComponent>
@@ -335,7 +342,6 @@ const Store = () => {
                             <span>${item.product.price.toFixed(2)}</span>
                           </div>
                           
-                          {/* Qty controls */}
                           <div className="flex items-center gap-3 mt-2">
                             <button 
                               onClick={() => updateCartQty(index, item.quantity - 1)}
@@ -408,7 +414,7 @@ const Store = () => {
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Checkout Coming Soon</h3>
                   <p className="text-white/40 text-sm leading-relaxed">
-                    Physical pre-orders and apparel drops will launch officially alongside the rollout of the <span className="text-white">Garfield Park</span> album.
+                    Physical pre-orders will launch officially alongside the rollout of the <span className="text-white">Garfield Park</span> album.
                   </p>
                 </div>
 
