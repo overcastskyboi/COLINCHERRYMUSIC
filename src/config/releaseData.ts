@@ -2,7 +2,8 @@ export const RELEASE_DATA = {
   currentSingle: {
     title: "Different",
     artworkUrl: "/different.png",
-    streamLink: "https://distrokid.com/hyperfollow/colincherry/different"
+    streamLink: "https://distrokid.com/hyperfollow/colincherry/different",
+    spotifyTrackId: "4jVnL8i04nZ5h6G8W6wP8S"
   },
   nextUp: {
     title: "More Lonely",

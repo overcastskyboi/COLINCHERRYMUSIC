@@ -89,9 +89,9 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h1 className="text-6xl md:text-[10rem] font-display uppercase tracking-tighter mb-16 leading-none">
-              COLIN CHERRY
-            </h1>
+            <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-white/30 text-center mb-16 mt-6">
+              Artist Hub & Archive
+            </h2>
 
             {/* Restructured Bento Grid Navigation */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
@@ -132,7 +132,7 @@ const Home = () => {
               </Link>
 
               {/* Card 3: "Different" Single Stream & Blurb (Spans 2 columns) - Custom Glow */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/25 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[240px] bg-black/20">
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/20 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div className="space-y-4">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Featured Single</span>
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Different</h3>
@@ -142,7 +142,7 @@ const Home = () => {
                 </div>
                 <div className="mt-6 w-full">
                   <iframe 
-                    src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
+                    src={`https://open.spotify.com/embed/track/${RELEASE_DATA.currentSingle.spotifyTrackId || "4jVnL8i04nZ5h6G8W6wP8S"}?utm_source=generator&theme=0`} 
                     width="100%" 
                     height="80" 
                     frameBorder="0" 
