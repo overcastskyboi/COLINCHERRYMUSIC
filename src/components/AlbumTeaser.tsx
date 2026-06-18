@@ -21,10 +21,10 @@ const AlbumTeaser = ({ title, artworkUrl, isVisible, releaseDate }: AlbumTeaserP
           <img src={artworkUrl} alt={title} className="w-full aspect-square object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
         </div>
         <div className="space-y-6">
-          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/30">Upcoming Release</h2>
+          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60">Upcoming Release</h2>
           <h3 className="text-5xl md:text-7xl font-black uppercase tracking-tighter">{title}</h3>
-          <p className="text-xl text-white/40 font-light italic">{releaseDate}</p>
-          <div className="h-px w-20 bg-white/20"></div>
+          <p className="text-xl text-white/70 font-light italic">{releaseDate}</p>
+          <div className="h-px w-20 bg-white/40"></div>
         </div>
       </div>
     </motion.section>

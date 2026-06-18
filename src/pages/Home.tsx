@@ -49,6 +49,9 @@ const Home = () => {
 
   const singleReleaseDate = new Date("2026-06-19T00:00:00-04:00").getTime();
   const daysToSingle = Math.max(0, Math.ceil((singleReleaseDate - Date.now()) / (1000 * 60 * 60 * 24)));
+  
+  const albumReleaseDate = new Date(RELEASE_DATA.rollout.countdownTarget || "2026-08-01T00:00:00-04:00").getTime();
+  const daysToAlbum = Math.max(0, Math.ceil((albumReleaseDate - Date.now()) / (1000 * 60 * 60 * 24)));
 
   const socials = [
     { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
@@ -65,11 +68,13 @@ const Home = () => {
       </Helmet>
 
       <Hero 
-        latestDropTitle={RELEASE_DATA.nextUp.title}
-        artworkUrl={upcomingReleases[0].art}
-        spotifyLink={RELEASE_DATA.nextUp.preSaveLink}
-        appleMusicLink={RELEASE_DATA.nextUp.preSaveLink}
-        subtitle={`Pre-Save Single • Out in ${daysToSingle} Days`}
+        latestDropTitle={RELEASE_DATA.rollout.albumTitle}
+        artworkUrl={RELEASE_DATA.rollout.coverArt}
+        spotifyLink={RELEASE_DATA.rollout.spotifyPreSaveLink}
+        appleMusicLink={RELEASE_DATA.rollout.appleMusicPreOrderLink}
+        subtitle={`Upcoming Album • Out in ${daysToAlbum} Days`}
+        spotifyBtnText="Spotify Pre-Save"
+        appleMusicBtnText="iTunes Pre-Order"
       />
 
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
@@ -88,7 +93,7 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-white/30 text-center mb-16 mt-6">
+            <h2 className="text-[10px] font-black uppercase tracking-[0.6em] text-white/60 text-center mb-16 mt-6">
               Artist Hub & Archive
             </h2>
 
@@ -96,14 +101,14 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
               
               {/* Card 1: More Lonely Pre-Save Spotlight (Spans 2 columns) - Blue/Cyan Glow */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
+              <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
                 <div className="absolute top-0 right-0 w-48 h-full opacity-15 group-hover:opacity-30 transition-opacity pointer-events-none">
                   <img src={upcomingReleases[0].art} alt="" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
                 <div className="relative z-10 space-y-4">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">Pre-Save Spotlight • Out in {daysToSingle} Days</span>
                   <h3 className="text-4xl font-black uppercase tracking-tighter">{RELEASE_DATA.nextUp.title}</h3>
-                  <p className="text-white/40 text-xs max-w-md">Be among the first to hear the new atmospheric single. Pre-save now on Spotify and Apple Music to add it to your library instantly upon release.</p>
+                  <p className="text-white/70 text-xs md:text-sm max-w-md leading-relaxed">Be among the first to hear the new atmospheric single. Pre-save now on Spotify and Apple Music to add it to your library instantly upon release.</p>
                 </div>
                 <a 
                   href={RELEASE_DATA.nextUp.preSaveLink}
@@ -116,32 +121,35 @@ const Home = () => {
               </div>
 
               {/* Card 2: Music Catalog (Spans 1 column) - Indigo Glow */}
-              <Link to="/music" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-indigo-500/30 hover:shadow-[0_0_30px_rgba(99,102,241,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="flex justify-between items-start text-white/40 group-hover:text-indigo-400 transition-colors">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-indigo-400">Discography</span>
+              <Link to="/music" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-indigo-500/30 hover:shadow-[0_0_30px_rgba(99,102,241,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
+                <div className="flex justify-between items-start text-white/70 group-hover:text-indigo-400 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70 group-hover:text-indigo-400">Discography</span>
                   <Disc size={20} className="group-hover:rotate-45 transition-transform duration-500" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Music</h3>
-                  <p className="text-white/40 text-xs">Explore all releases, tracks, and view high-fidelity song lyrics.</p>
+                  <p className="text-white/75 text-xs leading-relaxed">Explore all releases, tracks, and view high-fidelity song lyrics.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/80 group-hover:text-white transition-colors w-fit">
                   View Catalog <ArrowRight size={12} />
                 </span>
               </Link>
 
               {/* Card 3: "Different" Single Stream & Blurb (Spans 2 columns) - Custom Glow */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/20 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[240px] bg-black/20">
+              <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/20 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
                 <div className="space-y-4">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Featured Single</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70">Featured Single</span>
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Different</h3>
-                  <p className="text-white/60 text-xs leading-relaxed italic max-w-xl">
+                  <p className="text-white/90 text-xs md:text-sm leading-relaxed italic max-w-xl">
                     "A haunting exploration of emotional distance and half-confessions. Written and recorded late night in the home studio, utilizing analog synths to capture the feeling of cold isolation."
                   </p>
                 </div>
                 <div className="mt-6 w-full">
                   <iframe 
-                    src={`https://open.spotify.com/embed/track/${RELEASE_DATA.currentSingle.spotifyTrackId || "4jVnL8i04nZ5h6G8W6wP8S"}?utm_source=generator&theme=0`} 
+                    src={RELEASE_DATA.currentSingle.spotifyLink.includes('/track/')
+                      ? `https://open.spotify.com/embed/track/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
+                      : `https://open.spotify.com/embed/album/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
+                    } 
                     width="100%" 
                     height="80" 
                     frameBorder="0" 
@@ -157,38 +165,38 @@ const Home = () => {
                 href="https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN"
                 target="_blank"
                 rel="noopener noreferrer" 
-                className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[240px] bg-black/20"
+                className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20"
               >
-                <div className="flex justify-between items-start text-white/40 group-hover:text-emerald-400 transition-colors">
+                <div className="flex justify-between items-start text-white/70 group-hover:text-emerald-400 transition-colors">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em]">Curated</span>
                   <Music2 size={20} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Influences</h3>
-                  <p className="text-white/40 text-xs">Dive into the records and dark ambient soundscapes shaping the music.</p>
+                  <p className="text-white/75 text-xs leading-relaxed">Dive into the records and dark ambient soundscapes shaping the music.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/80 group-hover:text-white transition-colors w-fit">
                   Open Spotify <ArrowRight size={12} />
                 </span>
               </a>
 
               {/* Card 5: EPK Hub (Spans 1 column) - Fuchsia Glow */}
-              <Link to="/epk" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-fuchsia-500/30 hover:shadow-[0_0_30px_rgba(217,70,239,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="flex justify-between items-start text-white/40 group-hover:text-fuchsia-400 transition-colors">
+              <Link to="/epk" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-fuchsia-500/30 hover:shadow-[0_0_30px_rgba(217,70,239,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
+                <div className="flex justify-between items-start text-white/70 group-hover:text-fuchsia-400 transition-colors">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em]">Industry</span>
                   <FileText size={20} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">EPK</h3>
-                  <p className="text-white/40 text-xs">Access press assets, biography, and professional contact details.</p>
+                  <p className="text-white/75 text-xs leading-relaxed">Access press assets, biography, and professional contact details.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/80 group-hover:text-white transition-colors w-fit">
                   Press Hub &rarr;
                 </span>
               </Link>
 
               {/* Card 6: "The Process" Studio Card (Spans 1 column) - Neutral Glow */}
-              <div className="glass flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
+              <div className="glass flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
                 <div className="absolute inset-0 z-0">
                   <img 
                     src="/studio-lofi.jpg" 
@@ -197,50 +205,50 @@ const Home = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
                 </div>
-                <div className="relative z-10 p-8 flex flex-col justify-between h-full w-full">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">The Process</span>
+                <div className="relative z-10 p-6 md:p-8 flex flex-col justify-between h-full w-full">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/60">The Process</span>
                   <div>
                     <h3 className="text-2xl font-black uppercase tracking-tighter">Studio</h3>
-                    <p className="text-white/50 text-[10px] mt-1 leading-relaxed">Grainy tape loops, analog patch cables, and late-night experiments.</p>
+                    <p className="text-white/75 text-xs mt-1 leading-relaxed">Grainy tape loops, analog patch cables, and late-night experiments.</p>
                   </div>
                 </div>
               </div>
 
               {/* Card 7: Store (Spans 1 column) - White/Emerald Glow */}
-              <Link to="/store" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="flex justify-between items-start text-white/40 group-hover:text-white transition-colors">
+              <Link to="/store" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
+                <div className="flex justify-between items-start text-white/70 group-hover:text-white transition-colors">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em]">Shop Releases</span>
                   <ShoppingBag size={20} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Store</h3>
-                  <p className="text-white/40 text-xs">Garfield Park limited physical media (Vinyl & Cassette) coming soon.</p>
+                  <p className="text-white/75 text-xs leading-relaxed">Garfield Park limited physical media (Vinyl & Cassette) coming soon.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/85 group-hover:text-white transition-colors w-fit">
                   Explore Shop &rarr;
                 </span>
               </Link>
 
               {/* Card 8: Lyric Art block (Spans 2 columns) - Custom Glass Typography */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 bg-black/40 min-h-[240px] relative overflow-hidden">
+              <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 bg-black/40 min-h-[200px] md:min-h-[220px] relative overflow-hidden">
                 <div className="absolute -right-12 -top-12 w-48 h-48 bg-white/[0.01] blur-3xl rounded-full"></div>
                 <div className="space-y-2">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">Lyric Poetry</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70">Lyric Poetry</span>
                   <div className="h-px w-8 bg-white/10 my-2"></div>
                 </div>
                 <div className="my-auto py-4">
-                  <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light italic tracking-wide font-display">
+                  <p className="text-sm md:text-lg text-white/95 leading-relaxed font-light italic tracking-wide font-display">
                     "When I grew up I got more lonely, no new friends I got me only... Lost someone that I held so closely and lost myself on the day she told me."
                   </p>
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-white/30 text-right">
+                <span className="text-[8px] font-black uppercase tracking-widest text-white/75 text-right">
                   — More Lonely (June 19)
                 </span>
               </div>
 
               {/* Card 9: Connect & Socials (Spans 1 column) - White Glow */}
-              <div className="glass p-8 flex flex-col justify-between border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="flex justify-between items-start text-white/40">
+              <div className="glass p-6 md:p-8 flex flex-col justify-between border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
+                <div className="flex justify-between items-start text-white/70">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em]">Hustle</span>
                   <Share2 size={20} />
                 </div>
@@ -251,7 +259,7 @@ const Home = () => {
                       href={social.href} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className={`p-3 glass border border-white/5 transition-all flex items-center justify-center text-white/40 ${social.color} hover:bg-white/5`}
+                      className={`p-3 glass border border-white/5 transition-all flex items-center justify-center text-white/70 ${social.color} hover:bg-white/5`}
                     >
                       {social.icon}
                     </a>
@@ -261,18 +269,18 @@ const Home = () => {
                   href="https://instagram.com/thecolincherry" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors mt-4 block w-fit border-b border-transparent hover:border-white/30 pb-0.5"
+                  className="text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white transition-colors mt-4 block w-fit border-b border-transparent hover:border-white/30 pb-0.5"
                 >
                   @thecolincherry
                 </a>
               </div>
 
               {/* Card 10: "The Archive" Email Capture (Spans 3 columns) - Rose/Cult Glow */}
-              <div className="md:col-span-3 glass p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 group border border-white/5 hover:border-rose-500/20 hover:shadow-[0_0_40px_rgba(244,63,94,0.06)] transition-all duration-500 bg-black/20">
+              <div className="md:col-span-3 glass p-6 md:p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 group border border-white/5 hover:border-rose-500/20 hover:shadow-[0_0_40px_rgba(244,63,94,0.06)] transition-all duration-500 bg-black/20">
                 <div className="space-y-3 max-w-xl">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-rose-400">Be part of the beginning</span>
                   <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">The Archive</h3>
-                  <p className="text-white/40 text-xs leading-relaxed">
+                  <p className="text-white/70 text-xs md:text-sm leading-relaxed">
                     Sign up for exclusive first access to raw acoustic demos, voice notes, and the personal stories behind the tracks. No spam. Just access to the atmosphere.
                   </p>
                 </div>
@@ -294,7 +302,7 @@ const Home = () => {
                         placeholder="EMAIL ADDRESS" 
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="bg-white/5 border border-white/10 px-4 py-3.5 rounded-lg focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full sm:flex-grow"
+                        className="bg-white/5 border border-white/15 px-4 py-3.5 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full sm:flex-grow"
                       />
                       <button type="submit" className="bg-white text-black px-6 py-3.5 rounded-lg font-black uppercase text-[10px] tracking-widest hover:bg-rose-400 hover:text-black hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all flex items-center justify-center gap-2">
                         Access <Send size={12} />
@@ -305,9 +313,9 @@ const Home = () => {
               </div>
 
               {/* Card 11: Timeline & Countdown (Spans 3 columns) - Blue/White Glow */}
-              <div className="md:col-span-3 glass p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 border border-white/5 bg-black/20">
+              <div className="md:col-span-3 glass p-6 md:p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 border border-white/5 bg-black/20">
                 <div className="space-y-4 max-w-md w-full">
-                  <div className="flex items-center gap-2 text-white/30">
+                  <div className="flex items-center gap-2 text-white/70">
                     <Calendar size={14} />
                     <span className="text-[9px] font-black uppercase tracking-[0.3em]">Roadmap & Journey</span>
                   </div>
@@ -315,29 +323,29 @@ const Home = () => {
                   
                   {/* Timeline Visualizer */}
                   <div className="relative pt-6 pb-2 pr-4">
-                    <div className="absolute top-[34px] left-2 right-2 h-[2px] bg-white/5 z-0"></div>
+                    <div className="absolute top-[34px] left-2 right-2 h-[2px] bg-white/15 z-0"></div>
                     <div className="flex justify-between items-center relative z-10">
                       <div className="text-left bg-[#0a0a0a]/90 pr-3">
                         <div className="w-4 h-4 rounded-full border border-cyan-400 bg-[#0a0a0a] flex items-center justify-center">
                           <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
                         </div>
                         <p className="text-[10px] font-black uppercase tracking-wider text-cyan-400 mt-2">June 19</p>
-                        <p className="text-[8px] font-medium text-white/30 uppercase tracking-widest">More Lonely</p>
+                        <p className="text-[8px] font-medium text-white/70 uppercase tracking-widest">More Lonely</p>
                       </div>
                       
                       <div className="text-right bg-[#0a0a0a]/90 pl-3">
                         <div className="w-4 h-4 rounded-full border border-white/10 bg-[#0a0a0a] flex items-center justify-center ml-auto">
                           <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-wider text-white/40 mt-2">August 1</p>
-                        <p className="text-[8px] font-medium text-white/30 uppercase tracking-widest">Garfield Park</p>
+                        <p className="text-[10px] font-black uppercase tracking-wider text-white/80 mt-2">August 1</p>
+                        <p className="text-[8px] font-medium text-white/70 uppercase tracking-widest">Garfield Park</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-2 w-full md:w-auto md:min-w-[340px] p-6 glass rounded-2xl border border-white/5 bg-black/30 text-center">
-                  <div className="flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.25em] text-white/30 mb-2">
+                  <div className="flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.25em] text-white/75 mb-2">
                     <Clock size={12} />
                     <span>Countdown to Garfield Park</span>
                   </div>
@@ -350,19 +358,19 @@ const Home = () => {
                     <div className="grid grid-cols-4 gap-2 text-center">
                       <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
                         <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.days}</div>
-                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Days</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/75 mt-1">Days</div>
                       </div>
                       <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
                         <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.hours}</div>
-                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Hours</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/75 mt-1">Hours</div>
                       </div>
                       <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
                         <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.minutes}</div>
-                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Mins</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/75 mt-1">Mins</div>
                       </div>
                       <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
                         <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.seconds}</div>
-                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Secs</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/75 mt-1">Secs</div>
                       </div>
                     </div>
                   )}
@@ -382,7 +390,7 @@ const Home = () => {
           viewport={{ once: true }}
           transition={{ duration: 1 }}
         >
-          <p className="text-2xl md:text-3xl text-white/30 leading-relaxed font-light tracking-wide italic">
+          <p className="text-2xl md:text-3xl text-white/65 leading-relaxed font-light tracking-wide italic">
             Architecting atmosphere.
           </p>
         </motion.div>

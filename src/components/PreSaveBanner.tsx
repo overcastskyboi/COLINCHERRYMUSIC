@@ -67,7 +67,7 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="relative overflow-hidden bg-[#0c0c0c]/80 backdrop-blur-md border-b border-white/5 text-white/50 font-black uppercase tracking-[0.25em] text-[9px] py-3 group/banner cursor-pointer z-50"
+          className="relative overflow-hidden bg-[#0c0c0c]/80 backdrop-blur-md border-b border-white/5 text-white/75 font-black uppercase tracking-[0.25em] text-[9px] py-3 group/banner cursor-pointer z-50"
         >
           <div className="relative flex items-center w-full">
             <a 
@@ -85,7 +85,7 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pl-4 bg-gradient-to-l from-[#0c0c0c]/90 via-[#0c0c0c]/70 to-transparent h-full flex items-center z-10">
                <button 
                  onClick={dismiss} 
-                 className="p-1.5 rounded-full border border-white/10 bg-black/40 hover:bg-black/80 text-white/40 hover:text-white transition-all hover:scale-110 z-20 flex items-center justify-center opacity-0 group-hover/banner:opacity-100"
+                 className="p-1.5 rounded-full border border-white/10 bg-black/40 hover:bg-black/80 text-white/70 hover:text-white transition-all hover:scale-110 z-20 flex items-center justify-center opacity-0 group-hover/banner:opacity-100"
                  title="Dismiss Announcement"
                >
                  <X size={12} strokeWidth={3} />

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet-async';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
-import { motion as motionComponent, AnimatePresence as AnimatePresenceComponent } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Product {
   id: string;
@@ -100,11 +100,11 @@ const Store = () => {
       <div className="max-w-7xl mx-auto px-6 py-12 relative">
         <header className="mb-24 text-center max-w-2xl mx-auto flex flex-col items-center">
           <h1 className="text-6xl md:text-9xl font-display uppercase tracking-tighter mb-6 leading-none">Store</h1>
-          <p className="text-[10px] uppercase tracking-[0.5em] font-black text-white/20">Official Artist Merchandise</p>
+          <p className="text-[10px] uppercase tracking-[0.5em] font-black text-white/60">Official Artist Merchandise</p>
           
           <button 
             onClick={() => setIsCartOpen(true)}
-            className="mt-8 flex items-center gap-3 px-6 py-3 glass hover:bg-white/5 transition-all text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white"
+            className="mt-8 flex items-center gap-3 px-6 py-3 glass hover:bg-white/5 transition-all text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white"
           >
             <ShoppingBag size={14} /> Cart ({cartCount})
           </button>
@@ -145,12 +145,12 @@ const Store = () => {
               
               <div className="p-6 space-y-4">
                 <div>
-                  <span className="text-[8px] font-black uppercase tracking-widest text-white/20">{product.category}</span>
+                  <span className="text-[8px] font-black uppercase tracking-widest text-white/60">{product.category}</span>
                   <h3 className="text-lg font-black uppercase tracking-tight truncate mt-1">{product.name}</h3>
                 </div>
                 <div className="flex justify-between items-center border-t border-white/5 pt-4">
                   <span className="text-base font-bold">${product.price.toFixed(2)}</span>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-white/20 group-hover:text-white transition-colors">Select Options &rarr;</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Select Options &rarr;</span>
                 </div>
               </div>
             </div>
@@ -158,25 +158,25 @@ const Store = () => {
         </div>
 
         {/* Product Details Modal */}
-        <AnimatePresenceComponent>
+        <AnimatePresence>
           {selectedProduct && (
-            <motionComponent 
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl"
               onClick={() => setSelectedProduct(null)}
             >
-              <motionComponent 
+              <motion.div 
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                className="glass w-full max-w-4xl p-8 md:p-12 relative"
-                onClick={e => e.stopPropagation()}
+                className="glass w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 md:p-12 relative"
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <button 
                   onClick={() => setSelectedProduct(null)}
-                  className="absolute top-8 right-8 text-white/20 hover:text-white transition-colors"
+                  className="absolute top-8 right-8 text-white/60 hover:text-white transition-colors"
                 >
                   <X size={28} />
                 </button>
@@ -194,7 +194,7 @@ const Store = () => {
                   <div className="space-y-8">
                     <div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-white/30">{selectedProduct.category}</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{selectedProduct.category}</span>
                         {selectedProduct.isComingSoon && (
                           <span className="bg-white/10 text-white border border-white/10 px-2.5 py-0.5 rounded-full text-[7px] font-black uppercase tracking-widest">Coming Soon</span>
                         )}
@@ -208,7 +208,7 @@ const Store = () => {
                       <p className="text-2xl font-bold mt-4">${selectedProduct.price.toFixed(2)}</p>
                     </div>
 
-                    <p className="text-white/50 text-sm leading-relaxed">{selectedProduct.description}</p>
+                    <p className="text-white/80 text-sm leading-relaxed">{selectedProduct.description}</p>
 
                     {selectedProduct.isComingSoon ? (
                       <div className="space-y-4 pt-4 border-t border-white/5">
@@ -217,7 +217,7 @@ const Store = () => {
                         </p>
                         <button
                           disabled
-                          className="w-full bg-white/5 border border-white/10 text-white/30 py-4 rounded-lg font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-3 cursor-not-allowed"
+                          className="w-full bg-white/5 border border-white/10 text-white/50 py-4 rounded-lg font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-3 cursor-not-allowed"
                         >
                           Pre-Order Coming Soon
                         </button>
@@ -226,7 +226,7 @@ const Store = () => {
                       <>
                         {selectedProduct.hasSizes && (
                           <div className="space-y-3">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-white/20">Select Size</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-white/60">Select Size</span>
                             <div className="flex gap-3">
                               {['S', 'M', 'L', 'XL'].map((size) => (
                                 <button
@@ -235,7 +235,7 @@ const Store = () => {
                                   className={`w-12 h-12 flex items-center justify-center font-black rounded-lg text-xs transition-all ${
                                     selectedSize === size 
                                       ? 'bg-white text-black scale-105' 
-                                      : 'glass hover:bg-white/5 text-white/40 hover:text-white'
+                                      : 'glass hover:bg-white/5 text-white/60 hover:text-white'
                                   }`}
                                 >
                                   {size}
@@ -250,14 +250,14 @@ const Store = () => {
                             <div className="flex items-center border border-white/10 rounded-lg p-1.5 glass">
                               <button 
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="p-1 hover:text-white text-white/40 transition-colors"
+                                className="p-1 hover:text-white text-white/60 transition-colors"
                               >
                                 <Minus size={14} />
                               </button>
                               <span className="w-12 text-center font-black text-sm">{quantity}</span>
                               <button 
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="p-1 hover:text-white text-white/40 transition-colors"
+                                className="p-1 hover:text-white text-white/60 transition-colors"
                               >
                                 <Plus size={14} />
                               </button>
@@ -275,17 +275,17 @@ const Store = () => {
                     )}
                   </div>
                 </div>
-              </motionComponent>
-            </motionComponent>
+              </motion.div>
+            </motion.div>
           )}
-        </AnimatePresenceComponent>
+        </AnimatePresence>
 
         {/* Sliding Cart Drawer */}
-        <AnimatePresenceComponent>
+        <AnimatePresence>
           {isCartOpen && (
             <div className="fixed inset-0 z-[100] flex justify-end">
               {/* Overlay backdrop */}
-              <motionComponent
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -294,7 +294,7 @@ const Store = () => {
               />
               
               {/* Drawer Container */}
-              <motionComponent
+              <motion.div
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -308,7 +308,7 @@ const Store = () => {
                   </h3>
                   <button 
                     onClick={() => setIsCartOpen(false)}
-                    className="text-white/40 hover:text-white transition-colors"
+                    className="text-white/60 hover:text-white transition-colors"
                   >
                     <X size={24} />
                   </button>
@@ -317,8 +317,8 @@ const Store = () => {
                 {/* Cart Items List */}
                 <div className="flex-grow overflow-y-auto p-8 space-y-6">
                   {cart.length === 0 ? (
-                    <div className="text-center py-20 text-white/30 space-y-4">
-                      <ShoppingBag size={48} className="mx-auto text-white/10" />
+                    <div className="text-center py-20 text-white/60 space-y-4">
+                      <ShoppingBag size={48} className="mx-auto text-white/20" />
                       <p className="text-[10px] font-black uppercase tracking-widest">Your cart is currently empty</p>
                     </div>
                   ) : (
@@ -337,7 +337,7 @@ const Store = () => {
                         </div>
                         <div className="flex-grow space-y-1 pr-6">
                           <h4 className="font-black text-sm uppercase tracking-tight truncate leading-none">{item.product.name}</h4>
-                          <div className="flex gap-3 text-[9px] font-bold uppercase tracking-wider text-white/30">
+                          <div className="flex gap-3 text-[9px] font-bold uppercase tracking-wider text-white/60">
                             {item.size && <span>Size: {item.size}</span>}
                             <span>${item.product.price.toFixed(2)}</span>
                           </div>
@@ -345,14 +345,14 @@ const Store = () => {
                           <div className="flex items-center gap-3 mt-2">
                             <button 
                               onClick={() => updateCartQty(index, item.quantity - 1)}
-                              className="text-white/30 hover:text-white p-0.5"
+                              className="text-white/60 hover:text-white p-0.5"
                             >
                               <Minus size={10} />
                             </button>
                             <span className="font-bold text-xs">{item.quantity}</span>
                             <button 
                               onClick={() => updateCartQty(index, item.quantity + 1)}
-                              className="text-white/30 hover:text-white p-0.5"
+                              className="text-white/60 hover:text-white p-0.5"
                             >
                               <Plus size={10} />
                             </button>
@@ -361,7 +361,7 @@ const Store = () => {
 
                         <button 
                           onClick={() => removeFromCart(index)}
-                          className="absolute top-4 right-4 text-white/20 hover:text-red-400 transition-colors"
+                          className="absolute top-4 right-4 text-white/60 hover:text-red-400 transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -373,7 +373,7 @@ const Store = () => {
                 {/* Footer and subtotal */}
                 <div className="p-8 border-t border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md space-y-6">
                   <div className="flex justify-between items-end">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/30">Subtotal</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Subtotal</span>
                     <span className="text-2xl font-black">${cartSubtotal.toFixed(2)}</span>
                   </div>
 
@@ -385,27 +385,27 @@ const Store = () => {
                     Proceed to Checkout <ArrowRight size={14} />
                   </button>
                 </div>
-              </motionComponent>
+              </motion.div>
             </div>
           )}
-        </AnimatePresenceComponent>
+        </AnimatePresence>
 
         {/* Mock Checkout Confirmation Dialog */}
-        <AnimatePresenceComponent>
+        <AnimatePresence>
           {showCheckoutModal && (
-            <motionComponent 
+            <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl"
               onClick={() => setShowCheckoutModal(false)}
             >
-              <motionComponent 
+              <motion.div 
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 className="glass w-full max-w-md p-8 md:p-12 text-center space-y-6 border border-white/10"
-                onClick={e => e.stopPropagation()}
+                onClick={(e: React.MouseEvent) => e.stopPropagation()}
               >
                 <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mx-auto text-white/60">
                   <ShoppingBag size={24} />
@@ -413,7 +413,7 @@ const Store = () => {
                 
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Checkout Coming Soon</h3>
-                  <p className="text-white/40 text-sm leading-relaxed">
+                  <p className="text-white/70 text-sm leading-relaxed">
                     Physical pre-orders will launch officially alongside the rollout of the <span className="text-white">Garfield Park</span> album.
                   </p>
                 </div>
@@ -427,10 +427,10 @@ const Store = () => {
                 >
                   Return to Store
                 </button>
-              </motionComponent>
-            </motionComponent>
+              </motion.div>
+            </motion.div>
           )}
-        </AnimatePresenceComponent>
+        </AnimatePresence>
       </div>
     </PageTransition>
   );

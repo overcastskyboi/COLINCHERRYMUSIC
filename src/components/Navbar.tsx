@@ -34,7 +34,7 @@ const Navbar = () => {
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `text-lg uppercase tracking-[0.5em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/30'}`
+                `text-lg uppercase tracking-[0.5em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/60'}`
               }
             >
               {item.name}
@@ -44,7 +44,7 @@ const Navbar = () => {
 
         {/* Mobile Toggle */}
         <button 
-          className="md:hidden p-2 text-white/50 hover:text-white transition-colors"
+          className="md:hidden p-2 text-white/75 hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
@@ -67,7 +67,7 @@ const Navbar = () => {
                   to={item.path}
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => 
-                    `text-xl font-black uppercase tracking-[0.6em] transition-colors ${isActive ? 'text-white' : 'text-white/30'}`
+                    `text-xl font-black uppercase tracking-[0.6em] transition-colors ${isActive ? 'text-white' : 'text-white/60'}`
                   }
                 >
                   {item.name}
