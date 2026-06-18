@@ -39,7 +39,7 @@ const LyricModal = ({ isOpen, onClose, title, lyrics, themeColor }: LyricModalPr
             >
               {title}
             </h2>
-            <div className="font-mono text-sm leading-relaxed text-white/70 whitespace-pre-wrap max-h-[60vh] overflow-y-auto">
+            <div className="font-sans text-sm md:text-base leading-relaxed tracking-wide text-white/80 whitespace-pre-wrap max-h-[60vh] overflow-y-auto font-light antialiased">
               {lyrics}
             </div>
           </motion.div>

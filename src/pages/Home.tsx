@@ -64,13 +64,12 @@ const Home = () => {
         <meta name="description" content="Explore the atmospheric and visceral soundscapes of Indianapolis artist Colin Cherry. Stream official releases, view lyrics, and explore the catalog." />
       </Helmet>
 
-      {/* Hero section targeting More Lonely Pre-Save */}
       <Hero 
         latestDropTitle={RELEASE_DATA.nextUp.title}
         artworkUrl={upcomingReleases[0].art}
-        routingLink={RELEASE_DATA.nextUp.preSaveLink}
+        spotifyLink={RELEASE_DATA.nextUp.preSaveLink}
+        appleMusicLink={RELEASE_DATA.nextUp.preSaveLink}
         subtitle={`Pre-Save Single • Out in ${daysToSingle} Days`}
-        ctaText="Pre-Save Now"
       />
 
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">

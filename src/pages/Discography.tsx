@@ -274,9 +274,9 @@ const Discography = () => {
 
                     <div className="space-y-6">
                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 border-b border-white/5 pb-4">Lyrics</h4>
-                       <pre className="font-mono text-sm md:text-base leading-relaxed text-white/60 whitespace-pre-wrap max-h-[40vh] overflow-y-auto pr-4">
+                       <div className="font-sans text-xs md:text-sm leading-relaxed tracking-wide text-white/75 whitespace-pre-wrap max-h-[40vh] overflow-y-auto pr-4 font-light antialiased">
                          {getLyricsForAlbum(selectedAlbum.name)}
-                       </pre>
+                       </div>
                     </div>
                   </div>
                 </div>
