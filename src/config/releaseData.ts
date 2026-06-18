@@ -12,7 +12,8 @@ export const RELEASE_DATA = {
   rollout: {
     albumTitle: "Garfield Park",
     targetMonth: "August 2026",
-    showTeaser: true
+    showTeaser: true,
+    countdownTarget: "2026-08-01T00:00:00-04:00"
   }
 };
 

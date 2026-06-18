@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import Hero from '../components/Hero';
-import AlbumTeaser from '../components/AlbumTeaser';
 import { motion } from 'framer-motion';
-import { Instagram, Music2, Facebook, Music, ArrowRight, Send, Disc, FileText, Share2, ShoppingBag } from 'lucide-react';
+import { Instagram, Music2, Facebook, Music, ArrowRight, Send, Disc, FileText, Share2, ShoppingBag, Clock, Calendar } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -11,14 +10,9 @@ import { Link } from 'react-router-dom';
 const Home = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, completed: false });
 
-  const socials = [
-    { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
-    { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea] hover:border-[#00f2ea]/50' },
-    { icon: <Facebook size={18} />, href: 'https://facebook.com/thecolincherry', color: 'hover:text-[#1877F2] hover:border-[#1877F2]/50' },
-    { icon: <Music2 size={18} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300] hover:border-[#FF3300]/50' },
-  ];
-
+  // Handle newsletter signup
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
@@ -27,21 +21,41 @@ const Home = () => {
     }
   };
 
-  const now = Date.now();
-  const parseReleaseDate = (dateStr: string) => {
-    if (dateStr === "PAST RELEASE") return 0;
-    const parsed = Date.parse(`${dateStr}, ${new Date().getFullYear()}`);
-    return isNaN(parsed) ? 0 : parsed;
-  };
+  // Countdown timer logic targeting August 1, 2026
+  useEffect(() => {
+    const targetTime = new Date(RELEASE_DATA.rollout.countdownTarget || "2026-08-01T00:00:00-04:00").getTime();
+    
+    const calculateTime = () => {
+      const now = Date.now();
+      const difference = targetTime - now;
+      
+      if (difference <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, completed: true });
+        return;
+      }
+      
+      const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      
+      setTimeLeft({ days, hours, minutes, seconds, completed: false });
+    };
 
-  // Release Schedule items
-  const activeSchedule = upcomingReleases
-    .filter(release => {
-      const releaseTime = parseReleaseDate(release.date);
-      // Show if in future, or released in last 14 days
-      return releaseTime > now || (releaseTime > 0 && now - releaseTime < 14 * 24 * 60 * 60 * 1000);
-    })
-    .sort((a, b) => parseReleaseDate(a.date) - parseReleaseDate(b.date));
+    calculateTime();
+    const interval = setInterval(calculateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const singleReleaseDate = new Date("2026-06-19T00:00:00-04:00").getTime();
+  const daysToSingle = Math.max(0, Math.ceil((singleReleaseDate - Date.now()) / (1000 * 60 * 60 * 24)));
+
+  const socials = [
+    { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
+    { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea] hover:border-[#00f2ea]/50' },
+    { icon: <Facebook size={18} />, href: 'https://facebook.com/thecolincherry', color: 'hover:text-[#1877F2] hover:border-[#1877F2]/50' },
+    { icon: <Music2 size={18} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300] hover:border-[#FF3300]/50' },
+  ];
 
   return (
     <PageTransition>
@@ -50,17 +64,13 @@ const Home = () => {
         <meta name="description" content="Explore the atmospheric and visceral soundscapes of Indianapolis artist Colin Cherry. Stream official releases, view lyrics, and explore the catalog." />
       </Helmet>
 
+      {/* Hero section targeting More Lonely Pre-Save */}
       <Hero 
-        latestDropTitle={RELEASE_DATA.currentSingle.title}
-        artworkUrl={RELEASE_DATA.currentSingle.artworkUrl}
-        routingLink={RELEASE_DATA.currentSingle.streamLink}
-      />
-
-      <AlbumTeaser 
-        title={RELEASE_DATA.rollout.albumTitle}
-        artworkUrl="/Garfield Park.jpg"
-        isVisible={RELEASE_DATA.rollout.showTeaser}
-        releaseDate={RELEASE_DATA.rollout.targetMonth}
+        latestDropTitle={RELEASE_DATA.nextUp.title}
+        artworkUrl={upcomingReleases[0].art}
+        routingLink={RELEASE_DATA.nextUp.preSaveLink}
+        subtitle={`Pre-Save Single • Out in ${daysToSingle} Days`}
+        ctaText="Pre-Save Now"
       />
 
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
@@ -79,55 +89,30 @@ const Home = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
           >
-            <h1 className="text-6xl md:text-[10rem] font-display uppercase tracking-tighter mb-12 leading-none">
+            <h1 className="text-6xl md:text-[10rem] font-display uppercase tracking-tighter mb-16 leading-none">
               COLIN CHERRY
             </h1>
 
-            {/* Featured Embeds - Fixed Height Alignment */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-24 w-full max-w-4xl mx-auto">
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40 h-[380px]">
-                <iframe 
-                  src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
-                  width="100%" 
-                  height="380"
-                  frameBorder="0" 
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
-                  loading="lazy"
-                  className="w-full h-full rounded-xl bg-transparent"
-                ></iframe>
-              </div>
-              <div className="w-full md:w-1/2 overflow-hidden rounded-2xl shadow-2xl glass p-1 border border-white/5 bg-black/40 h-[380px]">
-                <iframe 
-                  allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write" 
-                  frameBorder="0" 
-                  height="380"
-                  sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation" 
-                  src="https://embed.music.apple.com/us/artist/colin-cherry/1639040887"
-                  className="w-full h-full rounded-xl bg-transparent"
-                ></iframe>
-              </div>
-            </div>
-
-            {/* Bento Grid Navigation */}
+            {/* Restructured Bento Grid Navigation */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
               
-              {/* Card 1: Latest Release (Spans 2 columns on desktop) - Cyan Glow */}
+              {/* Card 1: More Lonely Pre-Save Spotlight (Spans 2 columns) - Blue/Cyan Glow */}
               <div className="md:col-span-2 glass p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="absolute top-0 right-0 w-48 h-full opacity-10 group-hover:opacity-25 transition-opacity pointer-events-none">
-                  <img src={RELEASE_DATA.currentSingle.artworkUrl} alt="" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
+                <div className="absolute top-0 right-0 w-48 h-full opacity-15 group-hover:opacity-30 transition-opacity pointer-events-none">
+                  <img src={upcomingReleases[0].art} alt="" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
                 <div className="relative z-10 space-y-4">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">Latest Release</span>
-                  <h3 className="text-4xl font-black uppercase tracking-tighter">{RELEASE_DATA.currentSingle.title}</h3>
-                  <p className="text-white/40 text-xs max-w-md">Stream the new single now on Spotify, Apple Music, and other major platforms.</p>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">Pre-Save Spotlight • Out in {daysToSingle} Days</span>
+                  <h3 className="text-4xl font-black uppercase tracking-tighter">{RELEASE_DATA.nextUp.title}</h3>
+                  <p className="text-white/40 text-xs max-w-md">Be among the first to hear the new atmospheric single. Pre-save now on Spotify and Apple Music to add it to your library instantly upon release.</p>
                 </div>
                 <a 
-                  href={RELEASE_DATA.currentSingle.streamLink}
+                  href={RELEASE_DATA.nextUp.preSaveLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-6 group-hover:text-cyan-400 transition-colors w-fit border-b border-white hover:border-cyan-400 pb-1"
+                  className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-6 group-hover:text-cyan-400 transition-colors w-fit border-b border-white hover:border-cyan-400 pb-1 z-10"
                 >
-                  Stream Now <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  Pre-Save Single <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
 
@@ -146,113 +131,118 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 3: EPK Hub (Spans 1 column) - Fuchsia Glow */}
+              {/* Card 3: "Different" Single Stream & Blurb (Spans 2 columns) - Custom Glow */}
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/25 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="space-y-4">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Featured Single</span>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Different</h3>
+                  <p className="text-white/60 text-xs leading-relaxed italic max-w-xl">
+                    "A haunting exploration of emotional distance and half-confessions. Written and recorded late night in the home studio, utilizing analog synths to capture the feeling of cold isolation."
+                  </p>
+                </div>
+                <div className="mt-6 w-full">
+                  <iframe 
+                    src="https://open.spotify.com/embed/artist/2lCz91g9DugcZhbtvMnaUN?utm_source=generator&theme=0" 
+                    width="100%" 
+                    height="80" 
+                    frameBorder="0" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy"
+                    className="rounded-xl bg-transparent w-full border border-white/5"
+                  ></iframe>
+                </div>
+              </div>
+
+              {/* Card 4: "Selected Influences" Spotify Profile (Spans 1 column) - Spotify Green Glow */}
+              <a 
+                href="https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN"
+                target="_blank"
+                rel="noopener noreferrer" 
+                className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[240px] bg-black/20"
+              >
+                <div className="flex justify-between items-start text-white/40 group-hover:text-emerald-400 transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Curated</span>
+                  <Music2 size={20} />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">Influences</h3>
+                  <p className="text-white/40 text-xs">Dive into the records and dark ambient soundscapes shaping the music.</p>
+                </div>
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
+                  Open Spotify <ArrowRight size={12} />
+                </span>
+              </a>
+
+              {/* Card 5: EPK Hub (Spans 1 column) - Fuchsia Glow */}
               <Link to="/epk" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-fuchsia-500/30 hover:shadow-[0_0_30px_rgba(217,70,239,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div className="flex justify-between items-start text-white/40 group-hover:text-fuchsia-400 transition-colors">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-fuchsia-400">Industry</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Industry</span>
                   <FileText size={20} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">EPK</h3>
-                  <p className="text-white/40 text-xs">Access press assets, biography, tech rider, and contact details.</p>
+                  <p className="text-white/40 text-xs">Access press assets, biography, and professional contact details.</p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
-                  View Press Hub <ArrowRight size={12} />
+                  Press Hub &rarr;
                 </span>
               </Link>
 
-              {/* Card 4: Merchandise Store (Spans 1 column) - Emerald/Green Glow */}
-              <Link to="/store" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div className="flex justify-between items-start text-white/40 group-hover:text-emerald-400 transition-colors">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40 group-hover:text-emerald-400">Merchandise</span>
+              {/* Card 6: "The Process" Studio Card (Spans 1 column) - Neutral Glow */}
+              <div className="glass flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="absolute inset-0 z-0">
+                  <img 
+                    src="/studio-lofi.jpg" 
+                    alt="Analog synthesizer studio setup" 
+                    className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
+                </div>
+                <div className="relative z-10 p-8 flex flex-col justify-between h-full w-full">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">The Process</span>
+                  <div>
+                    <h3 className="text-2xl font-black uppercase tracking-tighter">Studio</h3>
+                    <p className="text-white/50 text-[10px] mt-1 leading-relaxed">Grainy tape loops, analog patch cables, and late-night experiments.</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 7: Store (Spans 1 column) - White/Emerald Glow */}
+              <Link to="/store" className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
+                <div className="flex justify-between items-start text-white/40 group-hover:text-white transition-colors">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Shop Releases</span>
                   <ShoppingBag size={20} />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black uppercase tracking-tighter">Store</h3>
-                  <p className="text-white/40 text-xs">Pre-order official vinyl, cassettes, heavyweight apparel, and accessories.</p>
+                  <p className="text-white/40 text-xs">Garfield Park limited physical media (Vinyl & Cassette) coming soon.</p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/40 group-hover:text-white transition-colors w-fit">
-                  Explore Shop <ArrowRight size={12} />
+                  Explore Shop &rarr;
                 </span>
               </Link>
 
-              {/* Card 5: Release Schedule (Spans 1 column) - Blue Glow */}
-              <div className="glass p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div>
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Schedule</span>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-6">Releases</h3>
-                  <div className="space-y-3">
-                    {activeSchedule.length > 0 ? (
-                      activeSchedule.slice(0, 1).map((release, i) => {
-                        const isFuture = parseReleaseDate(release.date) > now;
-                        return (
-                          <a 
-                            key={i}
-                            href={release.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 hover:border-white/10 transition-all group/item w-full"
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 flex-shrink-0 rounded-md overflow-hidden border border-white/10">
-                                <img 
-                                  src={release.art} 
-                                  alt="" 
-                                  className="w-full h-full object-cover grayscale group-hover/item:grayscale-0 transition-all duration-300"
-                                  onError={(e) => { e.currentTarget.src = "/Garfield Park.jpg"; }}
-                                />
-                              </div>
-                              <div>
-                                <h4 className="text-xs font-black uppercase tracking-tight leading-none mb-1 truncate max-w-[100px]">{release.title}</h4>
-                                <p className="text-[7px] font-bold uppercase tracking-wider text-white/20">
-                                  {release.date} {isFuture ? '— PRE' : '— OUT'}
-                                </p>
-                              </div>
-                            </div>
-                            <ArrowRight size={10} className="text-white/20 group-hover/item:translate-x-1 group-hover/item:text-white transition-all" />
-                          </a>
-                        );
-                      })
-                    ) : (
-                      <p className="text-xs text-white/30 italic">No releases currently scheduled.</p>
-                    )}
-                  </div>
+              {/* Card 8: Lyric Art block (Spans 2 columns) - Custom Glass Typography */}
+              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 bg-black/40 min-h-[240px] relative overflow-hidden">
+                <div className="absolute -right-12 -top-12 w-48 h-48 bg-white/[0.01] blur-3xl rounded-full"></div>
+                <div className="space-y-2">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">Lyric Poetry</span>
+                  <div className="h-px w-8 bg-white/10 my-2"></div>
                 </div>
+                <div className="my-auto py-4">
+                  <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light italic tracking-wide font-display">
+                    "When I grew up I got more lonely, no new friends I got me only... Lost someone that I held so closely and lost myself on the day she told me."
+                  </p>
+                </div>
+                <span className="text-[8px] font-black uppercase tracking-widest text-white/30 text-right">
+                  — More Lonely (June 19)
+                </span>
               </div>
 
-              {/* Card 5: Mailing List (Spans 2 columns on desktop) - Rose Glow */}
-              <div className="md:col-span-2 glass p-8 flex flex-col justify-between group border border-white/5 hover:border-rose-500/30 hover:shadow-[0_0_30px_rgba(244,63,94,0.1)] transition-all duration-500 min-h-[240px] bg-black/20">
-                <div>
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">Mailing List</span>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter mt-1 mb-2">Join the list</h3>
-                  <p className="text-white/40 text-xs max-w-md">No spam, just music drops and official show announcements.</p>
-                </div>
-                
-                {subscribed ? (
-                  <div className="text-[10px] font-black uppercase tracking-widest text-rose-400 py-4">
-                    Thank you. You have been subscribed.
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubscribe} className="flex gap-2 mt-4 max-w-md w-full">
-                    <input 
-                      type="email" 
-                      required
-                      placeholder="EMAIL ADDRESS" 
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="bg-white/5 border border-white/10 px-4 py-3 rounded-lg flex-grow focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full"
-                    />
-                    <button type="submit" className="bg-white text-black px-6 py-3 rounded-lg font-black uppercase text-[10px] tracking-widest hover:bg-rose-400 hover:text-black transition-all flex items-center gap-2">
-                      Join <Send size={12} />
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              {/* Card 6: Social Connections (Spans 1 column) - White Glow */}
+              {/* Card 9: Connect & Socials (Spans 1 column) - White Glow */}
               <div className="glass p-8 flex flex-col justify-between border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[240px] bg-black/20">
                 <div className="flex justify-between items-start text-white/40">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Connect</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Hustle</span>
                   <Share2 size={20} />
                 </div>
                 <div className="grid grid-cols-2 gap-3 mt-4">
@@ -268,8 +258,118 @@ const Home = () => {
                     </a>
                   ))}
                 </div>
-                <span className="text-[8px] font-black uppercase tracking-widest text-white/20 mt-4">@thecolincherry</span>
+                <a 
+                  href="https://instagram.com/thecolincherry" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-colors mt-4 block w-fit border-b border-transparent hover:border-white/30 pb-0.5"
+                >
+                  @thecolincherry
+                </a>
               </div>
+
+              {/* Card 10: "The Archive" Email Capture (Spans 3 columns) - Rose/Cult Glow */}
+              <div className="md:col-span-3 glass p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 group border border-white/5 hover:border-rose-500/20 hover:shadow-[0_0_40px_rgba(244,63,94,0.06)] transition-all duration-500 bg-black/20">
+                <div className="space-y-3 max-w-xl">
+                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-rose-400">Be part of the beginning</span>
+                  <h3 className="text-3xl font-black uppercase tracking-tighter leading-none">The Archive</h3>
+                  <p className="text-white/40 text-xs leading-relaxed">
+                    Sign up for exclusive first access to raw acoustic demos, voice notes, and the personal stories behind the tracks. No spam. Just access to the atmosphere.
+                  </p>
+                </div>
+                
+                <div className="w-full md:w-auto md:min-w-[340px]">
+                  {subscribed ? (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-[10px] font-black uppercase tracking-widest text-rose-400 border border-rose-500/20 bg-rose-500/5 px-6 py-4 rounded-lg text-center"
+                    >
+                      You have entered the Archive.
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 w-full">
+                      <input 
+                        type="email" 
+                        required
+                        placeholder="EMAIL ADDRESS" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="bg-white/5 border border-white/10 px-4 py-3.5 rounded-lg focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full sm:flex-grow"
+                      />
+                      <button type="submit" className="bg-white text-black px-6 py-3.5 rounded-lg font-black uppercase text-[10px] tracking-widest hover:bg-rose-400 hover:text-black hover:shadow-[0_0_20px_rgba(244,63,94,0.3)] transition-all flex items-center justify-center gap-2">
+                        Access <Send size={12} />
+                      </button>
+                    </form>
+                  )}
+                </div>
+              </div>
+
+              {/* Card 11: Timeline & Countdown (Spans 3 columns) - Blue/White Glow */}
+              <div className="md:col-span-3 glass p-8 md:p-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 border border-white/5 bg-black/20">
+                <div className="space-y-4 max-w-md w-full">
+                  <div className="flex items-center gap-2 text-white/30">
+                    <Calendar size={14} />
+                    <span className="text-[9px] font-black uppercase tracking-[0.3em]">Roadmap & Journey</span>
+                  </div>
+                  <h3 className="text-3xl font-black uppercase tracking-tighter">Garfield Park Tease</h3>
+                  
+                  {/* Timeline Visualizer */}
+                  <div className="relative pt-6 pb-2 pr-4">
+                    <div className="absolute top-[34px] left-2 right-2 h-[2px] bg-white/5 z-0"></div>
+                    <div className="flex justify-between items-center relative z-10">
+                      <div className="text-left bg-[#0a0a0a]/90 pr-3">
+                        <div className="w-4 h-4 rounded-full border border-cyan-400 bg-[#0a0a0a] flex items-center justify-center">
+                          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-wider text-cyan-400 mt-2">June 19</p>
+                        <p className="text-[8px] font-medium text-white/30 uppercase tracking-widest">More Lonely</p>
+                      </div>
+                      
+                      <div className="text-right bg-[#0a0a0a]/90 pl-3">
+                        <div className="w-4 h-4 rounded-full border border-white/10 bg-[#0a0a0a] flex items-center justify-center ml-auto">
+                          <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
+                        </div>
+                        <p className="text-[10px] font-black uppercase tracking-wider text-white/40 mt-2">August 1</p>
+                        <p className="text-[8px] font-medium text-white/30 uppercase tracking-widest">Garfield Park</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-2 w-full md:w-auto md:min-w-[340px] p-6 glass rounded-2xl border border-white/5 bg-black/30 text-center">
+                  <div className="flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-[0.25em] text-white/30 mb-2">
+                    <Clock size={12} />
+                    <span>Countdown to Garfield Park</span>
+                  </div>
+                  
+                  {timeLeft.completed ? (
+                    <div className="text-lg font-black uppercase tracking-widest text-cyan-400">
+                      The Event is Live
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-4 gap-2 text-center">
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.days}</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Days</div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.hours}</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Hours</div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.minutes}</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Mins</div>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-white/5 rounded-xl">
+                        <div className="text-2xl md:text-3xl font-black text-white">{timeLeft.seconds}</div>
+                        <div className="text-[7px] font-black uppercase tracking-wider text-white/20 mt-1">Secs</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
             </div>
 
           </motion.div>
