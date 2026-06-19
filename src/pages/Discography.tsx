@@ -133,6 +133,15 @@ const Discography = () => {
       <Helmet>
         <title>Colin Cherry | Music Catalog & Lyrics</title>
         <meta name="description" content="Explore Colin Cherry's full discography. View official album artwork, listen to streaming music, and read high-fidelity song lyrics." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.thecolincherry.com/music" />
+        <meta property="og:title" content="Colin Cherry — Music Catalog" />
+        <meta property="og:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
+        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Colin Cherry — Music Catalog" />
+        <meta name="twitter:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.png" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12">

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import Hero from '../components/Hero';
 import { motion } from 'framer-motion';
-import { Instagram, Music2, Facebook, Music, ArrowRight, Send, Disc, FileText, Share2, ShoppingBag, Clock, Calendar } from 'lucide-react';
+import { Instagram, Music, ArrowRight, Send, Disc, FileText, Clock, Calendar } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -54,10 +54,11 @@ const Home = () => {
   const daysToAlbum = Math.max(0, Math.ceil((albumReleaseDate - Date.now()) / (1000 * 60 * 60 * 24)));
 
   const socials = [
-    { icon: <Instagram size={18} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F] hover:border-[#E4405F]/50' },
-    { icon: <Music size={18} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea] hover:border-[#00f2ea]/50' },
-    { icon: <Facebook size={18} />, href: 'https://facebook.com/thecolincherry', color: 'hover:text-[#1877F2] hover:border-[#1877F2]/50' },
-    { icon: <Music2 size={18} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300] hover:border-[#FF3300]/50' },
+    { name: 'Instagram', icon: <Instagram size={20} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F]' },
+    { name: 'TikTok', icon: <Music size={20} />, href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea]' },
+    { name: 'SoundCloud', icon: <Music size={20} />, href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300]' },
+    { name: 'Spotify', icon: <Music size={20} />, href: 'https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN', color: 'hover:text-[#1DB954]' },
+    { name: 'Apple Music', icon: <Music size={20} />, href: 'https://music.apple.com/us/artist/colin-cherry/1639040887', color: 'hover:text-[#FC3C44]' },
   ];
 
   return (
@@ -65,9 +66,18 @@ const Home = () => {
       <Helmet>
         <title>Colin Cherry | Official Artist Site & Hub</title>
         <meta name="description" content="Explore the atmospheric and visceral soundscapes of Indianapolis artist Colin Cherry. Stream official releases, view lyrics, and explore the catalog." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.thecolincherry.com/" />
+        <meta property="og:title" content="Colin Cherry — Garfield Park" />
+        <meta property="og:description" content="New album out August 1, 2026. Pre-save on Spotify and pre-order on Apple Music now." />
+        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Colin Cherry — Garfield Park" />
+        <meta name="twitter:description" content="New album out August 1, 2026." />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.png" />
       </Helmet>
 
-      <Hero 
+      <Hero
         latestDropTitle={RELEASE_DATA.rollout.albumTitle}
         artworkUrl={RELEASE_DATA.rollout.coverArt}
         spotifyLink={RELEASE_DATA.rollout.spotifyPreSaveLink}
@@ -75,6 +85,7 @@ const Home = () => {
         subtitle={`Upcoming Album • Out in ${daysToAlbum} Days`}
         spotifyBtnText="Spotify Pre-Save"
         appleMusicBtnText="iTunes Pre-Order"
+        backgroundPhotoUrl="/garfield-park-hero.jpg"
       />
 
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
@@ -160,25 +171,6 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Card 4: "Selected Influences" Spotify Profile (Spans 1 column) - Spotify Green Glow */}
-              <a 
-                href="https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN"
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-emerald-500/30 hover:shadow-[0_0_30px_rgba(16,185,129,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20"
-              >
-                <div className="flex justify-between items-start text-white/70 group-hover:text-emerald-400 transition-colors">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Curated</span>
-                  <Music2 size={20} />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">Influences</h3>
-                  <p className="text-white/75 text-xs leading-relaxed">Dive into the records and dark ambient soundscapes shaping the music.</p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/80 group-hover:text-white transition-colors w-fit">
-                  Open Spotify <ArrowRight size={12} />
-                </span>
-              </a>
 
               {/* Card 5: EPK Hub (Spans 1 column) - Fuchsia Glow */}
               <Link to="/epk" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-fuchsia-500/30 hover:shadow-[0_0_30px_rgba(217,70,239,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
@@ -195,39 +187,7 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 6: "The Process" Studio Card (Spans 1 column) - Neutral Glow */}
-              <div className="glass flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
-                <div className="absolute inset-0 z-0">
-                  <img 
-                    src="/studio-lofi.jpg" 
-                    alt="Analog synthesizer studio setup" 
-                    className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent"></div>
-                </div>
-                <div className="relative z-10 p-6 md:p-8 flex flex-col justify-between h-full w-full">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/60">The Process</span>
-                  <div>
-                    <h3 className="text-2xl font-black uppercase tracking-tighter">Studio</h3>
-                    <p className="text-white/75 text-xs mt-1 leading-relaxed">Grainy tape loops, analog patch cables, and late-night experiments.</p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Card 7: Store (Spans 1 column) - White/Emerald Glow */}
-              <Link to="/store" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
-                <div className="flex justify-between items-start text-white/70 group-hover:text-white transition-colors">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Shop Releases</span>
-                  <ShoppingBag size={20} />
-                </div>
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">Store</h3>
-                  <p className="text-white/75 text-xs leading-relaxed">Garfield Park limited physical media (Vinyl & Cassette) coming soon.</p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/85 group-hover:text-white transition-colors w-fit">
-                  Explore Shop &rarr;
-                </span>
-              </Link>
 
               {/* Card 8: Lyric Art block (Spans 2 columns) - Custom Glass Typography */}
               <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 bg-black/40 min-h-[200px] md:min-h-[220px] relative overflow-hidden">
@@ -246,33 +206,24 @@ const Home = () => {
                 </span>
               </div>
 
-              {/* Card 9: Connect & Socials (Spans 1 column) - White Glow */}
-              <div className="glass p-6 md:p-8 flex flex-col justify-between border border-white/5 hover:border-white/20 hover:shadow-[0_0_30px_rgba(255,255,255,0.05)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
-                <div className="flex justify-between items-start text-white/70">
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em]">Hustle</span>
-                  <Share2 size={20} />
-                </div>
-                <div className="grid grid-cols-2 gap-3 mt-4">
+              {/* Card 9: Connect & Socials (Full width horizontal bar) */}
+              <div className="md:col-span-3 glass p-6 flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/5 hover:border-white/15 transition-all duration-500 bg-black/20">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/50">Follow Along</span>
+                <div className="flex items-center gap-6 sm:gap-8">
                   {socials.map((social, i) => (
-                    <a 
-                      key={i} 
-                      href={social.href} 
-                      target="_blank" 
+                    <a
+                      key={i}
+                      href={social.href}
+                      target="_blank"
                       rel="noopener noreferrer"
-                      className={`p-3 glass border border-white/5 transition-all flex items-center justify-center text-white/70 ${social.color} hover:bg-white/5`}
+                      title={social.name}
+                      className={`text-white/60 transition-all hover:scale-110 ${social.color}`}
                     >
                       {social.icon}
                     </a>
                   ))}
                 </div>
-                <a 
-                  href="https://instagram.com/thecolincherry" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white transition-colors mt-4 block w-fit border-b border-transparent hover:border-white/30 pb-0.5"
-                >
-                  @thecolincherry
-                </a>
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/50">@thecolincherry</span>
               </div>
 
               {/* Card 10: "The Archive" Email Capture (Spans 3 columns) - Rose/Cult Glow */}

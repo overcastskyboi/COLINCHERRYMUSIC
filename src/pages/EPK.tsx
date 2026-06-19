@@ -36,6 +36,15 @@ const EPK = () => {
       <Helmet>
         <title>Colin Cherry | EPK Press Hub & Contact</title>
         <meta name="description" content="Official Electronic Press Kit (EPK) for artist Colin Cherry. Access bio details, download high-res press assets and tech riders, or send direct inquiries." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.thecolincherry.com/epk" />
+        <meta property="og:title" content="Colin Cherry — EPK & Press" />
+        <meta property="og:description" content="Official press kit, bio, and contact for Indianapolis artist Colin Cherry." />
+        <meta property="og:image" content="https://www.thecolincherry.com/press-photo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Colin Cherry — EPK & Press" />
+        <meta name="twitter:description" content="Official press kit, bio, and contact for Indianapolis artist Colin Cherry." />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/press-photo.png" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12">

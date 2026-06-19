@@ -119,5 +119,183 @@
         }
       ]
     }
+  ],
+  "singles": [
+    {
+      "title": "More Lonely",
+      "type": "single",
+      "releaseDate": "2026-06-19",
+      "coverArt": "/Garfield Park.png",
+      "spotifyLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
+      "appleMusicLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely"
+    },
+    {
+      "title": "Different",
+      "type": "single",
+      "releaseDate": "2026-06-05",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e0276c9183086e2c33157c047de",
+      "spotifyLink": "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS",
+      "appleMusicLink": "https://music.apple.com/us/album/different-single/1895632562"
+    },
+    {
+      "title": "Guilty Conscience",
+      "type": "single",
+      "releaseDate": "2026-05-22",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02e8cf71996c86ab7541fcf554",
+      "spotifyLink": "https://open.spotify.com/album/3SMTqPigGXZfva4mQV3Hms",
+      "appleMusicLink": "https://music.apple.com/us/album/guilty-conscience-single/1895656258"
+    },
+    {
+      "title": "Holding On",
+      "type": "single",
+      "releaseDate": "2026-05-08",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02396b7e14ca4fe23bcd1ec6c3",
+      "spotifyLink": "https://open.spotify.com/album/28Vv4avwyZH05DdKVG0zhC",
+      "appleMusicLink": "https://music.apple.com/us/album/holding-on-single/1894578939"
+    },
+    {
+      "title": "Rose",
+      "type": "single",
+      "releaseDate": "2026-04-24",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e0208e845525f40faa1cb04d04d",
+      "spotifyLink": "https://open.spotify.com/album/1oQfVTE5ixc2JiqJn2G2ZN",
+      "appleMusicLink": "https://music.apple.com/us/album/rose-single/1894950069"
+    },
+    {
+      "title": "DOUBLE KO!",
+      "type": "single",
+      "releaseDate": "2026-04-03",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e0247e984dfec9783eb53b351b4",
+      "spotifyLink": "https://open.spotify.com/album/0pUU7Wy7aZ06leUVfd5wnO",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20DOUBLE%20KO%21"
+    },
+    {
+      "title": "Meant to Be",
+      "type": "single",
+      "releaseDate": "2025-04-24",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02009b9cc5712baad93a2d852b",
+      "spotifyLink": "https://open.spotify.com/album/6eQaAczcmHyWDfGl3Og1Hj",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Meant%20to%20Be"
+    },
+    {
+      "title": "Look At What You've Done",
+      "type": "single",
+      "releaseDate": "2025-03-01",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02b30806bf25d6193dfa0f25f5",
+      "spotifyLink": "https://open.spotify.com/album/2Li7Vd3h9I8oSQO9W8VmU5",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Look%20At%20What%20You%27ve%20Done"
+    },
+    {
+      "title": "More to Life",
+      "type": "single",
+      "releaseDate": "2023-05-01",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e029c19fc6897c0f5f5c6cd944c",
+      "spotifyLink": "https://open.spotify.com/album/2wkzbhV4VKGG0LXyJDQh2h",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20More%20to%20Life"
+    },
+    {
+      "title": "Sorry",
+      "type": "single",
+      "releaseDate": "2023-03-17",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e027ccfde23ee72be676fcdb293",
+      "spotifyLink": "https://open.spotify.com/album/7dcUdKO2iSqNYTQat2jng9",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Sorry"
+    },
+    {
+      "title": "Coulda Been (feat. Emerson Vernon)",
+      "type": "single",
+      "releaseDate": "2023-01-31",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02146dae83706271e91b160b8c",
+      "spotifyLink": "https://open.spotify.com/album/46WbFp1fjxo4SWmHhHnCRT",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Coulda%20Been%20%28feat.%20Emerson%20Vernon%29"
+    },
+    {
+      "title": "Alive But I'm Dying",
+      "type": "single",
+      "releaseDate": "2022-10-30",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e025e395a39196d2d9015f7b1c7",
+      "spotifyLink": "https://open.spotify.com/album/40pBTjOSsN4XKhgrdOJVI0",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Alive%20But%20I%27m%20Dying"
+    },
+    {
+      "title": "Moonlight Freestyle",
+      "type": "single",
+      "releaseDate": "2022-08-27",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02eceee247df541a01cd696df0",
+      "spotifyLink": "https://open.spotify.com/album/2XtKn8xtwvveGypbiYwllX",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Moonlight%20Freestyle"
+    },
+    {
+      "title": "Need Somebody",
+      "type": "single",
+      "releaseDate": "2022-01-21",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02e153ec0934c3d9c5a81f97c5",
+      "spotifyLink": "https://open.spotify.com/album/7I0rwjueaM0kGlcwyWtHx7",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Need%20Somebody"
+    },
+    {
+      "title": "Melancholy",
+      "type": "album",
+      "releaseDate": "2022-01-07",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e022bbf915e0be9920bf560c8c8",
+      "spotifyLink": "https://open.spotify.com/album/0YPpzs1kQqjBzvSNoGS5cg",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Melancholy"
+    },
+    {
+      "title": "Still Ballin'",
+      "type": "ep",
+      "releaseDate": "2020-09-18",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02835c9ddeeaed8f8bb953eeb4",
+      "spotifyLink": "https://open.spotify.com/album/1gjM2yxnbFKeqhdcsEvFEh",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Still%20Ballin%27"
+    },
+    {
+      "title": "Promise",
+      "type": "single",
+      "releaseDate": "2020-06-13",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e0219d0eb9af3a81c798a36a4b1",
+      "spotifyLink": "https://open.spotify.com/album/3vl4cg7W4procicaHc10Vn",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Promise"
+    },
+    {
+      "title": "Pretend (feat. CJ Vana)",
+      "type": "single",
+      "releaseDate": "2020-05-20",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e0232112d136216ed86d7449b7b",
+      "spotifyLink": "https://open.spotify.com/album/31ZQ5p2bRkOCzU8vLX8kOm",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Pretend%20%28feat.%20CJ%20Vana%29"
+    },
+    {
+      "title": "Miserable in Secret",
+      "type": "single",
+      "releaseDate": "2020-05-09",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e027fe819d0b1f99c1563af0aa5",
+      "spotifyLink": "https://open.spotify.com/album/0ZrhZ1CNR0ZGnwa6qDAFlU",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Miserable%20in%20Secret"
+    },
+    {
+      "title": "BAND$",
+      "type": "single",
+      "releaseDate": "2020-02-28",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e025237daf6dd797c338e0a6d78",
+      "spotifyLink": "https://open.spotify.com/album/0XjHSsEL4cOPD6G4HnMRk7",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20BAND%24"
+    },
+    {
+      "title": "Reflection",
+      "type": "single",
+      "releaseDate": "2019-12-27",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02d3c69e46ec2c2e113960fc8c",
+      "spotifyLink": "https://open.spotify.com/album/635Du4IfXh484bLOwx482c",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20Reflection"
+    },
+    {
+      "title": "S.O.S.",
+      "type": "single",
+      "releaseDate": "2019-07-24",
+      "coverArt": "https://i.scdn.co/image/ab67616d00001e02451d48ab58e2f84cb1e60fd9",
+      "spotifyLink": "https://open.spotify.com/album/3fFjbyEBbEEGU1uFT6acEP",
+      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20S.O.S."
+    }
   ]
 }

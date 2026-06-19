@@ -1,4 +1,4 @@
-import { Instagram, Facebook } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 
 const Footer = () => {
   const socials = [
@@ -16,12 +16,7 @@ const Footer = () => {
       ), 
       href: 'https://tiktok.com/@thecolincherry'
     },
-    { 
-      name: 'Facebook', 
-      icon: <Facebook size={20} />, 
-      href: 'https://facebook.com/thecolincherry'
-    },
-    { 
+    {
       name: 'SoundCloud', 
       icon: (
         <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
