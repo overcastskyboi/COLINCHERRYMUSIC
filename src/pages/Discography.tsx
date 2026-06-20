@@ -6,6 +6,7 @@ import { upcomingReleases } from '../config/releaseData';
 import LyricModal from '../components/LyricModal';
 import { Helmet } from 'react-helmet-async';
 import catalogDb from '../config/catalogDb.json';
+import lyricsDb from '../config/lyricsDb.json';
 
 interface SpotifyAlbum {
   id: string;
@@ -15,8 +16,6 @@ interface SpotifyAlbum {
   external_urls: { spotify: string };
   album_type: string;
 }
-
-const LYRICS_CACHE: Record<string, string> = {};
 
 const Discography = () => {
   const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
@@ -101,7 +100,10 @@ const Discography = () => {
 
   const getLyricsForAlbum = (albumName: string) => {
     const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
-    return matched ? matched.lyrics : (LYRICS_CACHE[albumName] || "Lyrics coming soon.");
+    if (matched) return matched.lyrics;
+    const lyricsEntry = Object.entries(lyricsDb as Record<string, string>)
+      .find(([title]) => title.toLowerCase() === albumName.toLowerCase());
+    return lyricsEntry ? lyricsEntry[1] : "Lyrics coming soon.";
   };
 
   const getThemeColorForAlbum = (albumName: string) => {

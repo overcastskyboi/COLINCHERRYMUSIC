@@ -53,6 +53,9 @@ export const upcomingReleases = garfieldPark.tracks.map(track => {
     title: track.title,
     date: displayDate,
     link: track.hyperfollowLink || track.spotifyLink || track.appleMusicLink || garfieldPark.appleMusicLink,
+    // True only if this track has its own standalone release (real single) — unreleased
+    // album tracks fall back to the album link and should never be marketed as "singles"
+    hasOwnLink: Boolean(track.hyperfollowLink || track.spotifyLink || track.appleMusicLink),
     art: track.coverArt || garfieldPark.coverArt || "/different.png",
     themeColor: track.themeColor || "#FFFFFF",
     lyrics: track.lyrics
