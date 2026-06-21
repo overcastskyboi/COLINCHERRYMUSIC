@@ -9,7 +9,7 @@ const moreLonelyTrack = garfieldPark.tracks.find(t => t.title === "More Lonely")
 export const RELEASE_DATA = {
   currentSingle: {
     title: differentTrack ? differentTrack.title : "Different",
-    artworkUrl: differentTrack && differentTrack.coverArt ? differentTrack.coverArt : "/different.png",
+    artworkUrl: differentTrack && differentTrack.coverArt ? differentTrack.coverArt : "/different.jpg",
     streamLink: differentTrack && differentTrack.hyperfollowLink ? differentTrack.hyperfollowLink : "https://distrokid.com/hyperfollow/colincherry/different-3",
     spotifyTrackId: differentTrack && differentTrack.spotifyLink ? differentTrack.spotifyLink.split('/').pop() : "7pnTJS5vf9YZygusVOb1qS",
     spotifyLink: differentTrack && differentTrack.spotifyLink ? differentTrack.spotifyLink : "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS"
@@ -24,7 +24,7 @@ export const RELEASE_DATA = {
     targetMonth: "August 2026",
     showTeaser: true,
     countdownTarget: "2026-08-01T00:00:00-04:00",
-    coverArt: "/Garfield Park.png",
+    coverArt: "/Garfield Park.jpg",
     spotifyPreSaveLink: garfieldPark.spotifyLink || "https://distrokid.com/hyperfollow/colincherry/garfield-park",
     appleMusicPreOrderLink: garfieldPark.appleMusicLink || "https://music.apple.com/us/album/garfield-park/6777408712?uo=4&app=itunes&at=1001lry3&ct=dashboard"
   }
@@ -56,7 +56,7 @@ export const upcomingReleases = garfieldPark.tracks.map(track => {
     // True only if this track has its own standalone release (real single) — unreleased
     // album tracks fall back to the album link and should never be marketed as "singles"
     hasOwnLink: Boolean(track.hyperfollowLink || track.spotifyLink || track.appleMusicLink),
-    art: track.coverArt || garfieldPark.coverArt || "/different.png",
+    art: track.coverArt || garfieldPark.coverArt || "/different.jpg",
     themeColor: track.themeColor || "#FFFFFF",
     lyrics: track.lyrics
   };

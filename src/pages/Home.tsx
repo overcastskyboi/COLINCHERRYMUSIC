@@ -102,11 +102,11 @@ const Home = () => {
         <meta property="og:url" content="https://www.thecolincherry.com/" />
         <meta property="og:title" content="Colin Cherry — Garfield Park" />
         <meta property="og:description" content="New album out August 1, 2026. Pre-save on Spotify and pre-order on Apple Music now." />
-        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — Garfield Park" />
         <meta name="twitter:description" content="New album out August 1, 2026." />
-        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
       </Helmet>
 
       <Hero
@@ -117,7 +117,7 @@ const Home = () => {
         subtitle={`Upcoming Album • Out in ${daysToAlbum} Days`}
         spotifyBtnText="Spotify Pre-Save"
         appleMusicBtnText="iTunes Pre-Order"
-        backgroundPhotoUrl="/garfield-park-hero.jpg"
+        backgroundPhotoUrl="/garfield-park-house.jpg"
       />
 
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">

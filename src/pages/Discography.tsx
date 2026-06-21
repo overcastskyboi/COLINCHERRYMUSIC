@@ -52,10 +52,25 @@ const Discography = () => {
     id: `local-db-${idx}`,
     name: album.title,
     release_date: album.releaseDate ? new Date(album.releaseDate).toISOString().split('T')[0] : '2026-08-01',
-    images: [{ url: album.coverArt || "/different.png" }],
+    images: [{ url: album.coverArt || "/different.jpg" }],
     external_urls: { spotify: album.spotifyLink || album.appleMusicLink || "#" },
     album_type: album.type
   }));
+
+  // Back catalog singles/EPs from catalogDb.singles — these were previously parsed
+  // but never rendered anywhere, so the whole pre-Garfield-Park catalog was invisible.
+  // Skip anything already represented via localDbAlbums/localFallbackAlbums (the
+  // Garfield Park tracks that have already been released, e.g. More Lonely, Different).
+  const localSinglesAlbums: SpotifyAlbum[] = catalogDb.singles
+    .filter(single => !upcomingReleases.some(r => r.title.toLowerCase() === single.title.toLowerCase()))
+    .map((single, idx) => ({
+      id: `local-single-${idx}`,
+      name: single.title,
+      release_date: single.releaseDate || '2025-01-01',
+      images: [{ url: single.coverArt || "/different.jpg" }],
+      external_urls: { spotify: single.spotifyLink || single.appleMusicLink || "#" },
+      album_type: single.type
+    }));
 
   useEffect(() => {
     setSelectedTrackIndex(0);
@@ -77,7 +92,7 @@ const Discography = () => {
           );
 
           // Merge localDbAlbums at the beginning if not already present
-          const merged = [...localDbAlbums];
+          const merged = [...localDbAlbums, ...localSinglesAlbums];
           sorted.forEach(apiAlbum => {
             if (!merged.some(ma => ma.name.toLowerCase() === apiAlbum.name.toLowerCase())) {
               merged.push(apiAlbum);
@@ -85,11 +100,11 @@ const Discography = () => {
           });
           setAlbums(merged);
         } else {
-          setAlbums([...localDbAlbums, ...localFallbackAlbums]);
+          setAlbums([...localDbAlbums, ...localSinglesAlbums, ...localFallbackAlbums]);
         }
       } catch (err) {
         console.warn('Spotify API fetch failed. Using local fallback catalog:', err);
-        setAlbums([...localDbAlbums, ...localFallbackAlbums]);
+        setAlbums([...localDbAlbums, ...localSinglesAlbums, ...localFallbackAlbums]);
       } finally {
         setLoading(false);
       }
@@ -139,11 +154,11 @@ const Discography = () => {
         <meta property="og:url" content="https://www.thecolincherry.com/music" />
         <meta property="og:title" content="Colin Cherry — Music Catalog" />
         <meta property="og:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — Music Catalog" />
         <meta name="twitter:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.png" />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -169,7 +184,7 @@ const Discography = () => {
                     src={release.art} 
                     alt={release.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                    onError={(e) => { e.currentTarget.src = "/different.png"; }}
+                    onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="text-xs font-black uppercase tracking-widest text-white">View Lyrics</span>
@@ -218,7 +233,7 @@ const Discography = () => {
                       src={album.images[0]?.url}
                       alt={album.name}
                       className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
-                      onError={(e) => { e.currentTarget.src = "/different.png"; }}
+                      onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
                       <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-2xl">
@@ -277,7 +292,7 @@ const Discography = () => {
                         src={selectedAlbum.images[0]?.url} 
                         alt={selectedAlbum.name} 
                         className="w-full h-full object-cover" 
-                        onError={(e) => { e.currentTarget.src = "/different.png"; }}
+                        onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                       />
                     </div>
                     <div className="space-y-4">

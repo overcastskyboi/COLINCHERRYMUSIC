@@ -16,7 +16,7 @@ interface HeroProps {
 
 const Hero = ({
   latestDropTitle = "GARFIELD PARK",
-  artworkUrl = "/Garfield Park.png",
+  artworkUrl = "/Garfield Park.jpg",
   spotifyLink = "#",
   appleMusicLink = "#",
   subtitle = "Upcoming Album",
