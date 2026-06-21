@@ -198,6 +198,8 @@ const Discography = () => {
                 <img
                   src={upcomingAlbum.images[0]?.url}
                   alt={upcomingAlbum.name}
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                 />
@@ -244,8 +246,9 @@ const Discography = () => {
                 <motion.div
                   key={album.id}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: i * 0.05 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "200px" }}
+                  transition={{ duration: 0.5, delay: Math.min(i, 8) * 0.04 }}
                   className="group cursor-pointer"
                   onClick={() => setSelectedAlbum(album)}
                 >
@@ -253,6 +256,8 @@ const Discography = () => {
                     <img
                       src={album.images[0]?.url}
                       alt={album.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
                       onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                     />
@@ -312,6 +317,7 @@ const Discography = () => {
                       <img
                         src={selectedAlbum.images[0]?.url}
                         alt={selectedAlbum.name}
+                        decoding="async"
                         className="w-full h-full object-cover"
                         onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                       />
@@ -321,7 +327,7 @@ const Discography = () => {
                         <iframe
                           src={getSpotifyEmbedUrl(selectedAlbum)!}
                           width="100%"
-                          height="152"
+                          height="80"
                           frameBorder="0"
                           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                           loading="lazy"
