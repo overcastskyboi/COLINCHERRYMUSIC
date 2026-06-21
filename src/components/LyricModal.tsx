@@ -33,14 +33,26 @@ const LyricModal = ({ isOpen, onClose, title, lyrics, themeColor }: LyricModalPr
             >
               <X size={24} />
             </button>
-            <h2 
+            <h2
               className="text-3xl font-black uppercase tracking-tighter mb-8"
               style={{ color: themeColor }}
             >
               {title}
             </h2>
-            <div className="font-sans text-sm md:text-base leading-relaxed tracking-wide text-white/90 whitespace-pre-wrap max-h-[60vh] overflow-y-auto font-light antialiased">
-              {lyrics}
+            <div className="font-lyric text-base md:text-lg leading-relaxed tracking-wide text-white/90 max-h-[60vh] overflow-y-auto">
+              {lyrics.split(/\n\s*\n/).map((stanza, i) => {
+                const lines = stanza.split('\n');
+                return (
+                  <p key={i} className="mb-5 last:mb-0">
+                    {lines.map((line, j) => (
+                      <span key={j}>
+                        {line}
+                        {j < lines.length - 1 ? <br /> : null}
+                      </span>
+                    ))}
+                  </p>
+                );
+              })}
             </div>
           </motion.div>
         </motion.div>

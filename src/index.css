@@ -44,6 +44,15 @@ body {
   letter-spacing: -0.05em;
 }
 
+/* Lyric typography — a literary serif distinct from the bold display/UI font,
+   used anywhere full song lyrics are rendered. */
+.font-lyric {
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.01em;
+}
+
 .spotify-embed {
   border-radius: 12px;
   overflow: hidden;

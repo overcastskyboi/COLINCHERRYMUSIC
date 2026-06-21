@@ -4,13 +4,25 @@ import Hero from '../components/Hero';
 import { motion } from 'framer-motion';
 import { Instagram, ArrowRight, Send, Disc, FileText, Clock, Calendar } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
+import { lyricQuotes } from '../config/lyricQuotes';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+
+// The lead-up singles ahead of the album, in release order, for the roadmap timeline.
+const roadmap = [
+  { label: 'Rose', date: 'Apr 24' },
+  { label: 'Holding On', date: 'May 8' },
+  { label: 'Guilty Conscience', date: 'May 22' },
+  { label: 'Different', date: 'Jun 5' },
+  { label: 'More Lonely', date: 'Jun 19', isCurrent: true },
+  { label: 'Garfield Park', date: 'Aug 1', isFuture: true },
+];
 
 const Home = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, completed: false });
+  const [quote] = useState(() => lyricQuotes[Math.floor(Math.random() * lyricQuotes.length)]);
 
   // Handle newsletter signup
   const handleSubscribe = (e: React.FormEvent) => {
@@ -24,21 +36,21 @@ const Home = () => {
   // Countdown timer logic targeting August 1, 2026
   useEffect(() => {
     const targetTime = new Date(RELEASE_DATA.rollout.countdownTarget || "2026-08-01T00:00:00-04:00").getTime();
-    
+
     const calculateTime = () => {
       const now = Date.now();
       const difference = targetTime - now;
-      
+
       if (difference <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, completed: true });
         return;
       }
-      
+
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-      
+
       setTimeLeft({ days, hours, minutes, seconds, completed: false });
     };
 
@@ -123,9 +135,9 @@ const Home = () => {
       <div className="relative flex flex-col items-center justify-center px-6 overflow-hidden pt-12 pb-40">
         {/* Brand Watermark */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
-           <img 
-             src="/logo_textured.png" 
-             alt="" 
+           <img
+             src="/logo_textured.png"
+             alt=""
              className="w-[120%] max-w-none opacity-[0.02] grayscale contrast-150 scale-110"
            />
         </div>
@@ -142,7 +154,7 @@ const Home = () => {
 
             {/* Restructured Bento Grid Navigation */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
-              
+
               {/* Card 1: More Lonely — Out Now (Spans 2 columns) - Blue/Cyan Glow */}
               <a
                 href={RELEASE_DATA.nextUp.preSaveLink}
@@ -188,15 +200,15 @@ const Home = () => {
                   </p>
                 </div>
                 <div className="mt-6 w-full">
-                  <iframe 
+                  <iframe
                     src={RELEASE_DATA.currentSingle.spotifyLink.includes('/track/')
                       ? `https://open.spotify.com/embed/track/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
                       : `https://open.spotify.com/embed/album/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
-                    } 
-                    width="100%" 
-                    height="80" 
-                    frameBorder="0" 
-                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    }
+                    width="100%"
+                    height="80"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="lazy"
                     className="rounded-xl bg-transparent w-full border border-white/5"
                   ></iframe>
@@ -221,19 +233,24 @@ const Home = () => {
 
 
 
-              {/* Card 8: Lyric Art block (Spans 3 columns, full width) - Custom Glass Typography */}
+              {/* Card 8: Lyric Art block (Spans 3 columns, full width) - rotates a new highlight on every load */}
               <div className="md:col-span-3 glass p-8 md:p-12 flex flex-col justify-center items-center text-center border border-white/5 bg-black/40 min-h-[200px] relative overflow-hidden">
                 <div className="absolute -right-12 -top-12 w-48 h-48 bg-white/[0.01] blur-3xl rounded-full"></div>
                 <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70 mb-4">Lyric Poetry</span>
                 <div className="h-px w-8 bg-white/10 mb-6"></div>
-                <p className="text-lg md:text-2xl text-white/95 leading-relaxed font-light italic tracking-wide font-display max-w-2xl">
-                  "When I grew up I got more lonely,<br />
-                  no new friends, I got me only.<br />
-                  Lost someone that I held so closely,<br />
-                  and lost myself on the day she told me."
+                <p
+                  className="font-lyric text-lg md:text-2xl leading-relaxed tracking-wide max-w-2xl"
+                  style={{ color: quote.themeColor ? `${quote.themeColor}f2` : 'rgba(255,255,255,0.95)' }}
+                >
+                  "{quote.lines.map((line, i) => (
+                    <span key={i}>
+                      {line}
+                      {i < quote.lines.length - 1 && <br />}
+                    </span>
+                  ))}"
                 </p>
                 <span className="text-[8px] font-black uppercase tracking-widest text-white/75 mt-6">
-                  — More Lonely (Out Now)
+                  — {quote.song}
                 </span>
               </div>
 
@@ -266,10 +283,10 @@ const Home = () => {
                     Sign up for exclusive first access to raw acoustic demos, voice notes, and the personal stories behind the tracks. No spam. Just access to the atmosphere.
                   </p>
                 </div>
-                
+
                 <div className="w-full md:w-auto md:min-w-[340px]">
                   {subscribed ? (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="text-[10px] font-black uppercase tracking-widest text-rose-400 border border-rose-500/20 bg-rose-500/5 px-6 py-4 rounded-lg text-center"
@@ -278,10 +295,10 @@ const Home = () => {
                     </motion.div>
                   ) : (
                     <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 w-full">
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         required
-                        placeholder="EMAIL ADDRESS" 
+                        placeholder="EMAIL ADDRESS"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="bg-white/5 border border-white/15 px-4 py-3.5 rounded-lg focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all text-[10px] font-bold tracking-widest text-white w-full sm:flex-grow"
@@ -296,31 +313,31 @@ const Home = () => {
 
               {/* Card 11: Timeline & Countdown (Spans 3 columns) - Blue/White Glow */}
               <div className="md:col-span-3 glass p-6 md:p-8 md:p-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 border border-white/5 bg-black/20">
-                <div className="space-y-4 max-w-md w-full">
+                <div className="space-y-4 max-w-2xl w-full">
                   <div className="flex items-center gap-2 text-white/70">
                     <Calendar size={14} />
                     <span className="text-[9px] font-black uppercase tracking-[0.3em]">Roadmap & Journey</span>
                   </div>
-                  <h3 className="text-3xl font-black uppercase tracking-tighter">Garfield Park Tease</h3>
-                  
-                  {/* Timeline Visualizer */}
-                  <div className="relative pt-6 pb-2 pr-4">
-                    <div className="absolute top-[34px] left-2 right-2 h-[2px] bg-white/15 z-0"></div>
-                    <div className="flex justify-between items-center relative z-10">
-                      <div className="text-left pr-3">
-                        <div className="w-4 h-4 rounded-full bg-cyan-400 flex items-center justify-center">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#0a0a0a]"></div>
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-wider text-cyan-400 mt-2">Out Now</p>
-                        <p className="text-[8px] font-medium text-white/70 uppercase tracking-widest">More Lonely</p>
-                      </div>
+                  <h3 className="text-3xl font-black uppercase tracking-tighter">Garfield Park</h3>
 
-                      <div className="text-right pl-3">
-                        <div className="w-4 h-4 rounded-full border border-white/10 bg-[#0a0a0a] flex items-center justify-center ml-auto">
-                          <div className="w-1.5 h-1.5 rounded-full bg-white/20"></div>
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-wider text-white/80 mt-2">August 1</p>
-                        <p className="text-[8px] font-medium text-white/70 uppercase tracking-widest">Garfield Park</p>
+                  {/* Timeline Visualizer */}
+                  <div className="relative pt-6 pb-2 pr-2 overflow-x-auto">
+                    <div className="relative min-w-[560px] sm:min-w-0">
+                      <div className="absolute top-[7px] left-2 right-2 h-[2px] bg-white/15 z-0"></div>
+                      <div className="flex justify-between items-start relative z-10">
+                        {roadmap.map((point) => (
+                          <div key={point.label} className="text-center px-1 flex-1">
+                            <div className="flex justify-center">
+                              <div className={`w-4 h-4 rounded-full flex items-center justify-center ${point.isCurrent ? 'bg-cyan-400' : point.isFuture ? 'border border-white/10 bg-[#0a0a0a]' : 'bg-white/25'}`}>
+                                <div className={`w-1.5 h-1.5 rounded-full ${point.isCurrent ? 'bg-[#0a0a0a]' : point.isFuture ? 'bg-white/20' : 'bg-[#0a0a0a]'}`}></div>
+                              </div>
+                            </div>
+                            <p className={`text-[9px] sm:text-[10px] font-black uppercase tracking-wider mt-2 ${point.isCurrent ? 'text-cyan-400' : point.isFuture ? 'text-white/80' : 'text-white/55'}`}>
+                              {point.isCurrent ? 'Out Now' : point.date}
+                            </p>
+                            <p className="text-[7px] sm:text-[8px] font-medium text-white/70 uppercase tracking-widest leading-tight">{point.label}</p>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -331,7 +348,7 @@ const Home = () => {
                     <Clock size={12} />
                     <span>Countdown to Garfield Park</span>
                   </div>
-                  
+
                   {timeLeft.completed ? (
                     <div className="text-lg font-black uppercase tracking-widest text-cyan-400">
                       The Event is Live
@@ -366,7 +383,7 @@ const Home = () => {
       </div>
 
       <section className="max-w-4xl mx-auto px-6 py-20 text-center">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
