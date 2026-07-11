@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Instagram, ArrowRight, Send, Disc, FileText, Clock, Calendar } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 import { lyricQuotes } from '../config/lyricQuotes';
+import { featuredSingles } from '../config/featuredSingles';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 
@@ -23,6 +24,7 @@ const Home = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, completed: false });
   const [quote] = useState(() => lyricQuotes[Math.floor(Math.random() * lyricQuotes.length)]);
+  const [featured] = useState(() => featuredSingles[Math.floor(Math.random() * featuredSingles.length)]);
 
   // Handle newsletter signup
   const handleSubscribe = (e: React.FormEvent) => {
@@ -67,6 +69,24 @@ const Home = () => {
 
   const socials = [
     { name: 'Instagram', icon: <Instagram size={20} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F]' },
+    {
+      name: 'Facebook',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+          <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+        </svg>
+      ),
+      href: 'https://www.facebook.com/itscolincherry', color: 'hover:text-[#1877F2]'
+    },
+    {
+      name: 'YouTube',
+      icon: (
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+        </svg>
+      ),
+      href: 'https://www.youtube.com/thecolincherry', color: 'hover:text-[#FF0000]'
+    },
     {
       name: 'TikTok',
       icon: (
@@ -192,21 +212,19 @@ const Home = () => {
                 </span>
               </Link>
 
-              {/* Card 3: "Different" Single Stream & Blurb (Spans 2 columns) - Custom Glow */}
+              {/* Card 3: Featured Single Stream & Blurb (Spans 2 columns) - rotates a new single + poetic synopsis on every load */}
               <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-blue-500/20 hover:shadow-[0_0_35px_rgba(59,130,246,0.08)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
                 <div className="space-y-4">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/70">Featured Single</span>
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">Different</h3>
+                  <h3 className="text-2xl font-black uppercase tracking-tighter">{featured.title}</h3>
                   <p className="text-white/90 text-xs md:text-sm leading-relaxed italic max-w-xl">
-                    "A haunting exploration of emotional distance and half-confessions. Written and recorded late night in the home studio, utilizing analog synths to capture the feeling of cold isolation."
+                    "{featured.synopsis}"
                   </p>
                 </div>
                 <div className="mt-6 w-full">
                   <iframe
-                    src={RELEASE_DATA.currentSingle.spotifyLink.includes('/track/')
-                      ? `https://open.spotify.com/embed/track/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
-                      : `https://open.spotify.com/embed/album/${RELEASE_DATA.currentSingle.spotifyTrackId}?utm_source=generator&theme=0`
-                    }
+                    key={featured.title}
+                    src={`https://open.spotify.com/embed/album/${featured.spotifyLink.split('/').pop()}?utm_source=generator&theme=0`}
                     width="100%"
                     height="80"
                     frameBorder="0"

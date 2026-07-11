@@ -80,9 +80,10 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
   const formattedDate = bannerData.date.toUpperCase();
 
   const singleMarqueeItem = bannerData.isAlbum
-    ? `✦ PRE-SAVE THE ALBUM "${bannerData.title}" — OUT ${formattedDate}        `
-    : `✦ PRE-SAVE NEW SINGLE "${bannerData.title}" — OUT ${formattedDate}        `;
-  const marqueeText = singleMarqueeItem.repeat(15);
+    ? `PRE-SAVE THE ALBUM "${bannerData.title}" — OUT ${formattedDate}`
+    : `PRE-SAVE NEW SINGLE "${bannerData.title}" — OUT ${formattedDate}`;
+  // Generous separator so repeats read as distinct messages, not a run-on wall of text.
+  const marqueeText = Array(15).fill(singleMarqueeItem).join('   ✦   ') + '   ✦   ';
 
   return (
     <AnimatePresence>

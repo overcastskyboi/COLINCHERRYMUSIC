@@ -95,9 +95,13 @@ body {
 /* Smooth in-page anchor scrolling */
 html { scroll-behavior: smooth; }
 
-/* Global reduce-motion killswitch (belt-and-suspenders alongside MotionConfig in App.tsx) */
+/* Global reduce-motion killswitch (belt-and-suspenders alongside MotionConfig in App.tsx).
+   The pre-save marquee is exempted: it's scrolling brand copy, not decorative motion,
+   so freezing it would hide/garble the message instead of just calming the page. */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *:not(.animate-marquee):not(.animate-marquee-slow),
+  *:not(.animate-marquee):not(.animate-marquee-slow)::before,
+  *:not(.animate-marquee):not(.animate-marquee-slow)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
