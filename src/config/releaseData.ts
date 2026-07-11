@@ -24,7 +24,7 @@ export const RELEASE_DATA = {
     targetMonth: "August 2026",
     showTeaser: true,
     countdownTarget: "2026-08-01T00:00:00-04:00",
-    coverArt: "/Garfield Park.jpg",
+    coverArt: "/garfield-park.jpg",
     spotifyPreSaveLink: garfieldPark.spotifyLink || "https://distrokid.com/hyperfollow/colincherry/garfield-park",
     appleMusicPreOrderLink: garfieldPark.appleMusicLink || "https://music.apple.com/us/album/garfield-park/6777408712?uo=4&app=itunes&at=1001lry3&ct=dashboard"
   }

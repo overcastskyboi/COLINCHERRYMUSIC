@@ -114,11 +114,11 @@ const Home = () => {
         <meta property="og:url" content="https://www.thecolincherry.com/" />
         <meta property="og:title" content="Colin Cherry — Garfield Park" />
         <meta property="og:description" content="New album out August 1, 2026. Pre-save on Spotify and pre-order on Apple Music now." />
-        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
+        <meta property="og:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — Garfield Park" />
         <meta name="twitter:description" content="New album out August 1, 2026." />
-        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
       </Helmet>
 
       <Hero
@@ -136,8 +136,10 @@ const Home = () => {
         {/* Brand Watermark */}
         <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
            <img
-             src="/logo_textured.png"
+             src="/logo-textured.png"
              alt=""
+             loading="lazy"
+             decoding="async"
              className="w-[120%] max-w-none opacity-[0.02] grayscale contrast-150 scale-110"
            />
         </div>
@@ -163,7 +165,7 @@ const Home = () => {
                 className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20"
               >
                 <div className="absolute top-0 right-0 w-48 h-full opacity-15 group-hover:opacity-30 transition-opacity pointer-events-none">
-                  <img src={moreLonelyArt} alt="" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
+                  <img src={moreLonelyArt} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
                 <div className="relative z-10 space-y-4">
                   <span className="text-[9px] font-black uppercase tracking-[0.3em] text-cyan-400">Out Now</span>

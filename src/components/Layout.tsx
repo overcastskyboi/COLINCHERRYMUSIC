@@ -12,24 +12,14 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden flex flex-col relative">
-      {/* Global Grain Overlay */}
-      <div className="fixed inset-0 z-[100] pointer-events-none opacity-[0.03] bg-grain mix-blend-overlay"></div>
-      
-      {/* Atmospheric Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Fog Layers */}
-        <div className="absolute top-[-10%] left-[-10%] w-[120%] h-[120%] opacity-40 animate-fog">
-          {/* Indigo/Violet Glow */}
-          <div className="absolute top-[10%] left-[5%] w-[50%] h-[50%] bg-indigo-500/[0.07] blur-[130px] rounded-full"></div>
-          {/* Fuchsia/Pink Glow */}
-          <div className="absolute bottom-[20%] right-[10%] w-[50%] h-[50%] bg-fuchsia-500/[0.06] blur-[140px] rounded-full"></div>
-          {/* Cyan Accents */}
-          <div className="absolute top-[40%] right-[20%] w-[35%] h-[35%] bg-cyan-500/[0.04] blur-[120px] rounded-full"></div>
-        </div>
-        
-        {/* Deep Ambient Glows */}
-        <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-purple-900/[0.05] blur-[160px] rounded-full"></div>
-        <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-blue-900/[0.05] blur-[160px] rounded-full"></div>
+      {/* Grain overlay — static, no mix-blend (mix-blend forces full-viewport recompositing). */}
+      <div className="fixed inset-0 z-[100] pointer-events-none opacity-[0.025] bg-grain"></div>
+
+      {/* Atmospheric background — two soft glows on their own compositor layer.
+          The drift animation moves via transform only (cheap) and is disabled under reduce-motion. */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden [transform:translateZ(0)]">
+        <div className="absolute top-[-10%] left-[-5%] w-[55%] h-[55%] bg-indigo-500/[0.06] blur-[80px] rounded-full motion-safe:animate-fog"></div>
+        <div className="absolute bottom-[-12%] right-[-5%] w-[55%] h-[55%] bg-fuchsia-500/[0.05] blur-[80px] rounded-full"></div>
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">

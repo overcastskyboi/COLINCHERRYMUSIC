@@ -59,6 +59,8 @@ const EPK = () => {
               <img 
                 src="/press-photo.png"
                 alt="Colin Cherry Press Shot" 
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                 onError={(e) => { e.currentTarget.style.opacity = '0'; }}
               />

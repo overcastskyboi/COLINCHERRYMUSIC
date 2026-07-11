@@ -16,7 +16,7 @@ interface HeroProps {
 
 const Hero = ({
   latestDropTitle = "GARFIELD PARK",
-  artworkUrl = "/Garfield Park.jpg",
+  artworkUrl = "/garfield-park.jpg",
   spotifyLink = "#",
   appleMusicLink = "#",
   subtitle = "Upcoming Album",
@@ -68,6 +68,11 @@ const Hero = ({
             <img
               src={artworkUrl}
               alt={latestDropTitle}
+              width={576}
+              height={576}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full object-cover"
             />
             {/* Subtle glow behind the cover */}

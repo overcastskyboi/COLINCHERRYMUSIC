@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 interface LyricModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface LyricModalProps {
 }
 
 const LyricModal = ({ isOpen, onClose, title, lyrics, themeColor }: LyricModalProps) => {
+  useModalA11y(isOpen, onClose);
   return (
     <AnimatePresence>
       {isOpen && (

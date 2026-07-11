@@ -91,3 +91,16 @@ body {
 .animate-fog {
   animation: fogDrift 20s ease-in-out infinite;
 }
+
+/* Smooth in-page anchor scrolling */
+html { scroll-behavior: smooth; }
+
+/* Global reduce-motion killswitch (belt-and-suspenders alongside MotionConfig in App.tsx) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

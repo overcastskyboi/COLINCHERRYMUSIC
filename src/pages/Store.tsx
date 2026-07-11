@@ -3,6 +3,7 @@ import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet-async';
 import { ShoppingBag, X, Plus, Minus, Trash2, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useModalA11y } from '../hooks/useModalA11y';
 
 interface Product {
   id: string;
@@ -52,6 +53,9 @@ const Store = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+
+  useModalA11y(!!selectedProduct, () => setSelectedProduct(null));
+  useModalA11y(isCartOpen, () => setIsCartOpen(false));
 
   const addToCart = (product: Product, size?: string, qty: number = 1) => {
     if (product.isComingSoon) return; // Prevent adding coming soon items
@@ -135,6 +139,8 @@ const Store = () => {
                 <img 
                   src={product.image} 
                   alt={product.name} 
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
                 />
@@ -186,6 +192,8 @@ const Store = () => {
                     <img 
                       src={selectedProduct.image} 
                       alt={selectedProduct.name} 
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover" 
                       onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
                     />
@@ -331,6 +339,8 @@ const Store = () => {
                           <img 
                             src={item.product.image} 
                             alt="" 
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover" 
                             onError={(e) => { e.currentTarget.src = "/rose.jpg"; }}
                           />

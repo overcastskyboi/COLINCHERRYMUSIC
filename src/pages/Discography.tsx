@@ -3,6 +3,7 @@ import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, Play, X } from 'lucide-react';
 import LyricModal from '../components/LyricModal';
+import { useModalA11y } from '../hooks/useModalA11y';
 import { Helmet } from 'react-helmet-async';
 import catalogDb from '../config/catalogDb.json';
 import lyricsDb from '../config/lyricsDb.json';
@@ -71,6 +72,8 @@ const Discography = () => {
   useEffect(() => {
     setSelectedTrackIndex(0);
   }, [selectedAlbum]);
+
+  useModalA11y(!!selectedAlbum, () => setSelectedAlbum(null));
 
   useEffect(() => {
     const fetchMusic = async () => {
@@ -171,11 +174,11 @@ const Discography = () => {
         <meta property="og:url" content="https://www.thecolincherry.com/music" />
         <meta property="og:title" content="Colin Cherry — Music Catalog" />
         <meta property="og:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta property="og:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
+        <meta property="og:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — Music Catalog" />
         <meta name="twitter:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta name="twitter:image" content="https://www.thecolincherry.com/Garfield Park.jpg" />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -317,6 +320,7 @@ const Discography = () => {
                       <img
                         src={selectedAlbum.images[0]?.url}
                         alt={selectedAlbum.name}
+                        loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover"
                         onError={(e) => { e.currentTarget.src = "/different.jpg"; }}

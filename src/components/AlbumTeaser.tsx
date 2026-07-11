@@ -18,7 +18,7 @@ const AlbumTeaser = ({ title, artworkUrl, isVisible, releaseDate }: AlbumTeaserP
     >
       <div className="glass p-12 md:p-24 grid md:grid-cols-2 gap-12 items-center">
         <div className="overflow-hidden rounded-lg">
-          <img src={artworkUrl} alt={title} className="w-full aspect-square object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+          <img src={artworkUrl} alt={title} loading="lazy" decoding="async" className="w-full aspect-square object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
         </div>
         <div className="space-y-6">
           <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60">Upcoming Release</h2>

@@ -7,7 +7,7 @@
       "upc": "",
       "spotifyLink": "https://distrokid.com/hyperfollow/colincherry/garfield-park",
       "appleMusicLink": "https://music.apple.com/us/album/garfield-park/6777408712?uo=4&app=itunes&at=1001lry3&ct=dashboard",
-      "coverArt": "/Garfield Park.jpg",
+      "coverArt": "/garfield-park.jpg",
       "tracks": [
         {
           "trackNumber": 1,
@@ -19,7 +19,7 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/Garfield Park.jpg"
+          "coverArt": "/garfield-park.jpg"
         },
         {
           "trackNumber": 2,
@@ -43,7 +43,7 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/Garfield Park.jpg"
+          "coverArt": "/garfield-park.jpg"
         },
         {
           "trackNumber": 4,
@@ -103,7 +103,7 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/Garfield Park.jpg"
+          "coverArt": "/garfield-park.jpg"
         },
         {
           "trackNumber": 9,
@@ -115,7 +115,7 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/Garfield Park.jpg"
+          "coverArt": "/garfield-park.jpg"
         }
       ]
     }
