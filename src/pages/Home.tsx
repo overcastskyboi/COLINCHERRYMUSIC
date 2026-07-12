@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import PageTransition from '../components/PageTransition';
 import Hero from '../components/Hero';
 import { motion } from 'framer-motion';
-import { Instagram, ArrowRight, Send, Disc, FileText, Clock, Calendar } from 'lucide-react';
+import { ArrowRight, Send, Disc, FileText, Clock, Calendar } from 'lucide-react';
 import { RELEASE_DATA, upcomingReleases } from '../config/releaseData';
 import { lyricQuotes } from '../config/lyricQuotes';
 import { featuredSingles } from '../config/featuredSingles';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import SocialLinks from '../components/SocialLinks';
+import { AppleMusicIcon } from '../components/icons/BrandIcons';
 
 // The lead-up singles ahead of the album, in release order, for the roadmap timeline.
 const roadmap = [
@@ -67,64 +69,6 @@ const Home = () => {
   // More Lonely is already out — pull its own art rather than the next unreleased album track
   const moreLonelyArt = upcomingReleases.find(r => r.title === RELEASE_DATA.nextUp.title)?.art || RELEASE_DATA.rollout.coverArt;
 
-  const socials = [
-    { name: 'Instagram', icon: <Instagram size={20} />, href: 'https://instagram.com/thecolincherry', color: 'hover:text-[#E4405F]' },
-    {
-      name: 'Facebook',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
-        </svg>
-      ),
-      href: 'https://www.facebook.com/itscolincherry', color: 'hover:text-[#1877F2]'
-    },
-    {
-      name: 'YouTube',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-        </svg>
-      ),
-      href: 'https://www.youtube.com/thecolincherry', color: 'hover:text-[#FF0000]'
-    },
-    {
-      name: 'TikTok',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M12.525.02c1.31.036 2.512.512 3.518 1.227v3.13c-.176-.034-.343-.065-.514-.11-2.504-.671-4.412-2.539-5.188-4.938-.03-.1-.073-.19-.146-.373v10.59c0 5.147-4.172 9.319-9.319 9.319-5.147 0-9.319-4.172-9.319-9.319 0-5.147 4.172-9.319 9.319-9.319.463 0 .926.034 1.381.101v3.167c-.5-.149-1-.224-1.5-.224-3.407 0-6.167 2.76-6.167 6.167s2.76 6.167 6.167 6.167 6.167-2.76 6.167-6.167V0h3.13z" />
-        </svg>
-      ),
-      href: 'https://tiktok.com/@thecolincherry', color: 'hover:text-[#00f2ea]'
-    },
-    {
-      name: 'SoundCloud',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M11.563 17.125c-.014 0-.027 0-.041-.001V8.11c.014-.001.027-.001.041-.001.196 0 .382.032.556.091v8.834a1.986 1.986 0 0 1-.556.091zm-2.344-.121c-.014 0-.028 0-.042 0V8.51c.014-.001.028-.001.042-.001.214 0 .417.038.605.107v8.402a2.33 2.33 0 0 1-.605.107zm-2.344-.34c-.014 0-.028 0-.042 0v-6.12c.014-.001.028-.001.042-.001.233 0 .452.046.653.129v5.862a2.71 2.71 0 0 1-.653.13zm-2.343-.84c-.015 0-.029 0-.043-.001v-3.41c.014-.001.028-.001.043-.001.252 0 .489.058.702.162v3.088a3.134 3.134 0 0 1-.702.162zM2.188 14.5c-.015 0-.03 0-.045-.001V13.5c.015 0 .03 0 .045-.001.272 0 .508.076.72.212v.576a3.63 3.63 0 0 1-.72.213zm20.312-1.375c0 2.209-1.791 4-4 4h-5.625c-.014 0-.027 0-.041-.001V8.11c.014-.001.027-.001.041-.001 1.454 0 2.723.776 3.436 1.936.314-.153.667-.241 1.041-.241 1.283 0 2.323.974 2.422 2.221.688.285 1.166.96 1.166 1.75z" />
-        </svg>
-      ),
-      href: 'https://soundcloud.com/thecolincherry', color: 'hover:text-[#FF3300]'
-    },
-    {
-      name: 'Spotify',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm5.508 17.302c-.216.354-.675.466-1.028.249-2.856-1.746-6.451-2.141-10.685-1.173-.406.092-.814-.16-.906-.565-.092-.406.16-.814.565-.906 4.634-1.059 8.604-.604 11.8 1.347.353.217.465.676.249 1.029l.005.019zm1.469-3.262c-.272.44-.847.578-1.287.306-3.269-2.008-8.253-2.592-12.118-1.418-.496.147-1.022-.135-1.169-.631-.147-.496.135-1.022.631-1.169 4.416-1.341 9.913-.688 13.65 1.611.439.272.577.847.305 1.287l-.012.014zm.127-3.41c-3.921-2.328-10.374-2.543-14.133-1.403-.601.182-1.237-.162-1.419-.763-.182-.601.162-1.237.763-1.419 4.305-1.306 11.428-1.058 15.921 1.611.54.32.714 1.015.394 1.555-.32.539-1.015.714-1.555.394l-.071-.075z" />
-        </svg>
-      ),
-      href: 'https://open.spotify.com/artist/2lCz91g9DugcZhbtvMnaUN', color: 'hover:text-[#1DB954]'
-    },
-    {
-      name: 'Apple Music',
-      icon: (
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-          <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm2.143 13.82c-.31.258-.727.41-1.143.41a1.867 1.867 0 0 1-1.857-1.857c0-1.025.832-1.857 1.857-1.857.294 0 .58.07.822.203V8.895l-3.429.742V15c-.31.258-.727.41-1.143.41a1.867 1.867 0 0 1-1.857-1.857c0-1.025.832-1.857 1.857-1.857.294 0 .58.07.822.203V8.125c0-.46.33-.846.784-.928l4.286-.928c.516-.112.984.28.984.806v6.786c0 .416-.215.802-.557 1.059z"/>
-        </svg>
-      ),
-      href: 'https://music.apple.com/us/artist/colin-cherry/1639040887', color: 'hover:text-[#FC3C44]'
-    },
-  ];
-
   return (
     <PageTransition>
       <Helmet>
@@ -178,12 +122,7 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto text-left mb-24 w-full">
 
               {/* Card 1: More Lonely — Out Now (Spans 2 columns) - Blue/Cyan Glow */}
-              <a
-                href={RELEASE_DATA.nextUp.preSaveLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20"
-              >
+              <div className="md:col-span-2 glass p-6 md:p-8 flex flex-col justify-between relative overflow-hidden group border border-white/5 hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
                 <div className="absolute top-0 right-0 w-48 h-full opacity-15 group-hover:opacity-30 transition-opacity pointer-events-none">
                   <img src={moreLonelyArt} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale scale-110 group-hover:scale-100 transition-transform duration-700" />
                 </div>
@@ -192,10 +131,25 @@ const Home = () => {
                   <h3 className="text-4xl font-black uppercase tracking-tighter">{RELEASE_DATA.nextUp.title}</h3>
                   <p className="text-white/70 text-xs md:text-sm max-w-md leading-relaxed">The newest single is streaming everywhere now. Stream it on Spotify and Apple Music.</p>
                 </div>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-6 group-hover:text-cyan-400 transition-colors w-fit border-b border-white group-hover:border-cyan-400 pb-1 z-10">
-                  Stream Now <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-                </span>
-              </a>
+                <div className="relative z-10 flex items-center gap-4 mt-6">
+                  <a
+                    href={RELEASE_DATA.nextUp.preSaveLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-[#1DB954] transition-colors w-fit border-b border-white hover:border-[#1DB954] pb-1"
+                  >
+                    Spotify <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a
+                    href={RELEASE_DATA.nextUp.appleMusicLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white hover:text-[#FA243C] transition-colors w-fit border-b border-white hover:border-[#FA243C] pb-1"
+                  >
+                    Apple Music <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </div>
+              </div>
 
               {/* Card 2: Music Catalog (Spans 1 column) - Indigo Glow */}
               <Link to="/music" className="glass p-6 md:p-8 flex flex-col justify-between group border border-white/5 hover:border-indigo-500/30 hover:shadow-[0_0_30px_rgba(99,102,241,0.1)] transition-all duration-500 min-h-[200px] md:min-h-[220px] bg-black/20">
@@ -221,7 +175,7 @@ const Home = () => {
                     "{featured.synopsis}"
                   </p>
                 </div>
-                <div className="mt-6 w-full">
+                <div className="mt-6 w-full space-y-3">
                   <iframe
                     key={featured.title}
                     src={`https://open.spotify.com/embed/album/${featured.spotifyLink.split('/').pop()}?utm_source=generator&theme=0`}
@@ -232,6 +186,17 @@ const Home = () => {
                     loading="lazy"
                     className="rounded-xl bg-transparent w-full border border-white/5"
                   ></iframe>
+                  {featured.appleMusicLink && (
+                    <a
+                      href={featured.appleMusicLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white hover:border-[#FA243C]/40 hover:bg-[#FA243C]/10 transition-all"
+                    >
+                      <AppleMusicIcon className="w-3.5 h-3.5 text-[#FA243C]" />
+                      Listen on Apple Music
+                    </a>
+                  )}
                 </div>
               </div>
 
@@ -277,20 +242,7 @@ const Home = () => {
               {/* Card 9: Connect & Socials (Full width horizontal bar) */}
               <div className="md:col-span-3 glass p-6 flex flex-col sm:flex-row items-center justify-between gap-6 border border-white/5 hover:border-white/15 transition-all duration-500 bg-black/20">
                 <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/50">Follow Along</span>
-                <div className="flex items-center gap-6 sm:gap-8">
-                  {socials.map((social, i) => (
-                    <a
-                      key={i}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={social.name}
-                      className={`text-white/60 transition-all hover:scale-110 ${social.color}`}
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
-                </div>
+                <SocialLinks className="flex items-center gap-6 sm:gap-8" linkClassName="text-white/60 transition-all hover:scale-110" />
                 <span className="text-[9px] font-black uppercase tracking-[0.4em] text-white/50">@thecolincherry</span>
               </div>
 

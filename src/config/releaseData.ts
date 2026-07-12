@@ -17,7 +17,12 @@ export const RELEASE_DATA = {
   nextUp: {
     title: moreLonelyTrack ? moreLonelyTrack.title : "More Lonely",
     releaseDate: "June 19",
-    preSaveLink: moreLonelyTrack && moreLonelyTrack.hyperfollowLink ? moreLonelyTrack.hyperfollowLink : "https://distrokid.com/hyperfollow/colincherry/more-lonely"
+    // Now that the song is actually out, link straight to the real streaming pages
+    // instead of the DistroKid pre-save/hyperfollow page (that page is for before release).
+    preSaveLink: moreLonelyTrack && moreLonelyTrack.spotifyLink
+      ? moreLonelyTrack.spotifyLink
+      : (moreLonelyTrack && moreLonelyTrack.hyperfollowLink) || "https://distrokid.com/hyperfollow/colincherry/more-lonely",
+    appleMusicLink: (moreLonelyTrack && moreLonelyTrack.appleMusicLink) || "https://music.apple.com/us/album/more-lonely-single/6768348519?uo=4"
   },
   rollout: {
     albumTitle: garfieldPark.title,
@@ -34,7 +39,7 @@ export const RELEASE_DATA = {
 export const upcomingReleases = garfieldPark.tracks.map(track => {
   // Parse month and day from releaseDate (e.g. "June 5, 2026" -> "JUNE 5")
   let displayDate = "PAST RELEASE";
-  
+
   if (track.releaseDate) {
     const parts = track.releaseDate.split(',');
     if (parts.length > 0) {

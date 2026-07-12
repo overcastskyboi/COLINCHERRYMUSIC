@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Play, X } from 'lucide-react';
+import { Play, X } from 'lucide-react';
 import LyricModal from '../components/LyricModal';
 import { useModalA11y } from '../hooks/useModalA11y';
 import { Helmet } from 'react-helmet-async';
 import catalogDb from '../config/catalogDb.json';
 import lyricsDb from '../config/lyricsDb.json';
 import { upcomingReleases } from '../config/releaseData';
+import { SpotifyIcon, AppleMusicIcon } from '../components/icons/BrandIcons';
 
 interface SpotifyAlbum {
   id: string;
@@ -121,6 +122,39 @@ const Discography = () => {
   const getThemeColorForAlbum = (albumName: string) => {
     const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
     return matched ? matched.themeColor : "#FFFFFF";
+  };
+
+  const spotifyEmbedFromLink = (link?: string | null) => {
+    if (!link) return null;
+    const match = link.match(/album\/([a-zA-Z0-9]+)/);
+    return match ? `https://open.spotify.com/embed/album/${match[1]}?utm_source=generator&theme=0` : null;
+  };
+
+  const appleEmbedFromLink = (link?: string | null) => {
+    if (!link) return null;
+    // Apple Music embeds live at embed.music.apple.com, same path as the public URL.
+    const match = link.match(/music\.apple\.com\/([a-z]{2}\/album\/[^?]+)/);
+    return match ? `https://embed.music.apple.com/${match[1]}` : null;
+  };
+
+  /**
+   * Resolve the best available streaming links + embeds for a single track inside
+   * an album entry. Unreleased tracks (e.g. Garfield Park's "Only Human") have empty
+   * spotifyLink/appleMusicLink of their own — fall back to the parent album's link so
+   * clicking into them never dead-ends, and flag that fallback so the UI can say
+   * "part of Garfield Park" instead of implying the track has its own release.
+   */
+  const getTrackStreaming = (track: { spotifyLink?: string; appleMusicLink?: string }, album: typeof catalogDb.albums[number]) => {
+    const spotifyLink = track.spotifyLink || album.spotifyLink || null;
+    const appleMusicLink = track.appleMusicLink || album.appleMusicLink || null;
+    const isOwnRelease = Boolean(track.spotifyLink || track.appleMusicLink);
+    return {
+      spotifyLink,
+      appleMusicLink,
+      spotifyEmbed: spotifyEmbedFromLink(spotifyLink),
+      appleEmbed: appleEmbedFromLink(appleMusicLink),
+      isOwnRelease,
+    };
   };
 
   const getSpotifyEmbedUrl = (album: SpotifyAlbum) => {
@@ -297,25 +331,29 @@ const Discography = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl"
+              className="fixed inset-0 z-[100] flex items-start md:items-center justify-center p-0 md:p-6 bg-black/90 backdrop-blur-xl"
               onClick={() => setSelectedAlbum(null)}
             >
               <motion.div
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                initial={{ scale: 0.98, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                className="glass w-full max-w-5xl max-h-[90vh] overflow-y-auto p-8 md:p-12 relative"
+                exit={{ scale: 0.98, opacity: 0, y: 20 }}
+                // Single scroll container for the whole modal — no nested scrollboxes.
+                // Art/streaming stays pinned at the top of its column on desktop via sticky,
+                // everything else (track picker + lyrics) flows and scrolls together.
+                className="glass w-full h-full md:h-auto md:max-w-6xl md:max-h-[88vh] overflow-y-auto p-6 sm:p-8 md:p-12 relative rounded-none md:rounded-2xl"
                 onClick={e => e.stopPropagation()}
               >
                 <button
                   onClick={() => setSelectedAlbum(null)}
-                  className="absolute top-8 right-8 text-white/60 hover:text-white transition-colors"
+                  className="fixed md:absolute top-4 right-4 md:top-8 md:right-8 z-10 text-white/60 hover:text-white transition-colors bg-black/40 md:bg-transparent rounded-full p-2 md:p-0"
                 >
-                  <X size={32} />
+                  <X size={28} />
                 </button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                  <div className="space-y-8">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-16">
+                  {/* Left: art + streaming — sticky on desktop so it stays visible while lyrics scroll */}
+                  <div className="space-y-6 lg:sticky lg:top-0 lg:self-start">
                     <div className="aspect-square glass overflow-hidden rounded-xl">
                       <img
                         src={selectedAlbum.images[0]?.url}
@@ -326,42 +364,10 @@ const Discography = () => {
                         onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
                       />
                     </div>
-                    <div className="space-y-4">
-                      {getSpotifyEmbedUrl(selectedAlbum) ? (
-                        <iframe
-                          src={getSpotifyEmbedUrl(selectedAlbum)!}
-                          width="100%"
-                          height="80"
-                          frameBorder="0"
-                          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                          loading="lazy"
-                          className="rounded-xl border border-white/5"
-                        ></iframe>
-                      ) : (
-                        <div className="p-6 glass rounded-xl text-center space-y-2 border border-white/10">
-                          <Play size={24} className="mx-auto text-white/60" />
-                          <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
-                            {dbAlbum && !isReleased(dbAlbum.releaseDate) ? "Streaming embed unlocks at release" : "No streaming embed available for this release"}
-                          </p>
-                        </div>
-                      )}
-                      {selectedAlbum.external_urls.spotify && selectedAlbum.external_urls.spotify !== "#" && (
-                        <a
-                          href={selectedAlbum.external_urls.spotify}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all border border-white/5 rounded-lg"
-                        >
-                          {dbAlbum && !isReleased(dbAlbum.releaseDate) ? "Pre-Save / Pre-Order" : "View on Platform"} <ExternalLink size={14} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
 
-                  <div className="space-y-12">
                     <div>
                       <h2
-                        className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2 leading-none transition-colors"
+                        className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-1 leading-none transition-colors"
                         style={{ color: dbAlbum ? (dbAlbum.tracks[selectedTrackIndex]?.themeColor || "#FFFFFF") : getThemeColorForAlbum(selectedAlbum.name) }}
                       >
                         {selectedAlbum.name}
@@ -369,34 +375,130 @@ const Discography = () => {
                       <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">{selectedAlbum.album_type} &bull; {selectedAlbum.release_date}</p>
                     </div>
 
-                    {dbAlbum ? (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div className="md:col-span-1 space-y-2 max-h-[40vh] overflow-y-auto pr-2">
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-2 mb-3">Tracks</h4>
-                          {dbAlbum.tracks.map((track, tIdx) => (
-                            <button
-                              key={track.title}
-                              onClick={() => setSelectedTrackIndex(tIdx)}
-                              className={`w-full text-left p-2 rounded transition-all border ${selectedTrackIndex === tIdx ? 'bg-white/10 border-white/10 text-white' : 'border-transparent text-white/60 hover:text-white hover:bg-white/5'}`}
-                            >
-                              <div className="flex items-start gap-2">
-                                <span className="text-[10px] font-mono mt-0.5 text-white/40">{(tIdx + 1).toString().padStart(2, '0')}</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider leading-tight">{track.title}</span>
-                              </div>
-                            </button>
-                          ))}
+                    {/* Streaming: resolves to the selected track's own links when this is a
+                        multi-track album entry, falling back to the album-level link for
+                        tracks that aren't out as their own release yet. */}
+                    {(() => {
+                      const trackStreaming = dbAlbum ? getTrackStreaming(dbAlbum.tracks[selectedTrackIndex] || {}, dbAlbum) : null;
+                      const spotifyEmbed = trackStreaming ? trackStreaming.spotifyEmbed : getSpotifyEmbedUrl(selectedAlbum);
+                      const appleEmbed = trackStreaming ? trackStreaming.appleEmbed : appleEmbedFromLink(dbAlbum?.appleMusicLink);
+                      const spotifyLink = trackStreaming ? trackStreaming.spotifyLink : (selectedAlbum.external_urls.spotify !== "#" ? selectedAlbum.external_urls.spotify : null);
+                      const appleLink = trackStreaming ? trackStreaming.appleMusicLink : (dbAlbum?.appleMusicLink || null);
+                      const unreleased = dbAlbum ? !isReleased(dbAlbum.releaseDate) : false;
+                      const ctaLabel = unreleased ? "Pre-Save / Pre-Order" : "Listen";
+
+                      return (
+                        <div className="space-y-3">
+                          {spotifyEmbed && (
+                            <iframe
+                              key={`spotify-${spotifyEmbed}`}
+                              src={spotifyEmbed}
+                              width="100%"
+                              height="80"
+                              frameBorder="0"
+                              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                              loading="lazy"
+                              className="rounded-xl border border-white/5"
+                            ></iframe>
+                          )}
+                          {appleEmbed && (
+                            <iframe
+                              key={`apple-${appleEmbed}`}
+                              src={appleEmbed}
+                              width="100%"
+                              height="150"
+                              frameBorder="0"
+                              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
+                              allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
+                              loading="lazy"
+                              className="rounded-xl border border-white/5 bg-[#0a0a0a]"
+                            ></iframe>
+                          )}
+                          {!spotifyEmbed && !appleEmbed && (
+                            <div className="p-6 glass rounded-xl text-center space-y-2 border border-white/10">
+                              <Play size={24} className="mx-auto text-white/60" />
+                              <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
+                                {unreleased ? "Streaming unlocks at release" : "No streaming embed available"}
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="grid grid-cols-2 gap-3">
+                            {spotifyLink && (
+                              <a
+                                href={spotifyLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center gap-2 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all border rounded-lg bg-[#1DB954]/10 border-[#1DB954]/30 text-white hover:bg-[#1DB954]/20"
+                              >
+                                <SpotifyIcon className="w-4 h-4 text-[#1DB954]" />
+                                {ctaLabel}
+                              </a>
+                            )}
+                            {appleLink && (
+                              <a
+                                href={appleLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center gap-2 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all border rounded-lg bg-[#FA243C]/10 border-[#FA243C]/30 text-white hover:bg-[#FA243C]/20"
+                              >
+                                <AppleMusicIcon className="w-4 h-4 text-[#FA243C]" />
+                                {ctaLabel}
+                              </a>
+                            )}
+                          </div>
+
+                          {dbAlbum && trackStreaming && !trackStreaming.isOwnRelease && (
+                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 text-center pt-1">
+                              Part of {dbAlbum.title} — not yet released as its own single
+                            </p>
+                          )}
                         </div>
-                        <div className="md:col-span-2 space-y-4">
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-2">Lyrics: {dbAlbum.tracks[selectedTrackIndex]?.title}</h4>
-                          <div className="font-lyric text-base md:text-lg leading-relaxed tracking-wide text-white/90 max-h-[40vh] overflow-y-auto pr-4">
-                            {renderLyrics(dbAlbum.tracks[selectedTrackIndex]?.lyrics || "")}
+                      );
+                    })()}
+                  </div>
+
+                  {/* Right: track picker (horizontal, scales to any track count) + lyrics */}
+                  <div className="space-y-8 min-w-0">
+                    {dbAlbum ? (
+                      <>
+                        <div>
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3 mb-4">
+                            Tracklist &bull; {dbAlbum.tracks.length} songs
+                          </h4>
+                          {/* Horizontal chip strip instead of a cramped 1/3-width vertical
+                              list — scales cleanly whether the album has 4 tracks or 14. */}
+                          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
+                            {dbAlbum.tracks.map((track, tIdx) => (
+                              <button
+                                key={track.title}
+                                onClick={() => setSelectedTrackIndex(tIdx)}
+                                className={`snap-start flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all whitespace-nowrap ${
+                                  selectedTrackIndex === tIdx
+                                    ? 'bg-white/15 border-white/20 text-white'
+                                    : 'border-white/10 text-white/60 hover:text-white hover:bg-white/5'
+                                }`}
+                              >
+                                <span className="text-[10px] font-mono text-white/40">{(tIdx + 1).toString().padStart(2, '0')}</span>
+                                <span className="text-xs font-semibold uppercase tracking-wider">{track.title}</span>
+                              </button>
+                            ))}
                           </div>
                         </div>
-                      </div>
+
+                        <div className="space-y-4">
+                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3">
+                            Lyrics &mdash; {dbAlbum.tracks[selectedTrackIndex]?.title}
+                          </h4>
+                          <div className="font-lyric text-base md:text-lg leading-loose tracking-wide text-white/90">
+                            {renderLyrics(dbAlbum.tracks[selectedTrackIndex]?.lyrics || "Lyrics coming soon.")}
+                          </div>
+                        </div>
+                      </>
                     ) : (
-                      <div className="space-y-6">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-4">Lyrics</h4>
-                        <div className="font-lyric text-base md:text-lg leading-relaxed tracking-wide text-white/90 max-h-[40vh] overflow-y-auto pr-4">
+                      <div className="space-y-4">
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3">Lyrics</h4>
+                        <div className="font-lyric text-base md:text-lg leading-loose tracking-wide text-white/90">
                           {renderLyrics(getLyricsForAlbum(selectedAlbum.name))}
                         </div>
                       </div>

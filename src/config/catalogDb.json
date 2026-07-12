@@ -64,8 +64,8 @@
           "releaseDate": "June 19, 2026",
           "themeColor": "#4A90E2",
           "upc": "",
-          "spotifyLink": "",
-          "appleMusicLink": "",
+          "spotifyLink": "https://open.spotify.com/album/1O621pRlYJtXhYfbzk8PA7",
+          "appleMusicLink": "https://music.apple.com/us/album/more-lonely-single/6768348519?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
           "coverArt": "/more-lonely.jpg"
         },
@@ -126,8 +126,8 @@
       "type": "single",
       "releaseDate": "2026-06-19",
       "coverArt": "/more-lonely.jpg",
-      "spotifyLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
-      "appleMusicLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely"
+      "spotifyLink": "https://open.spotify.com/album/1O621pRlYJtXhYfbzk8PA7",
+      "appleMusicLink": "https://music.apple.com/us/album/more-lonely-single/6768348519?uo=4"
     },
     {
       "title": "Different",

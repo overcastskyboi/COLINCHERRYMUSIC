@@ -12,8 +12,10 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] overflow-x-hidden flex flex-col relative">
-      {/* Grain overlay — static, no mix-blend (mix-blend forces full-viewport recompositing). */}
-      <div className="fixed inset-0 z-[100] pointer-events-none opacity-[0.025] bg-grain"></div>
+      {/* Grain overlay — static, no mix-blend (mix-blend forces full-viewport recompositing).
+          Softened from the original (finer noise + higher contrast) which read as dirty/smudged
+          rather than a deliberate film-grain texture. */}
+      <div className="fixed inset-0 z-[100] pointer-events-none opacity-[0.02] bg-grain"></div>
 
       {/* Atmospheric background — two soft glows on their own compositor layer.
           The drift animation moves via transform only (cheap) and is disabled under reduce-motion. */}
