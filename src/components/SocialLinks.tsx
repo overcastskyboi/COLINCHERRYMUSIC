@@ -28,10 +28,15 @@ interface SocialDef {
   href: string;
   /** Tailwind hover color class using each platform's official brand color. */
   hoverClass: string;
+  /** Override the icon's width class when its glyph isn't square (e.g. SoundCloud's
+      wide cloud mark) — keeps the icon's own aspect ratio instead of squishing it
+      into a square box that clips the artwork. */
+  widthClass?: string;
 }
 
 // Canonical artist links. Update in one place and every consumer (Footer, Home, EPK)
-// stays in sync.
+// stays in sync. Handles differ by platform — not every platform could get
+// "thecolincherry" (Facebook is "itscolincherry").
 export const SOCIAL_LINKS: Record<SocialPlatform, SocialDef> = {
   instagram: {
     name: 'Instagram',
@@ -50,6 +55,9 @@ export const SOCIAL_LINKS: Record<SocialPlatform, SocialDef> = {
     Icon: SoundCloudIcon,
     href: 'https://soundcloud.com/thecolincherry',
     hoverClass: 'hover:text-[#FF7700]',
+    // SoundCloud's mark is wider than tall (viewBox 0 0 32 24) — give it more width
+    // instead of squishing it into the same w-5 square as the round icons.
+    widthClass: 'w-7',
   },
   spotify: {
     name: 'Spotify',
@@ -80,7 +88,8 @@ export const SOCIAL_LINKS: Record<SocialPlatform, SocialDef> = {
 interface SocialLinksProps {
   /** Which platforms to render, in order. Defaults to the full set. */
   platforms?: SocialPlatform[];
-  /** Icon square size in Tailwind units, e.g. "w-5 h-5" (default) or "w-6 h-6". */
+  /** Icon size classes, e.g. "w-5 h-5" (default) or "w-6 h-6". Height is respected
+      exactly; width is used as the fallback for icons without their own widthClass. */
   iconClassName?: string;
   /** Wrapper className for the row/list container. */
   className?: string;
@@ -104,11 +113,16 @@ const SocialLinks = ({
   className = 'flex items-center gap-8',
   linkClassName = 'text-white/70 transition-all hover:scale-110',
 }: SocialLinksProps) => {
+  // Height stays constant across all icons (keeps the row visually aligned); width
+  // can be overridden per-platform for non-square glyphs like SoundCloud.
+  const heightClass = iconClassName.split(' ').find((c) => c.startsWith('h-')) || 'h-5';
+
   return (
     <div className={className}>
       {platforms.map((key) => {
         const social = SOCIAL_LINKS[key];
         const { Icon } = social;
+        const widthClass = social.widthClass || iconClassName.split(' ').find((c) => c.startsWith('w-')) || 'w-5';
         return (
           <a
             key={key}
@@ -116,9 +130,9 @@ const SocialLinks = ({
             target="_blank"
             rel="noopener noreferrer"
             title={social.name}
-            className={`${linkClassName} ${social.hoverClass}`}
+            className={`${linkClassName} ${social.hoverClass} inline-flex items-center justify-center`}
           >
-            <Icon className={iconClassName} />
+            <Icon className={`${widthClass} ${heightClass}`} />
           </a>
         );
       })}

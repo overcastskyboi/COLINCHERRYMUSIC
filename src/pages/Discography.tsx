@@ -124,64 +124,51 @@ const Discography = () => {
     return matched ? matched.themeColor : "#FFFFFF";
   };
 
-  const spotifyEmbedFromLink = (link?: string | null) => {
-    if (!link) return null;
-    const match = link.match(/album\/([a-zA-Z0-9]+)/);
-    return match ? `https://open.spotify.com/embed/album/${match[1]}?utm_source=generator&theme=0` : null;
-  };
-
-  const appleEmbedFromLink = (link?: string | null) => {
-    if (!link) return null;
-    // Apple Music embeds live at embed.music.apple.com, same path as the public URL.
-    const match = link.match(/music\.apple\.com\/([a-z]{2}\/album\/[^?]+)/);
-    return match ? `https://embed.music.apple.com/${match[1]}` : null;
-  };
-
   /**
-   * Resolve the best available streaming links + embeds for a single track inside
-   * an album entry. Unreleased tracks (e.g. Garfield Park's "Only Human") have empty
-   * spotifyLink/appleMusicLink of their own — fall back to the parent album's link so
-   * clicking into them never dead-ends, and flag that fallback so the UI can say
-   * "part of Garfield Park" instead of implying the track has its own release.
+   * Resolve the best available Spotify + Apple Music links for a single track inside
+   * a multi-track album entry (currently just Garfield Park). Unreleased tracks (e.g.
+   * "Only Human") have empty spotifyLink/appleMusicLink of their own — fall back to the
+   * parent album's link so clicking into them never dead-ends, and flag the fallback so
+   * the UI can say "part of Garfield Park" instead of implying its own release.
    */
   const getTrackStreaming = (track: { spotifyLink?: string; appleMusicLink?: string }, album: typeof catalogDb.albums[number]) => {
     const spotifyLink = track.spotifyLink || album.spotifyLink || null;
     const appleMusicLink = track.appleMusicLink || album.appleMusicLink || null;
     const isOwnRelease = Boolean(track.spotifyLink || track.appleMusicLink);
-    return {
-      spotifyLink,
-      appleMusicLink,
-      spotifyEmbed: spotifyEmbedFromLink(spotifyLink),
-      appleEmbed: appleEmbedFromLink(appleMusicLink),
-      isOwnRelease,
-    };
+    return { spotifyLink, appleMusicLink, isOwnRelease };
   };
 
-  const getSpotifyEmbedUrl = (album: SpotifyAlbum) => {
+  /**
+   * Resolve the raw Spotify + Apple Music links for ANY selected catalog card,
+   * regardless of source — a Garfield Park album track (local-db-), a standalone
+   * single/EP from catalogDb.singles (local-single-), or a live Spotify-API result
+   * (real Spotify id as the album id, Apple link unknown). Previously only Spotify
+   * was ever resolved outside the Garfield Park case, so every other song in the
+   * catalog (Different, Rose, Holding On, Guilty Conscience, More Lonely, and the
+   * whole back catalog) showed a Spotify button with no Apple Music equivalent.
+   */
+  const getStreamingLinks = (album: SpotifyAlbum): { spotifyLink: string | null; appleLink: string | null } => {
     if (album.id.startsWith('local-db-')) {
       const dbIdx = parseInt(album.id.split('-').pop() || '0');
-      const dbAlbum = catalogDb.albums[dbIdx];
-      if (dbAlbum && dbAlbum.spotifyLink) {
-        const match = dbAlbum.spotifyLink.match(/album\/([a-zA-Z0-9]+)/);
-        if (match) return `https://open.spotify.com/embed/album/${match[1]}?utm_source=generator&theme=0`;
-      }
-      return null;
+      const a = catalogDb.albums[dbIdx];
+      return { spotifyLink: a?.spotifyLink || null, appleLink: a?.appleMusicLink || null };
     }
     if (album.id.startsWith('local-single-')) {
       const idx = parseInt(album.id.split('-').pop() || '0');
       const single = catalogDb.singles[idx];
-      if (single && single.spotifyLink) {
-        const match = single.spotifyLink.match(/album\/([a-zA-Z0-9]+)/);
-        if (match) return `https://open.spotify.com/embed/album/${match[1]}?utm_source=generator&theme=0`;
-      }
-      return null;
+      return { spotifyLink: single?.spotifyLink || null, appleLink: single?.appleMusicLink || null };
     }
     if (album.id.includes('local-fallback')) {
-      return null;
+      return { spotifyLink: null, appleLink: null };
     }
-    // Only real Spotify-API-sourced entries have a genuine Spotify album id as their id.
+    // Live Spotify-API-sourced entries have a genuine Spotify album id as their id.
+    // Apple Music has no equivalent public search-by-Spotify-id API, so fall back to
+    // the external_urls.spotify field for Spotify and leave Apple unset for these.
     const looksLikeSpotifyId = /^[a-zA-Z0-9]{16,}$/.test(album.id);
-    return looksLikeSpotifyId ? `https://open.spotify.com/embed/album/${album.id}?utm_source=generator&theme=0` : null;
+    return {
+      spotifyLink: looksLikeSpotifyId ? (album.external_urls.spotify !== '#' ? album.external_urls.spotify : `https://open.spotify.com/album/${album.id}`) : null,
+      appleLink: null,
+    };
   };
 
   // Find if current selected album is in our database
@@ -375,78 +362,59 @@ const Discography = () => {
                       <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">{selectedAlbum.album_type} &bull; {selectedAlbum.release_date}</p>
                     </div>
 
-                    {/* Streaming: resolves to the selected track's own links when this is a
-                        multi-track album entry, falling back to the album-level link for
-                        tracks that aren't out as their own release yet. */}
+                    {/* Streaming: two uniform brand buttons, no embeds — Spotify's and
+                        Apple's widgets have different chrome/sizing and load in at
+                        different times, which reads as messy rather than official.
+                        Works for every song: Garfield Park album tracks resolve through
+                        getTrackStreaming (with album-level fallback for unreleased
+                        tracks), everything else (standalone singles/EPs, live API
+                        results) resolves through getStreamingLinks. */}
                     {(() => {
                       const trackStreaming = dbAlbum ? getTrackStreaming(dbAlbum.tracks[selectedTrackIndex] || {}, dbAlbum) : null;
-                      const spotifyEmbed = trackStreaming ? trackStreaming.spotifyEmbed : getSpotifyEmbedUrl(selectedAlbum);
-                      const appleEmbed = trackStreaming ? trackStreaming.appleEmbed : appleEmbedFromLink(dbAlbum?.appleMusicLink);
-                      const spotifyLink = trackStreaming ? trackStreaming.spotifyLink : (selectedAlbum.external_urls.spotify !== "#" ? selectedAlbum.external_urls.spotify : null);
-                      const appleLink = trackStreaming ? trackStreaming.appleMusicLink : (dbAlbum?.appleMusicLink || null);
+                      const catalogLinks = !dbAlbum ? getStreamingLinks(selectedAlbum) : null;
+                      const spotifyLink = trackStreaming ? trackStreaming.spotifyLink : catalogLinks?.spotifyLink || null;
+                      const appleLink = trackStreaming ? trackStreaming.appleMusicLink : catalogLinks?.appleLink || null;
                       const unreleased = dbAlbum ? !isReleased(dbAlbum.releaseDate) : false;
-                      const ctaLabel = unreleased ? "Pre-Save / Pre-Order" : "Listen";
+                      const spotifyLabel = unreleased ? "Pre-Save" : "Spotify";
+                      const appleLabel = unreleased ? "Pre-Order" : "Apple Music";
 
                       return (
                         <div className="space-y-3">
-                          {spotifyEmbed && (
-                            <iframe
-                              key={`spotify-${spotifyEmbed}`}
-                              src={spotifyEmbed}
-                              width="100%"
-                              height="80"
-                              frameBorder="0"
-                              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                              loading="lazy"
-                              className="rounded-xl border border-white/5"
-                            ></iframe>
-                          )}
-                          {appleEmbed && (
-                            <iframe
-                              key={`apple-${appleEmbed}`}
-                              src={appleEmbed}
-                              width="100%"
-                              height="150"
-                              frameBorder="0"
-                              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation"
-                              allow="autoplay *; encrypted-media *; fullscreen *; clipboard-write"
-                              loading="lazy"
-                              className="rounded-xl border border-white/5 bg-[#0a0a0a]"
-                            ></iframe>
-                          )}
-                          {!spotifyEmbed && !appleEmbed && (
+                          {!spotifyLink && !appleLink && (
                             <div className="p-6 glass rounded-xl text-center space-y-2 border border-white/10">
                               <Play size={24} className="mx-auto text-white/60" />
                               <p className="text-[10px] font-black uppercase tracking-widest text-white/60">
-                                {unreleased ? "Streaming unlocks at release" : "No streaming embed available"}
+                                {unreleased ? "Streaming unlocks at release" : "No streaming link available"}
                               </p>
                             </div>
                           )}
 
-                          <div className="grid grid-cols-2 gap-3">
-                            {spotifyLink && (
-                              <a
-                                href={spotifyLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all border rounded-lg bg-[#1DB954]/10 border-[#1DB954]/30 text-white hover:bg-[#1DB954]/20"
-                              >
-                                <SpotifyIcon className="w-4 h-4 text-[#1DB954]" />
-                                {ctaLabel}
-                              </a>
-                            )}
-                            {appleLink && (
-                              <a
-                                href={appleLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 py-3.5 text-[10px] font-black uppercase tracking-widest transition-all border rounded-lg bg-[#FA243C]/10 border-[#FA243C]/30 text-white hover:bg-[#FA243C]/20"
-                              >
-                                <AppleMusicIcon className="w-4 h-4 text-[#FA243C]" />
-                                {ctaLabel}
-                              </a>
-                            )}
-                          </div>
+                          {(spotifyLink || appleLink) && (
+                            <div className="grid grid-cols-2 gap-3">
+                              {spotifyLink && (
+                                <a
+                                  href={spotifyLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center gap-2 h-12 text-[10px] font-black uppercase tracking-widest rounded-full bg-[#1DB954] text-black hover:bg-[#1ed760] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                >
+                                  <SpotifyIcon className="w-4 h-4 flex-shrink-0" />
+                                  {spotifyLabel}
+                                </a>
+                              )}
+                              {appleLink && (
+                                <a
+                                  href={appleLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center gap-2 h-12 text-[10px] font-black uppercase tracking-widest rounded-full bg-[#FA243C] text-white hover:bg-[#fb4a5f] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                >
+                                  <AppleMusicIcon className="w-4 h-4 flex-shrink-0" />
+                                  {appleLabel}
+                                </a>
+                              )}
+                            </div>
+                          )}
 
                           {dbAlbum && trackStreaming && !trackStreaming.isOwnRelease && (
                             <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 text-center pt-1">
