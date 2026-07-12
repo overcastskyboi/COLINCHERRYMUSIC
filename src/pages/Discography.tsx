@@ -374,9 +374,17 @@ const Discography = () => {
                       const catalogLinks = !dbAlbum ? getStreamingLinks(selectedAlbum) : null;
                       const spotifyLink = trackStreaming ? trackStreaming.spotifyLink : catalogLinks?.spotifyLink || null;
                       const appleLink = trackStreaming ? trackStreaming.appleMusicLink : catalogLinks?.appleLink || null;
-                      const unreleased = dbAlbum ? !isReleased(dbAlbum.releaseDate) : false;
-                      const spotifyLabel = unreleased ? "Pre-Save" : "Spotify";
-                      const appleLabel = unreleased ? "Pre-Order" : "Apple Music";
+                      // Check the SELECTED TRACK's own release date, not the album's — Garfield
+                      // Park doesn't drop until Aug 1, 2026, but 5 of its tracks (Different, Rose,
+                      // Guilty Conscience, Holding On, More Lonely) already released as standalone
+                      // singles ahead of the album, so they should read "Play on Spotify"/"Play on
+                      // Apple Music" (already out), not "Pre-Save"/"Pre-Order" (not out yet).
+                      const selectedTrackDate = dbAlbum ? dbAlbum.tracks[selectedTrackIndex]?.releaseDate : null;
+                      const unreleased = dbAlbum
+                        ? (selectedTrackDate ? !isReleased(selectedTrackDate) : !isReleased(dbAlbum.releaseDate))
+                        : false;
+                      const spotifyLabel = unreleased ? "Pre-Save" : "Play on Spotify";
+                      const appleLabel = unreleased ? "Pre-Order" : "Play on Apple Music";
 
                       return (
                         <div className="space-y-3">
