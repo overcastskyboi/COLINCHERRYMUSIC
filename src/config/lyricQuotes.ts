@@ -72,7 +72,7 @@ export const lyricQuotes: LyricQuote[] = [
     themeColor: "#9DB0E3",
   },
   {
-    song: "What Can I Say",
+    song: "What Can I Say?",
     lines: [
       "Sub-zero heart so it makes me shiver",
       "Floating in the dark in this frozen river",
@@ -82,7 +82,7 @@ export const lyricQuotes: LyricQuote[] = [
     themeColor: "#9DB0E3",
   },
   {
-    song: "What Can I Say",
+    song: "What Can I Say?",
     lines: [
       "I'm turning off the noise that's keeping me in chains",
       "I'm washing out the dirt tryna clean away the stains",

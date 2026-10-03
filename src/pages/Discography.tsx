@@ -83,11 +83,17 @@ const Discography = () => {
   const [searchParams] = useSearchParams();
   const pendingTrack = useRef<number | null>(null);
   const lyricsRef = useRef<HTMLDivElement | null>(null);
+  const lyricsScrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSelectedTrackIndex(pendingTrack.current ?? 0);
     pendingTrack.current = null;
   }, [selectedAlbum]);
+
+  // New song or release: start its lyrics from the top.
+  useEffect(() => {
+    lyricsScrollRef.current?.scrollTo({ top: 0 });
+  }, [selectedTrackIndex, selectedAlbum]);
 
   useEffect(() => {
     if (loading) return;
@@ -206,11 +212,25 @@ const Discography = () => {
       <p key={i} className="mb-6 last:mb-0">
         {/* One block per bar with a hanging indent, so a bar that wraps on a narrow
             screen reads as a continuation instead of looking like a new line. */}
-        {stanza.split('\n').map((line, j) => (
-          <span key={j} className="block pl-5 -indent-5">
-            {line}
-          </span>
-        ))}
+        {stanza.split('\n').map((line, j) => {
+          // "[Verse 1]" style lines are section markers, shown as small labels
+          const section = line.trim().match(/^\[(.+)\]$/);
+          if (section) {
+            return (
+              <span
+                key={j}
+                className="block not-italic [font-family:Inter,sans-serif] text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-2"
+              >
+                ({section[1]})
+              </span>
+            );
+          }
+          return (
+            <span key={j} className="block pl-5 -indent-5">
+              {line}
+            </span>
+          );
+        })}
       </p>
     ));
 
@@ -355,10 +375,10 @@ const Discography = () => {
                 initial={{ scale: 0.98, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.98, opacity: 0, y: 20 }}
-                // Single scroll container for the whole modal — no nested scrollboxes.
-                // Art/streaming stays pinned at the top of its column on desktop via sticky,
-                // everything else (track picker + lyrics) flows and scrolls together.
-                className="glass w-full h-full md:h-auto md:max-w-6xl md:max-h-[88vh] overflow-y-auto p-6 sm:p-8 md:p-12 relative rounded-none md:rounded-2xl"
+                // Phones/tablets: the whole modal scrolls as one page.
+                // Desktop (lg+): fixed-height modal; artwork, buttons and tracklist stay put and
+                // only the lyrics pane scrolls, so the layout is identical for every song.
+                className="glass w-full h-full md:h-auto md:max-w-6xl md:max-h-[88vh] lg:h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-hidden p-6 sm:p-8 md:p-12 relative rounded-none md:rounded-2xl"
                 onClick={e => e.stopPropagation()}
               >
                 <button
@@ -368,10 +388,11 @@ const Discography = () => {
                   <X size={28} />
                 </button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-16">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-16 lg:h-full lg:min-h-0">
                   {/* Left: art + streaming — sticky on desktop so it stays visible while lyrics scroll */}
-                  <div className="space-y-6 lg:self-start">
-                    <div className="aspect-square glass overflow-hidden rounded-xl">
+                  <div className={`space-y-6 lg:space-y-5 lg:flex lg:flex-col lg:min-h-0 ${dbAlbum ? '' : 'lg:justify-center'}`}>
+                    {/* Singles have no tracklist, so their art + buttons sit centered top-to-bottom on desktop */}
+                    <div className={`aspect-square glass overflow-hidden rounded-xl lg:w-full lg:flex-shrink-0 ${dbAlbum ? 'lg:max-w-[min(380px,36vh)]' : 'lg:max-w-[min(380px,52vh)]'}`}>
                       <img
                         src={selectedAlbum.images[0]?.url}
                         alt={selectedAlbum.name}
@@ -465,11 +486,12 @@ const Discography = () => {
 
                     {/* Tracklist lives under the streaming buttons; picking a song swaps the lyrics on the right */}
                     {dbAlbum && (
-                      <div>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 border-b border-white/5 pb-3">
+                      <div className="lg:flex lg:flex-col lg:min-h-0 lg:flex-1">
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 border-b border-white/5 pb-3 lg:flex-shrink-0">
                           Tracklist &bull; {dbAlbum.tracks.length} songs
                         </h4>
-                        <ol>
+                        {/* Only scrolls on short desktop screens where all tracks can't fit */}
+                        <ol className="lg:min-h-0 lg:overflow-y-auto thin-scroll">
                           {dbAlbum.tracks.map((track, tIdx) => {
                             const active = selectedTrackIndex === tIdx;
                             return (
@@ -477,10 +499,15 @@ const Discography = () => {
                                 <button
                                   onClick={() => {
                                     setSelectedTrackIndex(tIdx);
-                                    lyricsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                    // Desktop: reset the lyrics pane. Phones: bring the lyrics into view.
+                                    if (window.matchMedia('(min-width: 1024px)').matches) {
+                                      lyricsScrollRef.current?.scrollTo({ top: 0 });
+                                    } else {
+                                      lyricsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                    }
                                   }}
                                   aria-current={active || undefined}
-                                  className={`w-full flex items-center gap-4 py-3 pl-3 pr-2 border-l-2 border-b border-b-white/5 text-left transition-colors ${
+                                  className={`w-full flex items-center gap-4 py-3 lg:py-2.5 pl-3 pr-2 border-l-2 border-b border-b-white/5 text-left transition-colors ${
                                     active ? 'bg-white/[0.04]' : 'border-l-transparent hover:bg-white/[0.02]'
                                   }`}
                                   style={active ? { borderLeftColor: track.themeColor !== '#FFFFFF' ? track.themeColor : '#9DB0E3' } : undefined}
@@ -499,27 +526,19 @@ const Discography = () => {
                     )}
                   </div>
 
-                  {/* Right: lyrics */}
-                  <div className="space-y-8 min-w-0">
-                    {dbAlbum ? (
-                      <>
-                        <div ref={lyricsRef} className="space-y-4 scroll-mt-6">
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3">
-                            Lyrics &mdash; {dbAlbum.tracks[selectedTrackIndex]?.title}
-                          </h4>
-                          <div className="font-lyric text-base md:text-lg leading-loose tracking-wide text-white/90">
-                            {renderLyrics(dbAlbum.tracks[selectedTrackIndex]?.lyrics || "Lyrics coming soon.")}
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="space-y-4">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3">Lyrics</h4>
-                        <div className="font-lyric text-base md:text-lg leading-loose tracking-wide text-white/90">
-                          {renderLyrics(getLyricsForAlbum(selectedAlbum.name))}
-                        </div>
-                      </div>
-                    )}
+                  {/* Right: lyrics. On desktop this pane is the only thing that scrolls. */}
+                  <div ref={lyricsRef} className="min-w-0 scroll-mt-6 lg:flex lg:flex-col lg:min-h-0">
+                    <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3 lg:flex-shrink-0 lg:pr-12">
+                      Lyrics{dbAlbum ? <> &mdash; {dbAlbum.tracks[selectedTrackIndex]?.title}</> : null}
+                    </h4>
+                    <div
+                      ref={lyricsScrollRef}
+                      className="mt-4 font-lyric text-base md:text-lg leading-loose tracking-wide text-white/90 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-6 lg:pb-8 thin-scroll lyrics-fade"
+                    >
+                      {dbAlbum
+                        ? renderLyrics(dbAlbum.tracks[selectedTrackIndex]?.lyrics || "Lyrics coming soon.")
+                        : renderLyrics(getLyricsForAlbum(selectedAlbum.name))}
+                    </div>
                   </div>
                 </div>
               </motion.div>

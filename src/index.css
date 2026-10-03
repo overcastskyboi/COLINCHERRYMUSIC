@@ -129,3 +129,13 @@ html { scroll-behavior: smooth; }
   letter-spacing: 0.01em;
   text-shadow: 0 0 0.6px rgba(22, 22, 26, 0.55);
 }
+
+/* Slim, unobtrusive scrollbars for inner scroll panes (Music modal lyrics/tracklist). */
+.thin-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent; }
+.thin-scroll::-webkit-scrollbar { width: 4px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 9999px; }
+
+/* Desktop lyrics pane: soft fade at the bottom edge so text doesn't hard-clip. */
+@media (min-width: 1024px) {
+  .lyrics-fade { mask-image: linear-gradient(to bottom, black calc(100% - 48px), transparent); }
+}
