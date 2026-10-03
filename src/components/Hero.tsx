@@ -1,124 +1,111 @@
 import { motion } from 'framer-motion';
+import { ArrowDown } from 'lucide-react';
 import { SpotifyIcon, AppleMusicIcon } from './icons/BrandIcons';
+import type { FeaturedRelease } from '../config/releaseData';
 
 interface HeroProps {
-  latestDropTitle: string;
-  artworkUrl: string;
-  spotifyLink?: string;
-  appleMusicLink?: string;
-  subtitle?: string;
-  spotifyBtnText?: string;
-  appleMusicBtnText?: string;
-  /** Optional: path to a muted looping video (mp4/webm). If set, plays as the full-bleed background. */
-  videoUrl?: string;
-  /** Optional: path to a press/promo photo to use as the full-bleed background instead of blurred album art. */
-  backgroundPhotoUrl?: string;
+  release: FeaturedRelease;
+  /** Small label above the title, e.g. "New EP · Out Now". */
+  eyebrow: string;
 }
 
-const Hero = ({
-  latestDropTitle = "GARFIELD PARK",
-  artworkUrl = "/garfield-park.jpg",
-  spotifyLink = "#",
-  appleMusicLink = "#",
-  subtitle = "Upcoming Album",
-  spotifyBtnText = "Spotify Pre-Save",
-  appleMusicBtnText = "iTunes Pre-Order",
-  videoUrl,
-  backgroundPhotoUrl,
-}: HeroProps) => {
+const formatLongDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+const Hero = ({ release, eyebrow }: HeroProps) => {
+  const { title, coverArt, coverArtSmall, accent, spotifyLink, appleMusicLink, amazonLink, tracks, releaseDateISO } = release;
+
   return (
-    <section className="relative w-full h-screen min-h-[680px] flex items-center justify-center overflow-hidden">
+    <section className="relative w-full min-h-[calc(100svh-5rem)] flex items-center justify-center overflow-hidden py-20">
+      {/* Background: the cover itself, blown up and blurred into a wash of its own colors */}
+      <div
+        aria-hidden
+        className="absolute inset-0 z-0 bg-cover bg-center scale-125"
+        style={{ backgroundImage: `url(${coverArtSmall})`, filter: 'blur(40px) saturate(1.2) brightness(0.4)' }}
+      />
+      <div aria-hidden className="absolute inset-0 z-10 bg-gradient-to-b from-[#0a0a0a]/70 via-[#0a0a0a]/20 to-[#0a0a0a]" />
+      <div aria-hidden className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_30%,#0a0a0a_95%)]" />
 
-      {/* Background: video (if provided) or blurred artwork/press photo */}
-      {videoUrl ? (
-        <video
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-          src={videoUrl}
-          autoPlay
-          muted
-          loop
-          playsInline
-        />
-      ) : backgroundPhotoUrl ? (
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${backgroundPhotoUrl})` }}
-        />
-      ) : (
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center scale-110"
-          style={{ backgroundImage: `url(${artworkUrl})`, filter: 'blur(18px) brightness(0.35)' }}
-        />
-      )}
-
-      {/* Dark gradient overlay — heavier at top/bottom */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]" />
-      {(videoUrl || backgroundPhotoUrl) && <div className="absolute inset-0 z-10 bg-[#0a0a0a]/45" />}
-
-      {/* Centered content */}
-      <div className="relative z-20 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16 px-6 max-w-5xl mx-auto w-full">
-
-        {/* Album art — the actual visible cover */}
+      <div className="relative z-20 grid md:grid-cols-[auto_1fr] items-center gap-12 md:gap-20 px-6 max-w-6xl mx-auto w-full">
+        {/* Cover, framed like a developed photo print */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="flex-shrink-0"
+          initial={{ opacity: 0, y: 24, rotate: -4 }}
+          animate={{ opacity: 1, y: 0, rotate: -2 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          className="mx-auto"
         >
-          <div className="relative w-56 h-56 md:w-72 md:h-72 shadow-[0_0_60px_rgba(0,0,0,0.8)]">
+          <div className="bg-[#f2efe8] p-3 pb-12 md:p-4 md:pb-16 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-64 sm:w-72 md:w-[22rem]">
             <img
-              src={artworkUrl}
-              alt={latestDropTitle}
-              width={576}
-              height={576}
+              src={coverArt}
+              alt={`${title} cover art`}
+              width={1200}
+              height={1200}
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="w-full h-full object-cover"
+              className="w-full aspect-square object-cover"
             />
-            {/* Subtle glow behind the cover */}
-            <div className="absolute inset-0 -z-10 blur-2xl opacity-50 scale-110" style={{ backgroundImage: `url(${artworkUrl})`, backgroundSize: 'cover' }} />
+            <p className="mt-4 md:mt-5 text-center text-[#2a2a2a] font-lyric text-sm md:text-base">{title.toLowerCase()}</p>
           </div>
         </motion.div>
 
-        {/* Text + CTAs */}
+        {/* Copy + CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.15 }}
+          transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
           className="text-center md:text-left"
         >
-          <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60 mb-4">{subtitle}</h2>
-          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 leading-none">{latestDropTitle}</h1>
-          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/50 mb-10">Colin Cherry · August 1, 2026</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-5" style={{ color: accent }}>
+            {eyebrow}
+          </p>
+          <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+            {title}
+          </h1>
+          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/60 mb-10">
+            Colin Cherry &middot; {formatLongDate(releaseDateISO)} &middot; {tracks.length} songs
+          </p>
 
-          <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-4">
-            {spotifyLink && (
-              <a
-                href={spotifyLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-[#1DB954] text-black px-7 py-3.5 rounded-full font-black uppercase text-[11px] tracking-widest hover:scale-105 active:scale-95 transition-all hover:bg-[#1ed760] hover:shadow-[0_0_30px_rgba(29,185,84,0.4)] w-full sm:w-auto justify-center"
-              >
-                <SpotifyIcon className="w-[15px] h-[15px]" />
-                {spotifyBtnText}
-              </a>
-            )}
-            {appleMusicLink && (
-              <a
-                href={appleMusicLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-[#FA243C] text-white px-7 py-3.5 rounded-full font-black uppercase text-[11px] tracking-widest hover:scale-105 active:scale-95 transition-all hover:bg-[#fb4a5f] hover:shadow-[0_0_30px_rgba(250,36,60,0.4)] w-full sm:w-auto justify-center"
-              >
-                <AppleMusicIcon className="w-[15px] h-[15px]" />
-                {appleMusicBtnText}
-              </a>
-            )}
+          <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3">
+            <a
+              href={spotifyLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 bg-[#1DB954] text-black px-7 py-3.5 rounded-full font-black uppercase text-[11px] tracking-widest hover:scale-105 active:scale-95 transition-all hover:bg-[#1ed760] w-full sm:w-auto"
+            >
+              <SpotifyIcon className="w-[15px] h-[15px]" />
+              Listen on Spotify
+            </a>
+            <a
+              href={appleMusicLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-3 bg-[#FA243C] text-white px-7 py-3.5 rounded-full font-black uppercase text-[11px] tracking-widest hover:scale-105 active:scale-95 transition-all hover:bg-[#fb4a5f] w-full sm:w-auto"
+            >
+              <AppleMusicIcon className="w-[15px] h-[15px]" />
+              Apple Music
+            </a>
           </div>
+          {amazonLink && (
+            <a
+              href={amazonLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-5 text-[10px] font-black uppercase tracking-widest text-white/50 hover:text-white border-b border-white/20 hover:border-white pb-1 transition-colors"
+            >
+              Also on Amazon Music
+            </a>
+          )}
         </motion.div>
-
       </div>
+
+      <a
+        href="#listen"
+        aria-label="Scroll to the tracklist"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-white/40 hover:text-white transition-colors motion-safe:animate-bounce"
+      >
+        <ArrowDown size={20} />
+      </a>
     </section>
   );
 };

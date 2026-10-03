@@ -43,7 +43,7 @@ const Store = () => {
     <PageTransition>
       <Helmet>
         <title>Colin Cherry | Store</title>
-        <meta name="description" content="The Colin Cherry merch store is coming soon. Follow along for updates on Garfield Park vinyl, cassettes, and more." />
+        <meta name="description" content="The Colin Cherry merch store is coming soon. Follow along for updates on physical releases and merch." />
       </Helmet>
 
       <div className="max-w-3xl mx-auto px-6 py-32 text-center flex flex-col items-center">
@@ -55,8 +55,8 @@ const Store = () => {
         <p className="text-[10px] uppercase tracking-[0.5em] font-black text-white/60 mb-8">Coming Soon</p>
 
         <p className="text-white/75 text-sm md:text-base leading-relaxed max-w-xl mb-12">
-          Merchandise — including Garfield Park vinyl and cassettes — will launch here alongside the album rollout.
-          In the meantime, follow along on socials so you don't miss the drop.
+          Merch is on the way.
+          Follow along on socials so you don't miss the drop.
         </p>
 
         <div className="glass p-6 flex items-center gap-6 sm:gap-8 border border-white/5">

@@ -1,68 +1,100 @@
 import catalogDb from './catalogDb.json';
 
-const garfieldPark = catalogDb.albums[0];
+export type CatalogAlbum = (typeof catalogDb.albums)[number];
+export type CatalogTrack = CatalogAlbum['tracks'][number];
 
-// Dynamic calculation for the current single (Different is track 2)
-const differentTrack = garfieldPark.tracks.find(t => t.title === "Different");
-const moreLonelyTrack = garfieldPark.tracks.find(t => t.title === "More Lonely");
-
-export const RELEASE_DATA = {
-  currentSingle: {
-    title: differentTrack ? differentTrack.title : "Different",
-    artworkUrl: differentTrack && differentTrack.coverArt ? differentTrack.coverArt : "/different.jpg",
-    streamLink: differentTrack && differentTrack.hyperfollowLink ? differentTrack.hyperfollowLink : "https://distrokid.com/hyperfollow/colincherry/different-3",
-    spotifyTrackId: differentTrack && differentTrack.spotifyLink ? differentTrack.spotifyLink.split('/').pop() : "7pnTJS5vf9YZygusVOb1qS",
-    spotifyLink: differentTrack && differentTrack.spotifyLink ? differentTrack.spotifyLink : "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS"
-  },
-  nextUp: {
-    title: moreLonelyTrack ? moreLonelyTrack.title : "More Lonely",
-    releaseDate: "June 19",
-    // Now that the song is actually out, link straight to the real streaming pages
-    // instead of the DistroKid pre-save/hyperfollow page (that page is for before release).
-    preSaveLink: moreLonelyTrack && moreLonelyTrack.spotifyLink
-      ? moreLonelyTrack.spotifyLink
-      : (moreLonelyTrack && moreLonelyTrack.hyperfollowLink) || "https://distrokid.com/hyperfollow/colincherry/more-lonely",
-    appleMusicLink: (moreLonelyTrack && moreLonelyTrack.appleMusicLink) || "https://music.apple.com/us/album/more-lonely-single/6768348519?uo=4"
-  },
-  rollout: {
-    albumTitle: garfieldPark.title,
-    targetMonth: "August 2026",
-    showTeaser: true,
-    countdownTarget: "2026-08-01T00:00:00-04:00",
-    coverArt: "/garfield-park.jpg",
-    spotifyPreSaveLink: garfieldPark.spotifyLink || "https://distrokid.com/hyperfollow/colincherry/garfield-park",
-    appleMusicPreOrderLink: garfieldPark.appleMusicLink || "https://music.apple.com/us/album/garfield-park/6777408712?uo=4&app=itunes&at=1001lry3&ct=dashboard"
-  }
+const findAlbum = (title: string): CatalogAlbum => {
+  const album = catalogDb.albums.find(a => a.title === title);
+  if (!album) throw new Error(`catalogDb is missing "${title}"`);
+  return album;
 };
 
-// Map tracks to the flat structure expected by the pages
-export const upcomingReleases = garfieldPark.tracks.map(track => {
-  // Parse month and day from releaseDate (e.g. "June 5, 2026" -> "JUNE 5")
-  let displayDate = "PAST RELEASE";
+const theresNoGoingBack = findAlbum("There's No Going Back");
+const garfieldPark = findAlbum('Garfield Park');
 
-  if (track.releaseDate) {
-    const parts = track.releaseDate.split(',');
-    if (parts.length > 0) {
-      const datePart = parts[0].trim().toUpperCase(); // e.g. "JUNE 5"
-      // If it's a future date, set it to that date.
-      // Wait, is it future? Let's check:
-      const year = parts[1] ? parseInt(parts[1].trim()) : 2026;
-      const releaseTime = Date.parse(`${parts[0]}, ${year}`);
-      if (!isNaN(releaseTime) && releaseTime > Date.now()) {
-        displayDate = datePart;
-      }
-    }
-  }
+/** "October 2, 2026" -> "2026-10-02" without UTC drift (toISOString shifts the day east of UTC). */
+export const toISODate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};
 
-  return {
-    title: track.title,
-    date: displayDate,
-    link: track.hyperfollowLink || track.spotifyLink || track.appleMusicLink || garfieldPark.appleMusicLink,
-    // True only if this track has its own standalone release (real single) — unreleased
-    // album tracks fall back to the album link and should never be marketed as "singles"
-    hasOwnLink: Boolean(track.hyperfollowLink || track.spotifyLink || track.appleMusicLink),
-    art: track.coverArt || garfieldPark.coverArt || "/different.jpg",
-    themeColor: track.themeColor || "#FFFFFF",
-    lyrics: track.lyrics
-  };
-});
+export const isReleased = (dateStr: string) => {
+  const t = new Date(dateStr).getTime();
+  return !isNaN(t) && t <= Date.now();
+};
+
+export interface FeaturedRelease {
+  title: string;
+  kind: string;
+  releaseDate: string;
+  releaseDateISO: string;
+  coverArt: string;
+  coverArtSmall: string;
+  accent: string;
+  tagline: string;
+  spotifyLink: string;
+  spotifyId: string;
+  appleMusicLink: string;
+  amazonLink: string;
+  tracks: CatalogTrack[];
+}
+
+// The release the whole site is built around right now. To roll the site forward
+// to a new era, add the release to catalogDb.json and point CURRENT_RELEASE at it.
+export const CURRENT_RELEASE: FeaturedRelease = {
+  title: theresNoGoingBack.title,
+  kind: 'EP',
+  releaseDate: theresNoGoingBack.releaseDate,
+  releaseDateISO: '2026-10-02T00:00:00-04:00',
+  coverArt: theresNoGoingBack.coverArt,
+  coverArtSmall: '/theres-no-going-back-600.jpg',
+  accent: '#9DB0E3',
+  tagline: 'Six songs. One direction.',
+  spotifyLink: theresNoGoingBack.spotifyLink,
+  spotifyId: theresNoGoingBack.spotifyLink.split('/').pop() || '',
+  appleMusicLink: theresNoGoingBack.appleMusicLink,
+  amazonLink: theresNoGoingBack.amazonLink,
+  tracks: theresNoGoingBack.tracks,
+};
+
+export const PREVIOUS_RELEASE: FeaturedRelease = {
+  title: garfieldPark.title,
+  kind: 'Album',
+  releaseDate: garfieldPark.releaseDate,
+  releaseDateISO: '2026-08-01T00:00:00-04:00',
+  coverArt: garfieldPark.coverArt,
+  coverArtSmall: garfieldPark.coverArt,
+  accent: '#D4AF37',
+  tagline: 'A gritty, groove-heavy dissection of routine and ambition.',
+  spotifyLink: garfieldPark.spotifyLink,
+  spotifyId: garfieldPark.spotifyLink.split('/').pop() || '',
+  appleMusicLink: garfieldPark.appleMusicLink,
+  amazonLink: garfieldPark.amazonLink,
+  tracks: garfieldPark.tracks,
+};
+
+/** Every track that lives on a multi-track project, flattened (used for lyric/theme lookups). */
+export const allProjectTracks = catalogDb.albums.flatMap(album =>
+  album.tracks.map(track => ({ ...track, album: album.title }))
+);
+
+/** Newest-first list of every release (projects + standalone singles) for "recent releases" strips. */
+export const recentReleases = [
+  ...catalogDb.albums.map(a => ({
+    title: a.title,
+    type: a.type,
+    date: toISODate(a.releaseDate),
+    coverArt: a.coverArt,
+    spotifyLink: a.spotifyLink,
+  })),
+  ...catalogDb.singles.map(s => ({
+    title: s.title,
+    type: s.type,
+    date: s.releaseDate,
+    coverArt: s.coverArt,
+    spotifyLink: s.spotifyLink,
+  })),
+]
+  .filter(r => isReleased(r.date))
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

@@ -7,7 +7,7 @@ import { useModalA11y } from '../hooks/useModalA11y';
 import { Helmet } from 'react-helmet-async';
 import catalogDb from '../config/catalogDb.json';
 import lyricsDb from '../config/lyricsDb.json';
-import { upcomingReleases } from '../config/releaseData';
+import { allProjectTracks, CURRENT_RELEASE, toISODate } from '../config/releaseData';
 import { SpotifyIcon, AppleMusicIcon } from '../components/icons/BrandIcons';
 
 interface SpotifyAlbum {
@@ -18,6 +18,10 @@ interface SpotifyAlbum {
   external_urls: { spotify: string };
   album_type: string;
 }
+
+// Releases pulled from distribution. Also filtered out of live Spotify API results so they
+// can't sneak back into the catalog through /api/spotify.
+const HIDDEN_RELEASES = new Set(['double ko!']);
 
 const sortByDateDesc = (arr: SpotifyAlbum[]) =>
   [...arr].sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
@@ -42,7 +46,7 @@ const Discography = () => {
   const toSpotifyAlbumShape = (album: typeof catalogDb.albums[number], idx: number): SpotifyAlbum => ({
     id: `local-db-${idx}`,
     name: album.title,
-    release_date: album.releaseDate ? new Date(album.releaseDate).toISOString().split('T')[0] : '2026-08-01',
+    release_date: album.releaseDate ? toISODate(album.releaseDate) : '2026-08-01',
     images: [{ url: album.coverArt || "/different.jpg" }],
     external_urls: { spotify: album.spotifyLink || album.appleMusicLink || "#" },
     album_type: album.type
@@ -57,6 +61,10 @@ const Discography = () => {
     .map(({ album, idx }) => toSpotifyAlbumShape(album, idx));
 
   const upcomingAlbum = upcomingDbAlbums[0] || null;
+  // With nothing announced, the spotlight slot goes to the newest release instead.
+  const latestAlbum = localDbAlbums.find(a => a.name === CURRENT_RELEASE.title) || null;
+  const spotlightAlbum = upcomingAlbum || latestAlbum;
+  const spotlightIsUpcoming = Boolean(upcomingAlbum);
 
   // Back catalog singles/EPs from catalogDb.singles — rendered as their own catalog
   // entries regardless of whether they're also advance tracks off an unreleased album
@@ -89,6 +97,7 @@ const Discography = () => {
         if (Array.isArray(data) && data.length > 0) {
           const merged = [...localDbAlbums, ...localSinglesAlbums];
           data.forEach((apiAlbum: SpotifyAlbum) => {
+            if (HIDDEN_RELEASES.has(apiAlbum.name.toLowerCase())) return;
             if (!merged.some(ma => ma.name.toLowerCase() === apiAlbum.name.toLowerCase())) {
               merged.push(apiAlbum);
             }
@@ -109,10 +118,9 @@ const Discography = () => {
   }, []);
 
   const getLyricsForAlbum = (albumName: string) => {
-    // Garfield Park advance singles (Different, Rose, More Lonely, Guilty Conscience,
-    // Holding On) carry their full lyrics on the album track entry, not in lyricsDb —
-    // check there first so their standalone catalog cards still show real lyrics.
-    const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
+    // Singles that also live on a project (Different, Rose, More Lonely, etc.) carry
+    // their full lyrics on the project's track entry, not in lyricsDb — check there first.
+    const matched = allProjectTracks.find(r => r.title.toLowerCase() === albumName.toLowerCase() && r.lyrics);
     if (matched) return matched.lyrics;
     const lyricsEntry = Object.entries(lyricsDb as Record<string, string>)
       .find(([title]) => title.toLowerCase() === albumName.toLowerCase());
@@ -120,7 +128,7 @@ const Discography = () => {
   };
 
   const getThemeColorForAlbum = (albumName: string) => {
-    const matched = upcomingReleases.find(r => r.title.toLowerCase() === albumName.toLowerCase());
+    const matched = allProjectTracks.find(r => r.title.toLowerCase() === albumName.toLowerCase());
     return matched ? matched.themeColor : "#FFFFFF";
   };
 
@@ -195,11 +203,11 @@ const Discography = () => {
         <meta property="og:url" content="https://www.thecolincherry.com/music" />
         <meta property="og:title" content="Colin Cherry — Music Catalog" />
         <meta property="og:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta property="og:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
+        <meta property="og:image" content="https://www.thecolincherry.com/og-theres-no-going-back.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — Music Catalog" />
         <meta name="twitter:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />
-        <meta name="twitter:image" content="https://www.thecolincherry.com/garfield-park.jpg" />
+        <meta name="twitter:image" content="https://www.thecolincherry.com/og-theres-no-going-back.jpg" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -208,20 +216,20 @@ const Discography = () => {
           <p className="text-[10px] uppercase tracking-[0.5em] font-black text-white/60">Official Streaming Catalog</p>
         </header>
 
-        {/* Upcoming Release — the next album as a single featured entry, not its individual tracks */}
-        {upcomingAlbum && (
+        {/* Spotlight — the next announced project, or the newest one when nothing is announced */}
+        {spotlightAlbum && (
           <section className="mb-32">
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60 mb-12 flex items-center gap-4">
-              Upcoming Release <span className="h-px flex-grow bg-white/5"></span>
+              {spotlightIsUpcoming ? 'Upcoming Release' : 'Latest Release'} <span className="h-px flex-grow bg-white/5"></span>
             </h3>
             <button
-              onClick={() => setSelectedAlbum(upcomingAlbum)}
+              onClick={() => setSelectedAlbum(spotlightAlbum)}
               className="group relative w-full glass overflow-hidden border border-white/10 flex flex-col sm:flex-row items-stretch text-left"
             >
               <div className="relative w-full sm:w-64 aspect-square flex-shrink-0 overflow-hidden">
                 <img
-                  src={upcomingAlbum.images[0]?.url}
-                  alt={upcomingAlbum.name}
+                  src={spotlightAlbum.images[0]?.url}
+                  alt={spotlightAlbum.name}
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
@@ -229,12 +237,14 @@ const Discography = () => {
                 />
               </div>
               <div className="p-8 md:p-10 flex flex-col justify-center gap-3">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-400">Upcoming Album</span>
-                <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{upcomingAlbum.name}</h3>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#9DB0E3]">
+                  {spotlightIsUpcoming ? 'Upcoming' : 'Out Now'} &bull; {spotlightAlbum.album_type === 'ep' ? 'EP' : spotlightAlbum.album_type}
+                </span>
+                <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter">{spotlightAlbum.name}</h3>
                 <p className="text-[11px] uppercase font-black tracking-[0.3em] text-white/60">
-                  Out {new Date(upcomingAlbum.release_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  {spotlightIsUpcoming ? 'Out' : 'Released'} {new Date(spotlightAlbum.release_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                 </p>
-                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-4 group-hover:text-cyan-400 transition-colors w-fit border-b border-white group-hover:border-cyan-400 pb-1">
+                <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white mt-4 group-hover:text-[#9DB0E3] transition-colors w-fit border-b border-white group-hover:border-[#9DB0E3] pb-1">
                   View Tracklist &amp; Lyrics
                 </span>
               </div>
@@ -426,7 +436,9 @@ const Discography = () => {
 
                           {dbAlbum && trackStreaming && !trackStreaming.isOwnRelease && (
                             <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 text-center pt-1">
-                              Part of {dbAlbum.title} — not yet released as its own single
+                              {isReleased(dbAlbum.releaseDate)
+                                ? `From the ${dbAlbum.type === 'ep' ? 'EP' : 'album'} ${dbAlbum.title}`
+                                : `Part of ${dbAlbum.title}, not yet released as its own single`}
                             </p>
                           )}
                         </div>
@@ -457,6 +469,7 @@ const Discography = () => {
                               >
                                 <span className="text-[10px] font-mono text-white/40">{(tIdx + 1).toString().padStart(2, '0')}</span>
                                 <span className="text-xs font-semibold uppercase tracking-wider">{track.title}</span>
+                                {track.duration && <span className="text-[10px] font-mono text-white/35">{track.duration}</span>}
                               </button>
                             ))}
                           </div>

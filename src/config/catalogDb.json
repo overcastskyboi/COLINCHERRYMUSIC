@@ -1,12 +1,103 @@
 {
   "albums": [
     {
+      "title": "There's No Going Back",
+      "type": "ep",
+      "releaseDate": "October 2, 2026",
+      "upc": "",
+      "spotifyLink": "https://open.spotify.com/album/281CFCEiPQVqgxNu49yJPT",
+      "appleMusicLink": "https://music.apple.com/us/album/theres-no-going-back-ep/6806558647",
+      "amazonLink": "https://www.amazon.com/gp/product/B0HH46SY6K",
+      "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/theres-no-going-back",
+      "coverArt": "/theres-no-going-back.jpg",
+      "tracks": [
+        {
+          "trackNumber": 1,
+          "title": "Live With That",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "3:31"
+        },
+        {
+          "trackNumber": 2,
+          "title": "Nowhere Fast",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "3:10"
+        },
+        {
+          "trackNumber": 3,
+          "title": "Safe Place",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "2:57"
+        },
+        {
+          "trackNumber": 4,
+          "title": "What Can I Say",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "2:55"
+        },
+        {
+          "trackNumber": 5,
+          "title": "Forever",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "3:17"
+        },
+        {
+          "trackNumber": 6,
+          "title": "Comfortable",
+          "lyrics": "",
+          "releaseDate": "October 2, 2026",
+          "themeColor": "#9DB0E3",
+          "upc": "",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
+          "coverArt": "/theres-no-going-back.jpg",
+          "duration": "2:46"
+        }
+      ]
+    },
+    {
       "title": "Garfield Park",
       "type": "album",
       "releaseDate": "August 1, 2026",
       "upc": "",
-      "spotifyLink": "https://distrokid.com/hyperfollow/colincherry/garfield-park",
-      "appleMusicLink": "https://music.apple.com/us/album/garfield-park/6777408712?uo=4&app=itunes&at=1001lry3&ct=dashboard",
+      "spotifyLink": "https://open.spotify.com/album/7gakUPKKRZBOs2WBqz1ooZ",
+      "appleMusicLink": "https://music.apple.com/us/album/garfield-park/6777408712",
       "coverArt": "/garfield-park.jpg",
       "tracks": [
         {
@@ -19,7 +110,8 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/garfield-park.jpg"
+          "coverArt": "/garfield-park.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 2,
@@ -31,7 +123,8 @@
           "spotifyLink": "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS",
           "appleMusicLink": "https://music.apple.com/us/album/different-single/1895632562?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/different-3",
-          "coverArt": "/different.jpg"
+          "coverArt": "/different.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 3,
@@ -43,7 +136,8 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/garfield-park.jpg"
+          "coverArt": "/garfield-park.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 4,
@@ -55,7 +149,8 @@
           "spotifyLink": "https://open.spotify.com/album/1oQfVTE5ixc2JiqJn2G2ZN",
           "appleMusicLink": "https://music.apple.com/us/album/rose-single/1894950069?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/rose-5",
-          "coverArt": "/ROSE.jpg"
+          "coverArt": "/ROSE.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 5,
@@ -67,7 +162,8 @@
           "spotifyLink": "https://open.spotify.com/album/1O621pRlYJtXhYfbzk8PA7",
           "appleMusicLink": "https://music.apple.com/us/album/more-lonely-single/6768348519?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
-          "coverArt": "/more-lonely.jpg"
+          "coverArt": "/more-lonely.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 6,
@@ -79,7 +175,8 @@
           "spotifyLink": "https://open.spotify.com/album/3SMTqPigGXZfva4mQV3Hms",
           "appleMusicLink": "https://music.apple.com/us/album/guilty-conscience-single/1895656258?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/guilty-conscience",
-          "coverArt": "/guilty-conscience.png"
+          "coverArt": "/guilty-conscience.png",
+          "duration": ""
         },
         {
           "trackNumber": 7,
@@ -91,7 +188,8 @@
           "spotifyLink": "https://open.spotify.com/album/28Vv4avwyZH05DdKVG0zhC",
           "appleMusicLink": "https://music.apple.com/us/album/holding-on-single/1894578939?uo=4",
           "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/holding-on-6",
-          "coverArt": "/holding-on.jpg"
+          "coverArt": "/holding-on.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 8,
@@ -103,7 +201,8 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/garfield-park.jpg"
+          "coverArt": "/garfield-park.jpg",
+          "duration": ""
         },
         {
           "trackNumber": 9,
@@ -115,9 +214,12 @@
           "spotifyLink": "",
           "appleMusicLink": "",
           "hyperfollowLink": "",
-          "coverArt": "/garfield-park.jpg"
+          "coverArt": "/garfield-park.jpg",
+          "duration": ""
         }
-      ]
+      ],
+      "amazonLink": "",
+      "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/garfield-park"
     }
   ],
   "singles": [
@@ -160,14 +262,6 @@
       "coverArt": "/ROSE.jpg",
       "spotifyLink": "https://open.spotify.com/album/1oQfVTE5ixc2JiqJn2G2ZN",
       "appleMusicLink": "https://music.apple.com/us/album/rose-single/1894950069"
-    },
-    {
-      "title": "DOUBLE KO!",
-      "type": "single",
-      "releaseDate": "2026-04-03",
-      "coverArt": "/double-ko.jpg",
-      "spotifyLink": "https://open.spotify.com/album/0pUU7Wy7aZ06leUVfd5wnO",
-      "appleMusicLink": "https://music.apple.com/us/search?term=Colin%20Cherry%20DOUBLE%20KO%21"
     },
     {
       "title": "Meant to Be",

@@ -3,6 +3,7 @@ import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
 import { Download, Mail, Instagram, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { CURRENT_RELEASE, PREVIOUS_RELEASE } from '../config/releaseData';
 
 const EPK = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -109,6 +110,27 @@ const EPK = () => {
                 <p>
                   Based in Indianapolis, his work explores the quiet tension of the Midwest through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
                 </p>
+              </div>
+            </section>
+
+            <section className="space-y-8">
+              <h3 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/60 flex items-center gap-4">
+                Latest Releases <span className="h-[1px] flex-grow bg-white/5"></span>
+              </h3>
+              <div className="grid sm:grid-cols-2 gap-6">
+                {[CURRENT_RELEASE, PREVIOUS_RELEASE].map(r => (
+                  <div key={r.title} className="glass p-4 flex gap-4 items-center">
+                    <img src={r.coverArtSmall} alt={`${r.title} cover art`} loading="lazy" decoding="async" className="w-20 h-20 object-cover rounded-md flex-shrink-0" />
+                    <div className="min-w-0 space-y-1">
+                      <p className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: r.accent }}>{r.kind} &middot; {r.releaseDate}</p>
+                      <p className="text-lg font-black uppercase tracking-tight leading-tight truncate">{r.title}</p>
+                      <div className="flex gap-4 text-[9px] font-black uppercase tracking-widest text-white/60">
+                        <a href={r.spotifyLink} target="_blank" rel="noopener noreferrer" className="hover:text-[#1DB954]">Spotify</a>
+                        <a href={r.appleMusicLink} target="_blank" rel="noopener noreferrer" className="hover:text-[#FA243C]">Apple Music</a>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 

@@ -21,7 +21,7 @@ const Layout = ({ children }: LayoutProps) => {
           The drift animation moves via transform only (cheap) and is disabled under reduce-motion. */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden [transform:translateZ(0)]">
         <div className="absolute top-[-10%] left-[-5%] w-[55%] h-[55%] bg-indigo-500/[0.06] blur-[80px] rounded-full motion-safe:animate-fog"></div>
-        <div className="absolute bottom-[-12%] right-[-5%] w-[55%] h-[55%] bg-fuchsia-500/[0.05] blur-[80px] rounded-full"></div>
+        <div className="absolute bottom-[-12%] right-[-5%] w-[55%] h-[55%] bg-[#2d4377]/[0.12] blur-[80px] rounded-full"></div>
       </div>
 
       <div className="relative z-10 flex flex-col min-h-screen">
