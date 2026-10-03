@@ -120,9 +120,9 @@
           "releaseDate": "June 5, 2026",
           "themeColor": "#E4405F",
           "upc": "825353234915",
-          "spotifyLink": "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS",
-          "appleMusicLink": "https://music.apple.com/us/album/different-single/1895632562?uo=4",
-          "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/different-3",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
           "coverArt": "/different.jpg",
           "duration": ""
         },
@@ -146,9 +146,9 @@
           "releaseDate": "April 24, 2026",
           "themeColor": "#D4AF37",
           "upc": "825393934820",
-          "spotifyLink": "https://open.spotify.com/album/1oQfVTE5ixc2JiqJn2G2ZN",
-          "appleMusicLink": "https://music.apple.com/us/album/rose-single/1894950069?uo=4",
-          "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/rose-5",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
           "coverArt": "/ROSE.jpg",
           "duration": ""
         },
@@ -161,7 +161,7 @@
           "upc": "",
           "spotifyLink": "",
           "appleMusicLink": "",
-          "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
+          "hyperfollowLink": "",
           "coverArt": "/more-lonely.jpg",
           "duration": ""
         },
@@ -172,9 +172,9 @@
           "releaseDate": "May 22, 2026",
           "themeColor": "#555555",
           "upc": "825353423876",
-          "spotifyLink": "https://open.spotify.com/album/3SMTqPigGXZfva4mQV3Hms",
-          "appleMusicLink": "https://music.apple.com/us/album/guilty-conscience-single/1895656258?uo=4",
-          "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/guilty-conscience",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
           "coverArt": "/guilty-conscience.png",
           "duration": ""
         },
@@ -185,9 +185,9 @@
           "releaseDate": "May 8, 2026",
           "themeColor": "#00f2ea",
           "upc": "825393939153",
-          "spotifyLink": "https://open.spotify.com/album/28Vv4avwyZH05DdKVG0zhC",
-          "appleMusicLink": "https://music.apple.com/us/album/holding-on-single/1894578939?uo=4",
-          "hyperfollowLink": "https://distrokid.com/hyperfollow/colincherry/holding-on-6",
+          "spotifyLink": "",
+          "appleMusicLink": "",
+          "hyperfollowLink": "",
           "coverArt": "/holding-on.jpg",
           "duration": ""
         },
@@ -223,46 +223,6 @@
     }
   ],
   "singles": [
-    {
-      "title": "More Lonely",
-      "type": "single",
-      "releaseDate": "2026-06-19",
-      "coverArt": "/more-lonely.jpg",
-      "spotifyLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely",
-      "appleMusicLink": "https://distrokid.com/hyperfollow/colincherry/more-lonely"
-    },
-    {
-      "title": "Different",
-      "type": "single",
-      "releaseDate": "2026-06-05",
-      "coverArt": "/different.jpg",
-      "spotifyLink": "https://open.spotify.com/album/7pnTJS5vf9YZygusVOb1qS",
-      "appleMusicLink": "https://music.apple.com/us/album/different-single/1895632562"
-    },
-    {
-      "title": "Guilty Conscience",
-      "type": "single",
-      "releaseDate": "2026-05-22",
-      "coverArt": "https://i.scdn.co/image/ab67616d00001e02e8cf71996c86ab7541fcf554",
-      "spotifyLink": "https://open.spotify.com/album/3SMTqPigGXZfva4mQV3Hms",
-      "appleMusicLink": "https://music.apple.com/us/album/guilty-conscience-single/1895656258"
-    },
-    {
-      "title": "Holding On",
-      "type": "single",
-      "releaseDate": "2026-05-08",
-      "coverArt": "/holding-on.jpg",
-      "spotifyLink": "https://open.spotify.com/album/28Vv4avwyZH05DdKVG0zhC",
-      "appleMusicLink": "https://music.apple.com/us/album/holding-on-single/1894578939"
-    },
-    {
-      "title": "Rose",
-      "type": "single",
-      "releaseDate": "2026-04-24",
-      "coverArt": "/ROSE.jpg",
-      "spotifyLink": "https://open.spotify.com/album/1oQfVTE5ixc2JiqJn2G2ZN",
-      "appleMusicLink": "https://music.apple.com/us/album/rose-single/1894950069"
-    },
     {
       "title": "Meant to Be",
       "type": "single",
