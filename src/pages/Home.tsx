@@ -207,19 +207,21 @@ const Home = () => {
         </motion.section>
 
         {/* ---------- Lyric pull-quote ---------- */}
-        <motion.section {...fadeUp} className="text-center max-w-3xl mx-auto">
+        <motion.section {...fadeUp} className="text-center max-w-4xl mx-auto">
           <div className="h-px w-10 bg-white/15 mx-auto mb-10" />
-          <p
-            className="font-lyric text-xl md:text-3xl leading-relaxed tracking-wide"
+          <blockquote
+            className="font-lyric text-[1.05rem] sm:text-xl md:text-[1.7rem] leading-snug md:leading-[1.45] tracking-wide space-y-2 md:space-y-1"
             style={{ color: quote.themeColor && quote.themeColor !== '#FFFFFF' ? quote.themeColor : 'rgba(255,255,255,0.92)' }}
           >
-            &ldquo;{quote.lines.map((line, i) => (
-              <span key={i}>
+            {/* Each bar is its own block, so long bars that wrap on phones still read as one line of the song */}
+            {quote.lines.map((line, i) => (
+              <span key={i} className="block text-balance">
+                {i === 0 && <span aria-hidden>&ldquo;</span>}
                 {line}
-                {i < quote.lines.length - 1 && <br />}
+                {i === quote.lines.length - 1 && <span aria-hidden>&rdquo;</span>}
               </span>
-            ))}&rdquo;
-          </p>
+            ))}
+          </blockquote>
           <a
             href={quote.source.spotifyLink}
             target="_blank"

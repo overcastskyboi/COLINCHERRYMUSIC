@@ -82,6 +82,7 @@ const Discography = () => {
   // Deep links: /music?release=<title>&track=<n> opens that release on that track's lyrics.
   const [searchParams] = useSearchParams();
   const pendingTrack = useRef<number | null>(null);
+  const lyricsRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSelectedTrackIndex(pendingTrack.current ?? 0);
@@ -202,11 +203,12 @@ const Discography = () => {
 
   const renderLyrics = (text: string) =>
     text.split(/\n\s*\n/).map((stanza, i) => (
-      <p key={i} className="mb-5 last:mb-0">
+      <p key={i} className="mb-6 last:mb-0">
+        {/* One block per bar with a hanging indent, so a bar that wraps on a narrow
+            screen reads as a continuation instead of looking like a new line. */}
         {stanza.split('\n').map((line, j) => (
-          <span key={j}>
+          <span key={j} className="block pl-5 -indent-5">
             {line}
-            {j < stanza.split('\n').length - 1 && <br />}
           </span>
         ))}
       </p>
@@ -368,7 +370,7 @@ const Discography = () => {
 
                 <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-10 lg:gap-16">
                   {/* Left: art + streaming — sticky on desktop so it stays visible while lyrics scroll */}
-                  <div className="space-y-6 lg:sticky lg:top-0 lg:self-start">
+                  <div className="space-y-6 lg:self-start">
                     <div className="aspect-square glass overflow-hidden rounded-xl">
                       <img
                         src={selectedAlbum.images[0]?.url}
@@ -416,8 +418,8 @@ const Discography = () => {
                       const unreleased = dbAlbum
                         ? (selectedTrackDate ? !isReleased(selectedTrackDate) : !isReleased(dbAlbum.releaseDate))
                         : false;
-                      const spotifyLabel = unreleased ? "Pre-Save" : "Play on Spotify";
-                      const appleLabel = unreleased ? "Pre-Order" : "Play on Apple Music";
+                      const spotifyLabel = unreleased ? "Pre-Save" : "Spotify";
+                      const appleLabel = unreleased ? "Pre-Order" : "Apple Music";
 
                       return (
                         <div className="space-y-3">
@@ -437,7 +439,7 @@ const Discography = () => {
                                   href={spotifyLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center justify-center gap-2 h-12 text-[10px] font-black uppercase tracking-widest rounded-full bg-[#1DB954] text-black hover:bg-[#1ed760] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                  className="flex items-center justify-center gap-2.5 h-12 px-4 whitespace-nowrap text-[11px] font-black uppercase tracking-[0.15em] rounded-full bg-[#1DB954] text-black hover:bg-[#1ed760] hover:scale-[1.02] active:scale-[0.98] transition-all"
                                 >
                                   <SpotifyIcon className="w-4 h-4 flex-shrink-0" />
                                   {spotifyLabel}
@@ -448,7 +450,7 @@ const Discography = () => {
                                   href={appleLink}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="flex items-center justify-center gap-2 h-12 text-[10px] font-black uppercase tracking-widest rounded-full bg-[#FA243C] text-white hover:bg-[#fb4a5f] hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                  className="flex items-center justify-center gap-2.5 h-12 px-4 whitespace-nowrap text-[11px] font-black uppercase tracking-[0.15em] rounded-full bg-[#FA243C] text-white hover:bg-[#fb4a5f] hover:scale-[1.02] active:scale-[0.98] transition-all"
                                 >
                                   <AppleMusicIcon className="w-4 h-4 flex-shrink-0" />
                                   {appleLabel}
@@ -457,51 +459,51 @@ const Discography = () => {
                             </div>
                           )}
 
-                          {dbAlbum && trackStreaming && !trackStreaming.isOwnRelease && (
-                            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 text-center pt-1">
-                              {isReleased(dbAlbum.releaseDate)
-                                ? `From the ${dbAlbum.type === 'ep' ? 'EP' : 'album'} ${dbAlbum.title}`
-                                : `Part of ${dbAlbum.title}, not yet released as its own single`}
-                            </p>
-                          )}
                         </div>
                       );
                     })()}
+
+                    {/* Tracklist lives under the streaming buttons; picking a song swaps the lyrics on the right */}
+                    {dbAlbum && (
+                      <div>
+                        <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50 border-b border-white/5 pb-3">
+                          Tracklist &bull; {dbAlbum.tracks.length} songs
+                        </h4>
+                        <ol>
+                          {dbAlbum.tracks.map((track, tIdx) => {
+                            const active = selectedTrackIndex === tIdx;
+                            return (
+                              <li key={track.title}>
+                                <button
+                                  onClick={() => {
+                                    setSelectedTrackIndex(tIdx);
+                                    lyricsRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+                                  }}
+                                  aria-current={active || undefined}
+                                  className={`w-full flex items-center gap-4 py-3 pl-3 pr-2 border-l-2 border-b border-b-white/5 text-left transition-colors ${
+                                    active ? 'bg-white/[0.04]' : 'border-l-transparent hover:bg-white/[0.02]'
+                                  }`}
+                                  style={active ? { borderLeftColor: track.themeColor !== '#FFFFFF' ? track.themeColor : '#9DB0E3' } : undefined}
+                                >
+                                  <span className="w-5 text-[10px] font-mono text-white/35">{(tIdx + 1).toString().padStart(2, '0')}</span>
+                                  <span className={`flex-1 min-w-0 truncate text-xs font-bold uppercase tracking-wider ${active ? 'text-white' : 'text-white/60'}`}>
+                                    {track.title}
+                                  </span>
+                                  {track.duration && <span className="text-[10px] font-mono text-white/35">{track.duration}</span>}
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Right: track picker (horizontal, scales to any track count) + lyrics */}
+                  {/* Right: lyrics */}
                   <div className="space-y-8 min-w-0">
                     {dbAlbum ? (
                       <>
-                        <div>
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3 mb-4">
-                            Tracklist &bull; {dbAlbum.tracks.length} songs
-                          </h4>
-                          {/* Horizontal chip strip instead of a cramped 1/3-width vertical
-                              list — scales cleanly whether the album has 4 tracks or 14. */}
-                          <div className="flex gap-2 overflow-x-auto pb-2 -mx-1 px-1 snap-x">
-                            {dbAlbum.tracks.map((track, tIdx) => (
-                              <button
-                                key={track.title}
-                                ref={el => {
-                                  if (el && selectedTrackIndex === tIdx) el.scrollIntoView({ block: 'nearest', inline: 'center' });
-                                }}
-                                onClick={() => setSelectedTrackIndex(tIdx)}
-                                className={`snap-start flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all whitespace-nowrap ${
-                                  selectedTrackIndex === tIdx
-                                    ? 'bg-white/15 border-white/20 text-white'
-                                    : 'border-white/10 text-white/60 hover:text-white hover:bg-white/5'
-                                }`}
-                              >
-                                <span className="text-[10px] font-mono text-white/40">{(tIdx + 1).toString().padStart(2, '0')}</span>
-                                <span className="text-xs font-semibold uppercase tracking-wider">{track.title}</span>
-                                {track.duration && <span className="text-[10px] font-mono text-white/35">{track.duration}</span>}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
+                        <div ref={lyricsRef} className="space-y-4 scroll-mt-6">
                           <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 border-b border-white/5 pb-3">
                             Lyrics &mdash; {dbAlbum.tracks[selectedTrackIndex]?.title}
                           </h4>

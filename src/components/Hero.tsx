@@ -45,7 +45,7 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
               decoding="async"
               className="w-full aspect-square object-cover"
             />
-            <p className="mt-4 md:mt-5 text-center text-[#2a2a2a] font-lyric text-sm md:text-base">{title.toLowerCase()}</p>
+            <p className="font-marker mt-4 md:mt-5 text-center text-[1.15rem] md:text-[1.4rem] leading-none -rotate-[2.5deg] translate-x-[-4%]">{title.toLowerCase()}</p>
           </div>
         </motion.div>
 
