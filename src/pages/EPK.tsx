@@ -1,13 +1,26 @@
 import { useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Download, Mail, Instagram, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Download, Mail, Instagram, ArrowRight, CheckCircle2, AlertCircle, Copy, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BIO_META, BIO_SHORT } from '../config/bio';
 import { Helmet } from 'react-helmet-async';
 import { CURRENT_RELEASE, PREVIOUS_RELEASE } from '../config/releaseData';
 
 const EPK = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [bioCopied, setBioCopied] = useState(false);
+
+  const copyBio = async () => {
+    try {
+      await navigator.clipboard.writeText(BIO_SHORT);
+      setBioCopied(true);
+      setTimeout(() => setBioCopied(false), 2000);
+    } catch {
+      /* clipboard blocked: the text is still selectable on the page */
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,15 +49,16 @@ const EPK = () => {
     <PageTransition>
       <Helmet>
         <title>Colin Cherry | EPK Press Hub & Contact</title>
-        <meta name="description" content="Official Electronic Press Kit (EPK) for artist Colin Cherry. Access bio details, download high-res press assets and tech riders, or send direct inquiries." />
+        <meta name="description" content={`Press kit for Colin Cherry. ${BIO_META}`} />
+        <link rel="canonical" href="https://www.thecolincherry.com/epk" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.thecolincherry.com/epk" />
         <meta property="og:title" content="Colin Cherry — EPK & Press" />
-        <meta property="og:description" content="Official press kit, bio, and contact for Indianapolis artist Colin Cherry." />
+        <meta property="og:description" content="Official press kit, bio, and booking contact for Indianapolis alternative pop and emo rap artist Colin Cherry." />
         <meta property="og:image" content="https://www.thecolincherry.com/press-photo.png" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Colin Cherry — EPK & Press" />
-        <meta name="twitter:description" content="Official press kit, bio, and contact for Indianapolis artist Colin Cherry." />
+        <meta name="twitter:description" content="Official press kit, bio, and booking contact for Indianapolis alternative pop and emo rap artist Colin Cherry." />
         <meta name="twitter:image" content="https://www.thecolincherry.com/press-photo.png" />
       </Helmet>
 
@@ -103,13 +117,24 @@ const EPK = () => {
               <h3 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/60 flex items-center gap-4">
                 Biography <span className="h-[1px] flex-grow bg-white/5"></span>
               </h3>
-              <div className="space-y-6 text-xl text-white/80 leading-relaxed font-light font-sans">
-                <p>
-                  Colin Cherry is an architect of atmosphere. Blending industrial textures with raw alternative emotion, he creates a sonic landscape that is both visceral and calculated.
-                </p>
-                <p>
-                  Based in Indianapolis, his work explores the quiet tension of the Midwest through heavy bass and haunting melodies. Defined by precision and grit, every track is an exploration of light and shadow.
-                </p>
+              <div className="space-y-6">
+                <p className="text-lg md:text-xl text-white/80 leading-relaxed font-light">{BIO_SHORT}</p>
+                <div className="flex flex-wrap items-center gap-6">
+                  <button
+                    type="button"
+                    onClick={copyBio}
+                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/70 hover:text-white border border-white/15 hover:border-white/40 rounded-full px-4 py-2 transition-colors"
+                  >
+                    {bioCopied ? <Check size={12} /> : <Copy size={12} />}
+                    {bioCopied ? 'Copied' : 'Copy short bio'}
+                  </button>
+                  <Link
+                    to="/about"
+                    className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white border-b border-white/20 hover:border-white pb-1 transition-colors"
+                  >
+                    Read the full bio <ArrowRight size={12} />
+                  </Link>
+                </div>
               </div>
             </section>
 

@@ -10,6 +10,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Discography = lazy(() => import('./pages/Discography'));
 const EPK = lazy(() => import('./pages/EPK'));
 const Store = lazy(() => import('./pages/Store'));
+const About = lazy(() => import('./pages/About'));
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/music" element={<Discography />} />
+        <Route path="/about" element={<About />} />
         <Route path="/epk" element={<EPK />} />
         <Route path="/store" element={<Store />} />
         {/* Unknown URLs go home instead of rendering an empty page */}

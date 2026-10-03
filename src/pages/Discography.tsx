@@ -188,6 +188,7 @@ const Discography = () => {
         <title>Colin Cherry | Music Catalog & Lyrics</title>
         <meta name="description" content="Explore Colin Cherry's full discography. View official album artwork, listen to streaming music, and read high-fidelity song lyrics." />
         <meta property="og:type" content="website" />
+        <link rel="canonical" href={"https://www.thecolincherry.com/music"} />
         <meta property="og:url" content="https://www.thecolincherry.com/music" />
         <meta property="og:title" content="Colin Cherry — Music Catalog" />
         <meta property="og:description" content="Explore every Colin Cherry release — singles, albums, and lyrics." />

@@ -51,6 +51,7 @@ const Home = () => {
         <title>Colin Cherry | There's No Going Back (EP) Out Now</title>
         <meta name="description" content="Colin Cherry's new EP There's No Going Back is out now. Stream it on Spotify and Apple Music, plus the album Garfield Park and the full catalog." />
         <meta property="og:type" content="music.album" />
+        <link rel="canonical" href={`${SITE}/`} />
         <meta property="og:url" content={`${SITE}/`} />
         <meta property="og:title" content="Colin Cherry: There's No Going Back" />
         <meta property="og:description" content="The new EP. Out now everywhere." />

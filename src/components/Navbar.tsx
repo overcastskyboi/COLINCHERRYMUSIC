@@ -9,6 +9,7 @@ const Navbar = () => {
   const navItems = [
     { name: 'Home', path: '/' },
     { name: 'Music', path: '/music' },
+    { name: 'About', path: '/about' },
     { name: 'Store', path: '/store' },
   ];
 
@@ -28,13 +29,13 @@ const Navbar = () => {
         </NavLink>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex gap-16">
+        <div className="hidden md:flex md:gap-8 lg:gap-14">
           {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
               className={({ isActive }) => 
-                `text-lg uppercase tracking-[0.5em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/60'}`
+                `md:text-base lg:text-lg uppercase tracking-[0.4em] lg:tracking-[0.5em] font-black transition-all hover:text-white ${isActive ? 'text-white' : 'text-white/60'}`
               }
             >
               {item.name}
