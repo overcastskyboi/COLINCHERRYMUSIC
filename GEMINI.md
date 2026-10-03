@@ -21,8 +21,7 @@ A high-end, minimalist digital experience for artist Colin Cherry. Built for atm
 - **Animation:** Framer Motion (page transitions and interactive states).
 - **Icons:** Lucide-React + Official high-fidelity SVG brand paths.
 - **Backend:** Vercel Serverless Functions (Node.js).
-- **External APIs:**
-  - **Resend:** Email routing for EPK inquiries (`api/contact.js`, needs `RESEND_API_KEY`).
+- **Contact:** No server functions. The EPK links straight to contact@thecolincherry.com (mailto).
 - **Monitoring:** Vercel Analytics + Vercel Speed Insights.
 
 ## 4. Operational Guidelines

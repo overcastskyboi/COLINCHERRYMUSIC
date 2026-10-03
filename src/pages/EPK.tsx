@@ -1,16 +1,28 @@
 import { useState } from 'react';
 import PageTransition from '../components/PageTransition';
 import { motion } from 'framer-motion';
-import { Download, Mail, Instagram, ArrowRight, CheckCircle2, AlertCircle, Copy, Check } from 'lucide-react';
+import { Download, Mail, Instagram, ArrowRight, Copy, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { BIO_META, BIO_SHORT } from '../config/bio';
 import { Helmet } from 'react-helmet-async';
 import { CURRENT_RELEASE, PREVIOUS_RELEASE } from '../config/releaseData';
 
+const CONTACT_EMAIL = 'contact@thecolincherry.com';
+
 const EPK = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [bioCopied, setBioCopied] = useState(false);
+
+  const [emailCopied, setEmailCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(CONTACT_EMAIL);
+      setEmailCopied(true);
+      setTimeout(() => setEmailCopied(false), 2000);
+    } catch {
+      /* clipboard blocked: the address is still selectable */
+    }
+  };
 
   const copyBio = async () => {
     try {
@@ -22,28 +34,6 @@ const EPK = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus('loading');
-
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setStatus('success');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        setStatus('error');
-      }
-    } catch (error) {
-      console.error('Form error:', error);
-      setStatus('error');
-    }
-  };
 
   return (
     <PageTransition>
@@ -152,92 +142,48 @@ const EPK = () => {
 
             <section className="space-y-8">
               <h3 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/60 flex items-center gap-4">
-                Inquiries <span className="h-[1px] flex-grow bg-white/5"></span>
+                Contact <span className="h-[1px] flex-grow bg-white/5"></span>
               </h3>
               
-              <div className="glass p-8 md:p-12">
-                {status === 'success' ? (
-                  <div className="text-center py-12 space-y-4">
-                    <CheckCircle2 size={48} className="mx-auto text-white/60" />
-                    <h4 className="text-2xl font-black uppercase tracking-tighter">Message Sent</h4>
-                    <p className="text-white/60 text-sm">We'll get back to you shortly.</p>
-                    <button 
-                      onClick={() => setStatus('idle')}
-                      className="mt-8 text-[10px] font-black uppercase tracking-widest border-b border-white/40 hover:border-white transition-colors"
+              <div className="glass p-8 md:p-12 space-y-8">
+                <div className="space-y-3">
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    Booking, press, features and everything else:
+                  </p>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="text-2xl md:text-3xl font-black tracking-tight break-all hover:text-[#9DB0E3] transition-colors"
                     >
-                      Send another message
+                      {CONTACT_EMAIL}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={copyEmail}
+                      className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white border border-white/15 hover:border-white/40 rounded-full px-3 py-1.5 transition-colors"
+                    >
+                      {emailCopied ? <Check size={12} /> : <Copy size={12} />}
+                      {emailCopied ? 'Copied' : 'Copy'}
                     </button>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-2">
-                        <label htmlFor="epk-name" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Name</label>
-                        <input
-                          id="epk-name"
-                          maxLength={120}
-                          autoComplete="name"
-                          required
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 px-6 py-4 rounded-lg focus:outline-none focus:border-white/30 transition-colors text-white"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="epk-email" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Email</label>
-                        <input
-                          id="epk-email"
-                          maxLength={254}
-                          autoComplete="email"
-                          required
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full bg-white/5 border border-white/10 px-6 py-4 rounded-lg focus:outline-none focus:border-white/30 transition-colors text-white"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="epk-message" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Message</label>
-                      <textarea
-                        id="epk-message"
-                        maxLength={5000}
-                        required
-                        rows={5}
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full bg-white/5 border border-white/10 px-6 py-4 rounded-lg focus:outline-none focus:border-white/30 transition-colors text-white resize-none"
-                      ></textarea>
-                    </div>
-                    
-                    {status === 'error' && (
-                      <div className="flex items-center gap-2 text-red-400 text-xs font-bold uppercase tracking-widest">
-                        <AlertCircle size={14} /> Failed to send. Please try again.
-                      </div>
-                    )}
+                </div>
 
-                    <button
-                      disabled={status === 'loading'}
-                      className="w-full bg-white text-black py-5 rounded-lg font-black uppercase tracking-[0.3em] text-[10px] hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:scale-100 transition-all flex items-center justify-center gap-3"
-                    >
-                      {status === 'loading' ? 'Sending...' : (
-                        <>Send Inquiry <ArrowRight size={14} /></>
-                      )}
-                    </button>
-                  </form>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-4 pt-8">
-                <a href="mailto:contact@thecolincherry.com" className="flex-grow glass p-6 flex items-center justify-center gap-3 hover:bg-white/5 transition-colors group">
-                  <Mail size={18} className="text-white/60 group-hover:text-white transition-colors" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Direct Email</span>
-                </a>
-                <a href="https://instagram.com/thecolincherry" target="_blank" rel="noopener noreferrer" className="flex-grow glass p-6 flex items-center justify-center gap-3 hover:bg-white/5 transition-colors group">
-                  <Instagram size={18} className="text-white/60 group-hover:text-white transition-colors" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">@thecolincherry</span>
-                </a>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Inquiry for Colin Cherry')}`}
+                    className="flex items-center justify-center gap-3 bg-white text-black py-5 rounded-lg font-black uppercase tracking-[0.25em] text-[10px] hover:scale-[1.02] active:scale-95 transition-all"
+                  >
+                    <Mail size={14} /> Email Colin
+                  </a>
+                  <a
+                    href="https://instagram.com/thecolincherry"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-3 glass py-5 rounded-lg font-black uppercase tracking-[0.25em] text-[10px] text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+                  >
+                    <Instagram size={14} /> @thecolincherry
+                  </a>
+                </div>
               </div>
             </section>
           </div>

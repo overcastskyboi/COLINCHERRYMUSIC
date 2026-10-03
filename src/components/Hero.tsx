@@ -47,14 +47,14 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
             />
             {/* Hand-written caption (Colin's own Sharpie scan) in the polaroid's thick bottom border.
                 The strip is a fixed proportion of the frame width so the caption scales with the polaroid. */}
-            <div className="flex items-center justify-center aspect-[100/34] pt-1">
+            <div className="flex items-center justify-center aspect-[100/38] pt-[3%] pb-[2%]">
               <img
                 src="/tngb-handwritten.png"
                 alt={title}
                 width={600}
                 height={504}
                 decoding="async"
-                className="h-[92%] w-auto -rotate-[3deg] select-none pointer-events-none"
+                className="h-full w-auto rotate-[5deg] select-none pointer-events-none"
                 draggable={false}
               />
             </div>

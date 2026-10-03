@@ -259,7 +259,7 @@ const Home = () => {
                       alt={r.title}
                       loading="lazy"
                       decoding="async"
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
+                      className="w-full h-full object-cover group-hover:grayscale group-hover:scale-105 transition-all duration-500"
                     />
                   </div>
                   <p className="text-xs font-black uppercase tracking-tight truncate">{r.title}</p>

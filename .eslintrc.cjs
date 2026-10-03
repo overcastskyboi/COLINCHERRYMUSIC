@@ -1,4 +1,4 @@
-/* ESLint config for the Vite + React + TypeScript app (src/) and Vercel functions (api/). */
+/* ESLint config for the Vite + React + TypeScript app. */
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -14,10 +14,4 @@ module.exports = {
   rules: {
     'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
   },
-  overrides: [
-    {
-      files: ['api/**/*.js'],
-      env: { node: true, browser: false },
-    },
-  ],
 };
