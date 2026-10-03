@@ -230,4 +230,11 @@ export const lyricQuotes: LyricQuote[] = [
       "When someone says they love me now; don't know if I believe them",
     ],
   },
+  // There's No Going Back (EP, 2026)
+  { song: "Live With That", lines: ["Living in the in-between", "Of how it really is and how I thought it'd be"], themeColor: "#9DB0E3" },
+  { song: "Nowhere Fast", lines: ["I keep paying the rent on a house I don't live in", "And calling it peace of mind"], themeColor: "#9DB0E3" },
+  { song: "Safe Place", lines: ["Built this cage myself, always in the same state", "Only one that got the key I might just take it to the grave"], themeColor: "#9DB0E3" },
+  { song: "What Can I Say", lines: ["I'm learning how to breathe in the heaviest of air", "While picking up and carrying the crosses that I bear"], themeColor: "#9DB0E3" },
+  { song: "Forever", lines: ["It isn't dominance, it's just a fear of still", "If I don't manufacture chaos, the silence will"], themeColor: "#9DB0E3" },
+  { song: "Comfortable", lines: ["And though the past can't be undone", "I'll keep on tryna right the wrongs that I've made"], themeColor: "#9DB0E3" },
 ];

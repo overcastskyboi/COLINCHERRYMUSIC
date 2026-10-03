@@ -26,7 +26,7 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
       <div aria-hidden className="absolute inset-0 z-10 bg-gradient-to-b from-[#0a0a0a]/70 via-[#0a0a0a]/20 to-[#0a0a0a]" />
       <div aria-hidden className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_30%,#0a0a0a_95%)]" />
 
-      <div className="relative z-20 grid md:grid-cols-[auto_1fr] items-center gap-12 md:gap-20 px-6 max-w-6xl mx-auto w-full">
+      <div className="relative z-20 grid lg:grid-cols-[auto_1fr] items-center gap-12 lg:gap-20 px-6 max-w-6xl mx-auto w-full">
         {/* Cover, framed like a developed photo print */}
         <motion.div
           initial={{ opacity: 0, y: 24, rotate: -4 }}
@@ -34,7 +34,7 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="mx-auto"
         >
-          <div className="bg-[#f2efe8] p-3 pb-12 md:p-4 md:pb-16 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-64 sm:w-72 md:w-[22rem]">
+          <div className="bg-[#f2efe8] p-3 pb-12 md:p-4 md:pb-16 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-64 sm:w-72 lg:w-[22rem] 2xl:w-[26rem]">
             <img
               src={coverArt}
               alt={`${title} cover art`}
@@ -54,19 +54,19 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: 'easeOut', delay: 0.15 }}
-          className="text-center md:text-left"
+          className="text-center lg:text-left"
         >
           <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-5" style={{ color: accent }}>
             {eyebrow}
           </p>
-          <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl 2xl:text-9xl font-black uppercase tracking-tighter leading-[0.9] mb-6">
             {title}
           </h1>
           <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-white/60 mb-10">
             Colin Cherry &middot; {formatLongDate(releaseDateISO)} &middot; {tracks.length} songs
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start gap-3">
+          <div className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-3">
             <a
               href={spotifyLink}
               target="_blank"

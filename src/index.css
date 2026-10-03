@@ -68,7 +68,7 @@ body {
 }
 
 .animate-marquee-slow {
-  animation: marquee 60s linear infinite;
+  animation: marquee 70s linear infinite;
 }
 
 .animate-pulse-slow {
@@ -111,4 +111,11 @@ html { scroll-behavior: smooth; }
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Upright literary serif for editorial copy (font-lyric is italic-only). */
+.font-editorial {
+  font-family: 'Lora', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-style: normal;
 }

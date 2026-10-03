@@ -3,11 +3,12 @@ import PageTransition from '../components/PageTransition';
 import Hero from '../components/Hero';
 import { motion } from 'framer-motion';
 import { ArrowRight, Disc, FileText } from 'lucide-react';
-import { CURRENT_RELEASE, PREVIOUS_RELEASE, recentReleases } from '../config/releaseData';
+import { CURRENT_RELEASE, PREVIOUS_RELEASE, recentReleases, resolveSong } from '../config/releaseData';
 import { lyricQuotes } from '../config/lyricQuotes';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import SocialLinks from '../components/SocialLinks';
+import SpotifyEmbed from '../components/SpotifyEmbed';
 import { SpotifyIcon, AppleMusicIcon } from '../components/icons/BrandIcons';
 
 const SITE = 'https://www.thecolincherry.com';
@@ -29,7 +30,14 @@ const fadeUp = {
 } as const;
 
 const Home = () => {
-  const [quote] = useState(() => lyricQuotes[Math.floor(Math.random() * lyricQuotes.length)]);
+  // Only rotate quotes whose song resolves to a release, so every quote can credit
+  // its year and link straight to the song.
+  const [quote] = useState(() => {
+    const pool = lyricQuotes
+      .map(q => ({ ...q, source: resolveSong(q.song) }))
+      .filter((q): q is typeof q & { source: NonNullable<typeof q.source> } => q.source !== null);
+    return pool[Math.floor(Math.random() * pool.length)];
+  });
   const ep = CURRENT_RELEASE;
   const album = PREVIOUS_RELEASE;
   // Back catalog strip: everything except the two projects already featured above it.
@@ -57,9 +65,9 @@ const Home = () => {
 
       <div className="relative max-w-6xl mx-auto px-6 pb-32 space-y-28">
 
-        {/* ---------- The EP: tracklist + player ---------- */}
-        <motion.section id="listen" {...fadeUp} className="scroll-mt-32 pt-8">
-          <div className="flex items-end justify-between gap-6 mb-10 border-b border-white/10 pb-6">
+        {/* ---------- The EP: story, tracklist, player ---------- */}
+        <section id="listen" className="scroll-mt-32 pt-8 space-y-16">
+          <motion.div {...fadeUp} className="flex items-end justify-between gap-6 border-b border-white/10 pb-6">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.5em] mb-3" style={{ color: ep.accent }}>The EP</p>
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none">{ep.tagline}</h2>
@@ -67,53 +75,80 @@ const Home = () => {
             <p className="hidden sm:block text-[10px] font-black uppercase tracking-[0.3em] text-white/50 whitespace-nowrap">
               {ep.tracks.length} tracks &middot; {totalRuntime}
             </p>
-          </div>
+          </motion.div>
 
-          <div className="grid lg:grid-cols-[1fr_minmax(0,420px)] gap-10 lg:gap-14 items-start">
-            <ol className="divide-y divide-white/5">
+          {/* About the record */}
+          <motion.div {...fadeUp} className="grid md:grid-cols-[200px_1fr] gap-6 md:gap-12">
+            <div className="flex md:flex-col items-center md:items-start gap-4 md:pt-3">
+              <span className="h-px w-10 md:w-12" style={{ backgroundColor: ep.accent }} />
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/50">About the record</span>
+            </div>
+            <div className="max-w-3xl space-y-6">
+              <p className="font-editorial text-2xl md:text-[2rem] leading-snug text-white/90">
+                <em className="font-lyric" style={{ color: ep.accent }}>There&rsquo;s No Going Back</em> is an unfiltered look at
+                self-reliance, survival instincts, and the cost of building walls.
+              </p>
+              <p className="text-base md:text-lg leading-relaxed text-white/65">
+                Moving between sharp defensive armor, restless ambition, and unguarded acceptance, the EP tracks the
+                exhaustion of outrunning the past and the quiet resolve to keep moving forward anyway.
+              </p>
+              <p className="text-base md:text-lg leading-relaxed text-white/65">
+                Written, produced, and performed entirely from the ground up, it leaves the bravado at the door to confront
+                accountability, unfixable mistakes, and the reality that time only moves in one direction.
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div {...fadeUp} className="grid lg:grid-cols-[1fr_minmax(0,400px)] gap-10 lg:gap-14 items-start">
+            <ol className="divide-y divide-white/5 border-y border-white/5">
               {ep.tracks.map(track => (
-                <li key={track.title}>
+                <li key={track.title} className="group flex items-center gap-4 sm:gap-6 py-4 sm:py-5">
+                  <span className="w-6 text-[11px] font-mono text-white/35">
+                    {String(track.trackNumber).padStart(2, '0')}
+                  </span>
                   <a
                     href={ep.spotifyLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-6 py-5 px-2 -mx-2 rounded-lg hover:bg-white/[0.03] transition-colors"
+                    className="flex-grow min-w-0 truncate text-lg sm:text-2xl font-black uppercase tracking-tight text-white/85 hover:text-white transition-colors"
                   >
-                    <span className="w-6 text-[11px] font-mono text-white/35 group-hover:text-white/70 transition-colors">
-                      {String(track.trackNumber).padStart(2, '0')}
-                    </span>
-                    <span className="flex-grow text-lg md:text-2xl font-black uppercase tracking-tight text-white/85 group-hover:text-white transition-colors">
-                      {track.title}
-                    </span>
-                    <span className="text-[11px] font-mono text-white/35">{track.duration}</span>
+                    {track.title}
                   </a>
+                  <Link
+                    to={`/music?release=${encodeURIComponent(ep.title)}&track=${track.trackNumber}`}
+                    className="text-[9px] font-black uppercase tracking-[0.25em] text-white/40 hover:text-white border border-white/10 hover:border-white/40 rounded-full px-3 py-1.5 transition-colors"
+                  >
+                    Lyrics
+                  </Link>
+                  <span className="hidden sm:inline w-10 text-right text-[11px] font-mono text-white/35">{track.duration}</span>
                 </li>
               ))}
             </ol>
 
-            <div className="space-y-4 lg:sticky lg:top-36">
-              <iframe
-                title={`${ep.title} on Spotify`}
-                src={`https://open.spotify.com/embed/album/${ep.spotifyId}?utm_source=generator&theme=0`}
-                width="100%"
-                height="352"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-                className="rounded-2xl w-full bg-black/40 border border-white/5"
-              />
-              <a
-                href={ep.appleMusicLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white hover:border-[#FA243C]/40 hover:bg-[#FA243C]/10 transition-all"
-              >
-                <AppleMusicIcon className="w-3.5 h-3.5 text-[#FA243C]" />
-                Listen on Apple Music
-              </a>
+            <div className="space-y-3 lg:sticky lg:top-40">
+              <SpotifyEmbed albumId={ep.spotifyId} title={ep.title} coverArt={ep.coverArtSmall} href={ep.spotifyLink} />
+              <div className="grid grid-cols-2 gap-3">
+                <a
+                  href={ep.appleMusicLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 h-11 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white hover:border-[#FA243C]/40 hover:bg-[#FA243C]/10 transition-all"
+                >
+                  <AppleMusicIcon className="w-3.5 h-3.5 text-[#FA243C]" />
+                  Apple Music
+                </a>
+                <a
+                  href={ep.amazonLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center h-11 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/80 hover:text-white hover:border-[#00A8E1]/40 hover:bg-[#00A8E1]/10 transition-all"
+                >
+                  Amazon Music
+                </a>
+              </div>
             </div>
-          </div>
-        </motion.section>
+          </motion.div>
+        </section>
 
         {/* ---------- Garfield Park + navigation bento ---------- */}
         <motion.section {...fadeUp} className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -123,7 +158,7 @@ const Home = () => {
               alt={`${album.title} cover art`}
               loading="lazy"
               decoding="async"
-              className="w-full h-full aspect-square object-cover"
+              className="w-full h-full aspect-[16/10] sm:aspect-square object-cover object-[50%_35%]"
             />
             <div className="p-6 md:p-8 flex flex-col justify-between gap-6">
               <div className="space-y-3">
@@ -185,7 +220,16 @@ const Home = () => {
               </span>
             ))}&rdquo;
           </p>
-          <p className="text-[9px] font-black uppercase tracking-[0.4em] text-white/50 mt-8">{quote.song}</p>
+          <a
+            href={quote.source.spotifyLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-3 mt-8 text-[10px] font-black uppercase tracking-[0.35em] text-white/60 hover:text-white transition-colors"
+          >
+            <SpotifyIcon className="w-3.5 h-3.5 text-white/40 group-hover:text-[#1DB954] transition-colors" />
+            <span className="border-b border-white/20 group-hover:border-white pb-0.5">{quote.song}</span>
+            <span className="text-white/35 tracking-[0.2em]">{quote.source.year}</span>
+          </a>
         </motion.section>
 
         {/* ---------- Back catalog strip ---------- */}

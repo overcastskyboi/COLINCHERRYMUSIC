@@ -38,10 +38,21 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
     }
   };
 
-  const message = isOut
-    ? `NEW ${release.kind.toUpperCase()} "${release.title.toUpperCase()}" OUT NOW EVERYWHERE`
-    : `PRE-SAVE THE NEW ${release.kind.toUpperCase()} "${release.title.toUpperCase()}"`;
-  const marqueeText = Array(12).fill(message).join('   ✦   ') + '   ✦   ';
+  const status = isOut ? 'Out Now' : 'Pre-Save Now';
+  // One marquee group = a handful of identical items. Two groups sit side by side and the
+  // track slides by exactly one group width (-50%), so the loop is seamless.
+  const group = (hidden: boolean) => (
+    <div className="flex items-center flex-shrink-0" aria-hidden={hidden || undefined}>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <span key={i} className="inline-flex items-center gap-4 px-8 md:px-12">
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-white/40">New {release.kind}</span>
+          <span className="font-lyric text-[13px] text-white/90 whitespace-nowrap">{release.title}</span>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: release.accent }}>{status}</span>
+          <span className="ml-8 md:ml-12 w-1 h-1 rounded-full bg-white/20" />
+        </span>
+      ))}
+    </div>
+  );
 
   return (
     <AnimatePresence>
@@ -50,33 +61,29 @@ const PreSaveBanner = ({ onVisibilityChange }: PreSaveBannerProps) => {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="relative overflow-hidden bg-[#0b1320]/90 backdrop-blur-md border-b border-white/5 font-black uppercase tracking-[0.25em] text-[9px] py-3 group/banner z-50"
-          style={{ color: release.accent }}
+          className="relative overflow-hidden bg-[#0b1320]/95 backdrop-blur-md border-b border-white/5 z-50"
         >
-          <div className="relative flex items-center w-full">
-            <a
-              href={release.spotifyLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full hover:text-white transition-colors flex items-center"
-            >
-              <div className="whitespace-nowrap animate-marquee-slow flex items-center">
-                <span>{marqueeText}</span>
-                <span aria-hidden>{marqueeText}</span>
-              </div>
-            </a>
-
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pl-4 bg-gradient-to-l from-[#0b1320] via-[#0b1320]/80 to-transparent h-full flex items-center z-10">
-              <button
-                onClick={dismiss}
-                className="p-1.5 rounded-full border border-white/10 bg-black/40 hover:bg-black/80 text-white/70 hover:text-white transition-all hover:scale-110 flex items-center justify-center md:opacity-0 md:group-hover/banner:opacity-100 focus:opacity-100"
-                aria-label="Dismiss announcement"
-                title="Dismiss announcement"
-              >
-                <X size={12} strokeWidth={3} />
-              </button>
+          <a
+            href={release.spotifyLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${release.title}, new ${release.kind}, ${status.toLowerCase()}. Listen on Spotify`}
+            className="group/banner block py-2.5 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          >
+            <div className="flex w-max animate-marquee-slow group-hover/banner:[animation-play-state:paused]">
+              {group(false)}
+              {group(true)}
             </div>
-          </div>
+          </a>
+
+          <button
+            onClick={dismiss}
+            className="absolute right-0 inset-y-0 pl-6 pr-3 flex items-center bg-gradient-to-l from-[#0b1320] via-[#0b1320] to-transparent text-white/40 hover:text-white transition-colors"
+            aria-label="Dismiss announcement"
+            title="Dismiss"
+          >
+            <X size={12} strokeWidth={2.5} />
+          </button>
         </motion.div>
       )}
     </AnimatePresence>

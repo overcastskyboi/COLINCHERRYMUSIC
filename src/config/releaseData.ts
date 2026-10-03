@@ -98,3 +98,30 @@ export const recentReleases = [
 ]
   .filter(r => isReleased(r.date))
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export interface SongSource {
+  year: string;
+  spotifyLink: string;
+}
+
+/**
+ * Where a song can be heard and when it came out. Project tracks link to their own single
+ * when they have one, otherwise to the project. Returns null for songs that aren't in the
+ * catalog yet, so callers can skip them instead of showing a dead link.
+ */
+export const resolveSong = (title: string): SongSource | null => {
+  const key = title.trim().toLowerCase();
+  const single = catalogDb.singles.find(s => s.title.toLowerCase() === key);
+  if (single?.spotifyLink) {
+    return { year: single.releaseDate.slice(0, 4), spotifyLink: single.spotifyLink };
+  }
+  for (const album of catalogDb.albums) {
+    const track = album.tracks.find(t => t.title.toLowerCase() === key);
+    if (track) {
+      const link = track.spotifyLink || album.spotifyLink;
+      if (!link) return null;
+      return { year: toISODate(track.releaseDate || album.releaseDate).slice(0, 4), spotifyLink: link };
+    }
+  }
+  return null;
+};

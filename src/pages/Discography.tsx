@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, X } from 'lucide-react';
@@ -78,9 +79,26 @@ const Discography = () => {
     album_type: single.type
   }));
 
+  // Deep links: /music?release=<title>&track=<n> opens that release on that track's lyrics.
+  const [searchParams] = useSearchParams();
+  const pendingTrack = useRef<number | null>(null);
+
   useEffect(() => {
-    setSelectedTrackIndex(0);
+    setSelectedTrackIndex(pendingTrack.current ?? 0);
+    pendingTrack.current = null;
   }, [selectedAlbum]);
+
+  useEffect(() => {
+    if (loading) return;
+    const wanted = searchParams.get('release');
+    if (!wanted) return;
+    const match = albums.find(a => a.name.toLowerCase() === wanted.toLowerCase());
+    if (!match) return;
+    const track = parseInt(searchParams.get('track') || '1', 10);
+    pendingTrack.current = Number.isFinite(track) && track > 0 ? track - 1 : 0;
+    setSelectedAlbum(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   useModalA11y(!!selectedAlbum, () => setSelectedAlbum(null));
 
@@ -369,7 +387,12 @@ const Discography = () => {
                       >
                         {selectedAlbum.name}
                       </h2>
-                      <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">{selectedAlbum.album_type} &bull; {selectedAlbum.release_date}</p>
+                      <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/60">
+                        {selectedAlbum.album_type === 'ep' ? 'EP' : selectedAlbum.album_type} &bull;{' '}
+                        {/^\d{4}-\d{2}-\d{2}$/.test(selectedAlbum.release_date)
+                          ? new Date(selectedAlbum.release_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                          : selectedAlbum.release_date}
+                      </p>
                     </div>
 
                     {/* Streaming: two uniform brand buttons, no embeds — Spotify's and
@@ -460,6 +483,9 @@ const Discography = () => {
                             {dbAlbum.tracks.map((track, tIdx) => (
                               <button
                                 key={track.title}
+                                ref={el => {
+                                  if (el && selectedTrackIndex === tIdx) el.scrollIntoView({ block: 'nearest', inline: 'center' });
+                                }}
                                 onClick={() => setSelectedTrackIndex(tIdx)}
                                 className={`snap-start flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full border transition-all whitespace-nowrap ${
                                   selectedTrackIndex === tIdx
