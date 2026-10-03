@@ -48,8 +48,8 @@ const Home = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>Colin Cherry | There's No Going Back (EP) Out Now</title>
-        <meta name="description" content="Colin Cherry's new EP There's No Going Back is out now. Stream it on Spotify and Apple Music, plus the album Garfield Park and the full catalog." />
+        <title>Colin Cherry | Official Site | Indianapolis Alt-Pop & Emo Rap Artist</title>
+        <meta name="description" content="Official site of Colin Cherry, the alternative pop and emo rap artist from Indianapolis. Stream There's No Going Back and Garfield Park, read the lyrics, and get his story." />
         <meta property="og:type" content="music.album" />
         <link rel="canonical" href={`${SITE}/`} />
         <meta property="og:url" content={`${SITE}/`} />
