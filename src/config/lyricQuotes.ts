@@ -357,10 +357,37 @@ export const lyricQuotes: LyricQuote[] = [
   {
     song: "Coulda Been (feat. Emerson Vernon)",
     lines: [
-      "It coulda been you, it coulda been me",
-      "It coulda been trust in what we gon be",
-      "So is it too much to think of your touch?",
-      "A love with no end, it coulda been us",
+      "People say it's better to have loved and then lost",
+      "But now I'm wishing that I never even felt it at all",
+      "And now I'm wishing you would call like the times we would talk",
+      "But now the only time we do is when my brain will recall",
+    ],
+  },
+  {
+    song: "Coulda Been (feat. Emerson Vernon)",
+    lines: [
+      "You know I never really meant to push your buttons",
+      "And that I always tried to be the one you trusted",
+      "I hope you're doing well and your life's becoming",
+      "The way you'd always tell me that you said you wanted",
+    ],
+  },
+  {
+    song: "Pretend (feat. CJ Vana)",
+    lines: [
+      "Tell me why the past always sticking in my mind",
+      "When I tried to play my part I couldn't remember all my lines",
+      "Everything was dark, head spinning like a cyclone",
+      "Every day was hard I was standing on a tightrope",
+    ],
+  },
+  {
+    song: "Pretend (feat. CJ Vana)",
+    lines: [
+      "I was feeling low, I was sick of being anxious",
+      "I was like a ghost, used to wonder where the days went",
+      "Knew I had to go, can't be thinking in a frame when",
+      "I ain't got no hope, cause it only ends in anguish",
     ],
   },
   {
@@ -433,15 +460,6 @@ export const lyricQuotes: LyricQuote[] = [
       "The way I think is like my arms and knees",
       "So can you tell if that's hard to see",
       "And can you love someone who's heart might bleed?",
-    ],
-  },
-  {
-    song: "Pretend (feat. CJ Vana)",
-    lines: [
-      "I was down so long I didn't know which way was up",
-      "I was asking for some help, I was asking way too much",
-      "But no ones gonna be there but the fam and the friends",
-      "When you really need it they don't wanna pretend anymore",
     ],
   },
   {

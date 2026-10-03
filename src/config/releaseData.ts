@@ -109,9 +109,19 @@ export interface SongSource {
  * when they have one, otherwise to the project. Returns null for songs that aren't in the
  * catalog yet, so callers can skip them instead of showing a dead link.
  */
+// Tracklists for older multi-song releases stored as single catalog entries (no per-track
+// data in catalogDb). Lets songs from them resolve to the project's link and year.
+const LEGACY_PROJECT_TRACKS: Record<string, string[]> = {
+  "Still Ballin'": ['Money', 'Rainbow Road', 'Real Slick', "Still Ballin'", 'What Do I Know?'],
+};
+
 export const resolveSong = (title: string): SongSource | null => {
   const key = title.trim().toLowerCase();
-  const single = catalogDb.singles.find(s => s.title.toLowerCase() === key);
+  const parent = Object.entries(LEGACY_PROJECT_TRACKS).find(([, tracks]) =>
+    tracks.some(t => t.toLowerCase() === key)
+  )?.[0];
+  const lookup = (parent ?? title).trim().toLowerCase();
+  const single = catalogDb.singles.find(s => s.title.toLowerCase() === lookup);
   if (single?.spotifyLink) {
     return { year: single.releaseDate.slice(0, 4), spotifyLink: single.spotifyLink };
   }
