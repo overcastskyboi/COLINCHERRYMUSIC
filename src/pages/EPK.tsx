@@ -86,22 +86,13 @@ const EPK = () => {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4 mt-8">
-               <a 
-                 href="/press/press-assets.zip"
-                 download
-                 className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
-               >
-                 <Download size={14} /> Hi-Res Assets
-               </a>
-               <a 
-                 href="/press/tech-rider.pdf"
-                 download
-                 className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
-               >
-                 <Download size={14} /> Tech Rider
-               </a>
-            </div>
+            <a
+              href="/press/press-assets.zip"
+              download
+              className="mt-8 flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
+            >
+              <Download size={14} /> Download Hi-Res Press Assets
+            </a>
           </motion.div>
           
           {/* Info Side */}
@@ -239,7 +230,7 @@ const EPK = () => {
               </div>
 
               <div className="flex flex-wrap gap-4 pt-8">
-                <a href="mailto:press@thecolincherry.com" className="flex-grow glass p-6 flex items-center justify-center gap-3 hover:bg-white/5 transition-colors group">
+                <a href="mailto:contact@thecolincherry.com" className="flex-grow glass p-6 flex items-center justify-center gap-3 hover:bg-white/5 transition-colors group">
                   <Mail size={18} className="text-white/60 group-hover:text-white transition-colors" />
                   <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Direct Email</span>
                 </a>

@@ -41,7 +41,7 @@ export default async function handler(req, res) {
   try {
     const { error } = await resend.emails.send({
       from: 'Colin Cherry Site <onboarding@resend.dev>',
-      to: ['press@thecolincherry.com'],
+      to: ['contact@thecolincherry.com'],
       subject: `New EPK Inquiry from ${safeSubjectName}`,
       reply_to: email,
       html: `
