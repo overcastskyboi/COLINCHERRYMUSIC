@@ -34,7 +34,7 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           className="mx-auto"
         >
-          <div className="bg-[#f2efe8] p-3 pb-12 md:p-4 md:pb-16 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-64 sm:w-72 lg:w-[22rem] 2xl:w-[26rem]">
+          <div className="bg-[#f2efe8] p-3 md:p-4 shadow-[0_30px_80px_rgba(0,0,0,0.7)] w-64 sm:w-72 lg:w-[22rem] 2xl:w-[26rem]">
             <img
               src={coverArt}
               alt={`${title} cover art`}
@@ -45,7 +45,22 @@ const Hero = ({ release, eyebrow }: HeroProps) => {
               decoding="async"
               className="w-full aspect-square object-cover"
             />
-            <p className="font-marker mt-4 md:mt-5 text-center text-[1.15rem] md:text-[1.4rem] leading-none -rotate-[2.5deg] translate-x-[-4%]">{title.toLowerCase()}</p>
+            {/* Hand-written caption (Colin's own Sharpie scan) in the polaroid's thick bottom border.
+                The strip is a fixed proportion of the frame width so the caption scales with the polaroid. */}
+            <div className="flex items-center justify-center aspect-[100/34] pt-1">
+              <picture className="h-[92%]">
+                <source srcSet="/tngb-handwritten.webp" type="image/webp" />
+                <img
+                  src="/tngb-handwritten.png"
+                  alt={title}
+                  width={900}
+                  height={756}
+                  decoding="async"
+                  className="h-full w-auto -rotate-[3deg] select-none pointer-events-none"
+                  draggable={false}
+                />
+              </picture>
+            </div>
           </div>
         </motion.div>
 
