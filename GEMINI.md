@@ -4,15 +4,15 @@ A high-end, minimalist digital experience for artist Colin Cherry. Built for atm
 
 ## 1. Core Architecture
 
-- **Home:** Abstract minimalist hero section with front-and-center Spotify/Apple Music embeds. Includes a mobile-optimized 'Bento Grid' for navigation and a dynamic 'Release Schedule' with artwork and pre-save links.
-- **Music Catalog:** Dynamic discography powered by a Vercel Serverless / Spotify API integration. Features clickable release artwork that opens high-fidelity modals containing lyrics, streaming embeds, and platform links.
+- **Home:** Built around the current release (`CURRENT_RELEASE` in `src/config/releaseData.ts`): polaroid hero, EP story, tracklist with per-track lyric links, Spotify player, previous-album card, rotating lyric quote, back-catalog strip.
+- **Music Catalog:** Driven entirely by the local `src/config/catalogDb.json` (projects with tracklists) and `src/config/lyricsDb.json` (standalone single lyrics). Cards open a modal with artwork, Spotify/Apple buttons, tracklist and section-labelled lyrics. Deep link: `/music?release=<title>&track=<n>`.
 - **EPK (Industry Hub):** A professional, hidden route (`/epk`) designed for labels and press. Includes biography, downloadable high-res asset management, and a functional contact system.
 
 ## 2. Global Features & Aesthetic
 
 - **Visual Identity:** Ultra-dark theme (#0a0a0a) with a global static noise/grain overlay and atmospheric 'fog' animations.
 - **UI Components:** Strict glassmorphism panels, high-contrast bold typography, and a fixed header stack.
-- **Marquee Banner:** An automated, continuously scrolling CSS marquee at the top of the viewport that dynamically displays the next upcoming release based on the current date.
+- **Marquee Banner:** A slow scrolling announcement for `CURRENT_RELEASE` ("Pre-Save" before release day, "Out Now" after), dismissible per release.
 - **Mobile First:** Fully responsive navigation and bento-style layouts optimized for iOS and Android.
 
 ## 3. Tech Stack & Integrations
@@ -21,9 +21,8 @@ A high-end, minimalist digital experience for artist Colin Cherry. Built for atm
 - **Animation:** Framer Motion (page transitions and interactive states).
 - **Icons:** Lucide-React + Official high-fidelity SVG brand paths.
 - **Backend:** Vercel Serverless Functions (Node.js).
-- **External APIs:** 
-  - **Spotify API:** Dynamic catalog fetching via Client Credentials flow.
-  - **Resend:** Secure email routing for EPK inquiries.
+- **External APIs:**
+  - **Resend:** Email routing for EPK inquiries (`api/contact.js`, needs `RESEND_API_KEY`).
 - **Monitoring:** Vercel Analytics + Vercel Speed Insights.
 
 ## 4. Operational Guidelines
@@ -31,3 +30,5 @@ A high-end, minimalist digital experience for artist Colin Cherry. Built for atm
 - **Zero Retail:** No references to TCG, cards, or retail shops. This is a strictly music-focused hub.
 - **Case-Sensitivity:** Imports and file paths must strictly match the file system for Linux-based deployment compatibility.
 - **Build Optimized:** The `npm run build` script is set to `vite build` to ensure deployment stability on Vercel.
+- **Lyrics format:** Section markers are their own lines in square brackets (e.g. `[Verse 1]`, `[Chorus]`); consecutive repeated lines are collapsed to `(x2)`, `(x4)`. Homepage quotes in `src/config/lyricQuotes.ts` must be verbatim, contiguous excerpts.
+- **Checks before pushing:** `npm run lint`, `npm run typecheck`, `npm run build`.

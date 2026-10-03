@@ -37,7 +37,7 @@ interface SocialDef {
 // Canonical artist links. Update in one place and every consumer (Footer, Home, EPK)
 // stays in sync. Handles differ by platform — not every platform could get
 // "thecolincherry" (Facebook is "itscolincherry").
-export const SOCIAL_LINKS: Record<SocialPlatform, SocialDef> = {
+const SOCIAL_LINKS: Record<SocialPlatform, SocialDef> = {
   instagram: {
     name: 'Instagram',
     Icon: InstagramIcon,
@@ -130,6 +130,7 @@ const SocialLinks = ({
             target="_blank"
             rel="noopener noreferrer"
             title={social.name}
+            aria-label={social.name}
             className={`${linkClassName} ${social.hoverClass} inline-flex items-center justify-center`}
           >
             <Icon className={`${widthClass} ${heightClass}`} />

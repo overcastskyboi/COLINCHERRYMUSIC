@@ -3,7 +3,6 @@ import { useSearchParams } from 'react-router-dom';
 import PageTransition from '../components/PageTransition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, X } from 'lucide-react';
-import LyricModal from '../components/LyricModal';
 import { useModalA11y } from '../hooks/useModalA11y';
 import { Helmet } from 'react-helmet-async';
 import catalogDb from '../config/catalogDb.json';
@@ -11,6 +10,7 @@ import lyricsDb from '../config/lyricsDb.json';
 import { allProjectTracks, CURRENT_RELEASE, toISODate } from '../config/releaseData';
 import { SpotifyIcon, AppleMusicIcon } from '../components/icons/BrandIcons';
 
+// One card in the catalog grid (shape kept from the old Spotify-API integration).
 interface SpotifyAlbum {
   id: string;
   name: string;
@@ -20,9 +20,8 @@ interface SpotifyAlbum {
   album_type: string;
 }
 
-// Releases pulled from distribution. Also filtered out of live Spotify API results so they
-// can't sneak back into the catalog through /api/spotify.
-const HIDDEN_RELEASES = new Set(['double ko!']);
+// Shown if a cover image ever fails to load.
+const FALLBACK_ART = '/logo-textured.png';
 
 const sortByDateDesc = (arr: SpotifyAlbum[]) =>
   [...arr].sort((a, b) => new Date(b.release_date).getTime() - new Date(a.release_date).getTime());
@@ -33,10 +32,7 @@ const isReleased = (dateStr: string) => {
 };
 
 const Discography = () => {
-  const [albums, setAlbums] = useState<SpotifyAlbum[]>([]);
-  const [loading, setLoading] = useState(true);
   const [selectedAlbum, setSelectedAlbum] = useState<SpotifyAlbum | null>(null);
-  const [selectedLyrics, setSelectedLyrics] = useState<{title: string, lyrics: string, themeColor: string} | null>(null);
   const [selectedTrackIndex, setSelectedTrackIndex] = useState<number>(0);
 
   // Split the local album catalog into released (belongs in the main Catalog grid)
@@ -48,7 +44,7 @@ const Discography = () => {
     id: `local-db-${idx}`,
     name: album.title,
     release_date: album.releaseDate ? toISODate(album.releaseDate) : '2026-08-01',
-    images: [{ url: album.coverArt || "/different.jpg" }],
+    images: [{ url: album.coverArt || FALLBACK_ART }],
     external_urls: { spotify: album.spotifyLink || album.appleMusicLink || "#" },
     album_type: album.type
   });
@@ -67,17 +63,20 @@ const Discography = () => {
   const spotlightAlbum = upcomingAlbum || latestAlbum;
   const spotlightIsUpcoming = Boolean(upcomingAlbum);
 
-  // Back catalog singles/EPs from catalogDb.singles — rendered as their own catalog
-  // entries regardless of whether they're also advance tracks off an unreleased album
-  // (e.g. Different / Rose / More Lonely are real standalone releases in their own right).
+  // Standalone singles/EPs from catalogDb.singles. (Garfield Park's advance singles were
+  // retired from this list once they moved onto the album.)
   const localSinglesAlbums: SpotifyAlbum[] = catalogDb.singles.map((single, idx) => ({
     id: `local-single-${idx}`,
     name: single.title,
     release_date: single.releaseDate || '2025-01-01',
-    images: [{ url: single.coverArt || "/different.jpg" }],
+    images: [{ url: single.coverArt || FALLBACK_ART }],
     external_urls: { spotify: single.spotifyLink || single.appleMusicLink || "#" },
     album_type: single.type
   }));
+
+  // The local catalog is the single source of truth: curated, instant (no network
+  // round-trip or spinner), and can't resurface retired releases.
+  const albums = sortByDateDesc([...localDbAlbums, ...localSinglesAlbums]);
 
   // Deep links: /music?release=<title>&track=<n> opens that release on that track's lyrics.
   const [searchParams] = useSearchParams();
@@ -96,7 +95,6 @@ const Discography = () => {
   }, [selectedTrackIndex, selectedAlbum]);
 
   useEffect(() => {
-    if (loading) return;
     const wanted = searchParams.get('release');
     if (!wanted) return;
     const match = albums.find(a => a.name.toLowerCase() === wanted.toLowerCase());
@@ -104,43 +102,11 @@ const Discography = () => {
     const track = parseInt(searchParams.get('track') || '1', 10);
     pendingTrack.current = Number.isFinite(track) && track > 0 ? track - 1 : 0;
     setSelectedAlbum(match);
+    // Only on first load; the catalog is static.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading]);
+  }, []);
 
   useModalA11y(!!selectedAlbum, () => setSelectedAlbum(null));
-
-  useEffect(() => {
-    const fetchMusic = async () => {
-      try {
-        const response = await fetch('/api/spotify');
-        if (!response.ok) {
-          throw new Error(`API error: ${response.status}`);
-        }
-        const data = await response.json();
-        if (data.error) throw new Error(data.error);
-
-        if (Array.isArray(data) && data.length > 0) {
-          const merged = [...localDbAlbums, ...localSinglesAlbums];
-          data.forEach((apiAlbum: SpotifyAlbum) => {
-            if (HIDDEN_RELEASES.has(apiAlbum.name.toLowerCase())) return;
-            if (!merged.some(ma => ma.name.toLowerCase() === apiAlbum.name.toLowerCase())) {
-              merged.push(apiAlbum);
-            }
-          });
-          setAlbums(sortByDateDesc(merged));
-        } else {
-          setAlbums(sortByDateDesc([...localDbAlbums, ...localSinglesAlbums]));
-        }
-      } catch (err) {
-        console.warn('Spotify API fetch failed. Using local fallback catalog:', err);
-        setAlbums(sortByDateDesc([...localDbAlbums, ...localSinglesAlbums]));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMusic();
-  }, []);
 
   const getLyricsForAlbum = (albumName: string) => {
     // Singles that also live on a project (Different, Rose, More Lonely, etc.) carry
@@ -171,15 +137,7 @@ const Discography = () => {
     return { spotifyLink, appleMusicLink, isOwnRelease };
   };
 
-  /**
-   * Resolve the raw Spotify + Apple Music links for ANY selected catalog card,
-   * regardless of source — a Garfield Park album track (local-db-), a standalone
-   * single/EP from catalogDb.singles (local-single-), or a live Spotify-API result
-   * (real Spotify id as the album id, Apple link unknown). Previously only Spotify
-   * was ever resolved outside the Garfield Park case, so every other song in the
-   * catalog (Different, Rose, Holding On, Guilty Conscience, More Lonely, and the
-   * whole back catalog) showed a Spotify button with no Apple Music equivalent.
-   */
+  /** Spotify + Apple Music links for any catalog card (project or standalone single). */
   const getStreamingLinks = (album: SpotifyAlbum): { spotifyLink: string | null; appleLink: string | null } => {
     if (album.id.startsWith('local-db-')) {
       const dbIdx = parseInt(album.id.split('-').pop() || '0');
@@ -191,17 +149,7 @@ const Discography = () => {
       const single = catalogDb.singles[idx];
       return { spotifyLink: single?.spotifyLink || null, appleLink: single?.appleMusicLink || null };
     }
-    if (album.id.includes('local-fallback')) {
-      return { spotifyLink: null, appleLink: null };
-    }
-    // Live Spotify-API-sourced entries have a genuine Spotify album id as their id.
-    // Apple Music has no equivalent public search-by-Spotify-id API, so fall back to
-    // the external_urls.spotify field for Spotify and leave Apple unset for these.
-    const looksLikeSpotifyId = /^[a-zA-Z0-9]{16,}$/.test(album.id);
-    return {
-      spotifyLink: looksLikeSpotifyId ? (album.external_urls.spotify !== '#' ? album.external_urls.spotify : `https://open.spotify.com/album/${album.id}`) : null,
-      appleLink: null,
-    };
+    return { spotifyLink: null, appleLink: null };
   };
 
   // Find if current selected album is in our database
@@ -273,7 +221,7 @@ const Discography = () => {
                   loading="lazy"
                   decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
+                  onError={(e) => { e.currentTarget.src = FALLBACK_ART; }}
                 />
               </div>
               <div className="p-8 md:p-10 flex flex-col justify-center gap-3">
@@ -292,25 +240,7 @@ const Discography = () => {
           </section>
         )}
 
-        {selectedLyrics && (
-          <LyricModal
-            isOpen={!!selectedLyrics}
-            onClose={() => setSelectedLyrics(null)}
-            title={selectedLyrics.title}
-            lyrics={selectedLyrics.lyrics}
-            themeColor={selectedLyrics.themeColor}
-          />
-        )}
-
-        {loading ? (
-          <div className="flex justify-center py-40">
-            <div className="w-8 h-8 border-2 border-white/10 border-t-white rounded-full animate-spin"></div>
-          </div>
-        ) : albums.length === 0 ? (
-          <div className="text-center py-40 text-white/70">
-            <p>No music found.</p>
-          </div>
-        ) : (
+        {albums.length > 0 && (
           <>
             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60 mb-12 flex items-center gap-4">
               Catalog <span className="h-px flex-grow bg-white/5"></span>
@@ -333,7 +263,7 @@ const Discography = () => {
                       loading="lazy"
                       decoding="async"
                       className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110"
-                      onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
+                      onError={(e) => { e.currentTarget.src = FALLBACK_ART; }}
                     />
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-sm">
                       <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-all shadow-2xl">
@@ -378,11 +308,15 @@ const Discography = () => {
                 // Phones/tablets: the whole modal scrolls as one page.
                 // Desktop (lg+): fixed-height modal; artwork, buttons and tracklist stay put and
                 // only the lyrics pane scrolls, so the layout is identical for every song.
+                role="dialog"
+                aria-modal="true"
+                aria-label={selectedAlbum.name}
                 className="glass w-full h-full md:h-auto md:max-w-6xl md:max-h-[88vh] lg:h-[90vh] lg:max-h-none overflow-y-auto lg:overflow-hidden p-6 sm:p-8 md:p-12 relative rounded-none md:rounded-2xl"
                 onClick={e => e.stopPropagation()}
               >
                 <button
                   onClick={() => setSelectedAlbum(null)}
+                  aria-label="Close"
                   className="fixed md:absolute top-4 right-4 md:top-8 md:right-8 z-10 text-white/60 hover:text-white transition-colors bg-black/40 md:bg-transparent rounded-full p-2 md:p-0"
                 >
                   <X size={28} />
@@ -399,7 +333,7 @@ const Discography = () => {
                         loading="lazy"
                         decoding="async"
                         className="w-full h-full object-cover"
-                        onError={(e) => { e.currentTarget.src = "/different.jpg"; }}
+                        onError={(e) => { e.currentTarget.src = FALLBACK_ART; }}
                       />
                     </div>
 

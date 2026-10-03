@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import Layout from './components/Layout';
@@ -21,6 +21,8 @@ function AnimatedRoutes() {
         <Route path="/music" element={<Discography />} />
         <Route path="/epk" element={<EPK />} />
         <Route path="/store" element={<Store />} />
+        {/* Unknown URLs go home instead of rendering an empty page */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );

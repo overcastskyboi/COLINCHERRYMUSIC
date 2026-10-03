@@ -74,14 +74,14 @@ const EPK = () => {
             
             <div className="grid grid-cols-2 gap-4 mt-8">
                <a 
-                 href="/assets/press-assets.zip" 
+                 href="/press/press-assets.zip"
                  download
                  className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
                >
                  <Download size={14} /> Hi-Res Assets
                </a>
                <a 
-                 href="/assets/tech-rider.pdf" 
+                 href="/press/tech-rider.pdf"
                  download
                  className="flex items-center justify-center gap-3 py-4 glass text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all text-center text-white"
                >
@@ -156,8 +156,11 @@ const EPK = () => {
                   <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-2">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Name</label>
+                        <label htmlFor="epk-name" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Name</label>
                         <input
+                          id="epk-name"
+                          maxLength={120}
+                          autoComplete="name"
                           required
                           type="text"
                           value={formData.name}
@@ -166,8 +169,11 @@ const EPK = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Email</label>
+                        <label htmlFor="epk-email" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Email</label>
                         <input
+                          id="epk-email"
+                          maxLength={254}
+                          autoComplete="email"
                           required
                           type="email"
                           value={formData.email}
@@ -177,8 +183,10 @@ const EPK = () => {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Message</label>
+                      <label htmlFor="epk-message" className="text-[9px] font-black uppercase tracking-widest text-white/60 ml-2">Message</label>
                       <textarea
+                        id="epk-message"
+                        maxLength={5000}
                         required
                         rows={5}
                         value={formData.message}

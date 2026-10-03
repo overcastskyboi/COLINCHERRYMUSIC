@@ -43,9 +43,11 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Toggle */}
-        <button 
+        <button
           className="md:hidden p-2 text-white/75 hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={isOpen}
         >
           {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>

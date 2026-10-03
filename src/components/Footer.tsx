@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import SocialLinks from './SocialLinks';
 
 const Footer = () => {
@@ -10,9 +11,12 @@ const Footer = () => {
 
         <SocialLinks />
 
-        <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/55">
-          {/* Empty spacer or status check placeholder */}
-        </div>
+        <Link
+          to="/epk"
+          className="text-[10px] font-black uppercase tracking-[0.4em] text-white/55 hover:text-white transition-colors"
+        >
+          Press Kit
+        </Link>
       </div>
     </footer>
   );
